@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaAnalyserVer3", "AreaAnalyserVer3\AreaAnalyserVer3.csproj", "{4FC081AD-E9A6-4CED-B100-E7CA22A517DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaAnalyserVer3.Tests", "AreaAnalyserVer3.Tests\AreaAnalyserVer3.Tests.csproj", "{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FC081AD-E9A6-4CED-B100-E7CA22A517DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC081AD-E9A6-4CED-B100-E7CA22A517DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC081AD-E9A6-4CED-B100-E7CA22A517DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC081AD-E9A6-4CED-B100-E7CA22A517DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
