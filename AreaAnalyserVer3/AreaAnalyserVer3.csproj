@@ -211,10 +211,17 @@
     <Compile Include="Migrations\201612101632457_initial.Designer.cs">
       <DependentUpon>201612101632457_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612131836412_crime.cs" />
+    <Compile Include="Migrations\201612131836412_crime.Designer.cs">
+      <DependentUpon>201612131836412_crime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AnnualReport.cs" />
+    <Compile Include="Models\GardaStation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Offence.cs" />
     <Compile Include="Models\PriceRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -228,7 +235,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Migrations\201612131836412_crime.resx">
+      <DependentUpon>201612131836412_crime.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="sampleData.csv" />
+    <EmbeddedResource Include="crimeSample.csv" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\googleMap.js" />
     <Content Include="Scripts\historyChart.js" />
@@ -280,6 +291,7 @@
     <Content Include="Views\PriceRegister\search.cshtml" />
     <Content Include="Views\PriceRegister\Chart.cshtml" />
     <Content Include="Views\PriceRegister\GoogleMap.cshtml" />
+    <EmbeddedResource Include="StationCoordinates.csv" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

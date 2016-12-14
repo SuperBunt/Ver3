@@ -87,3 +87,4 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\Google.Apis.PlatformServ
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\GoogleMapsApi.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\log4net.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\Zlib.Portable.xml
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.Migrations.crime.resources

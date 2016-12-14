@@ -32,6 +32,8 @@ namespace AreaAnalyserVer3.Models
         }
 
         public DbSet<PriceRegister> PriceRegister { get; set; }
+        public DbSet<GardaStation> GardaStation { get; set; }
+        public DbSet<AnnualReport> AnnualReport { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
