@@ -9,10 +9,30 @@
 </div>
 
 <div class="row">
-    <div class="form-group">
-        <h4>Enter chosen address</h4>
-        
+    @using (Html.BeginForm("Index", "Analysis", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-4">@Html.Label("Enter Address: ")</div>
+            <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
+            <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.Counties, "Choose county...", new { @class = "form-control" })</div>
+            <br />
+
+            <input type="submit" value="Search" />
+        </div>
+
+    }
+   @*@using (Html.BeginForm("search", "PriceRegister", FormMethod.Get))
+   {
+    <div class="row">
+        <div class="col-md-4">@Html.Label("Enter Address: ")</div>
+        <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
+        <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.counties, "Choose county...", new { @class = "form-control" })</div>
+        <br />
+
+        <input type="submit" value="Search" />
     </div>
+
+   }*@
     @*<div class="col-md-4">
         <h2>Getting started</h2>
         <p>

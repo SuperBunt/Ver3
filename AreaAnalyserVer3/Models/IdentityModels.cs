@@ -24,6 +24,7 @@ namespace AreaAnalyserVer3.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+        
         }
 
         public static ApplicationDbContext Create()
@@ -31,9 +32,13 @@ namespace AreaAnalyserVer3.Models
             return new ApplicationDbContext();
         }
 
+        
+
         public DbSet<PriceRegister> PriceRegister { get; set; }
         public DbSet<GardaStation> GardaStation { get; set; }
         public DbSet<AnnualReport> AnnualReport { get; set; }
+        public DbSet<Offence> Offence { get; set; }
+        public DbSet<Town> Town { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

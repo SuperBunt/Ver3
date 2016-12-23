@@ -107,6 +107,14 @@ namespace AreaAnalyserVer3.Controllers
             return View();         
         }
 
+        // Simple view with just map and address location
+        //public ActionResult GoogleMap(string address)
+        //{
+        //    ViewBag.heading = address;
+        //    return View();
+        //}
+
+        // Map view with Garda details
         public ActionResult GoogleMap(string address)
         {
             ViewBag.heading = address;

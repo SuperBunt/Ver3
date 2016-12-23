@@ -201,23 +201,29 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AnalysisController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PriceRegisterController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612101632457_initial.cs" />
-    <Compile Include="Migrations\201612101632457_initial.Designer.cs">
-      <DependentUpon>201612101632457_initial.cs</DependentUpon>
+    <Compile Include="Migrations\201612152004069_earlyData.cs" />
+    <Compile Include="Migrations\201612152004069_earlyData.Designer.cs">
+      <DependentUpon>201612152004069_earlyData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612131836412_crime.cs" />
-    <Compile Include="Migrations\201612131836412_crime.Designer.cs">
-      <DependentUpon>201612131836412_crime.cs</DependentUpon>
+    <Compile Include="Migrations\201612152217081_earlyData1.cs" />
+    <Compile Include="Migrations\201612152217081_earlyData1.Designer.cs">
+      <DependentUpon>201612152217081_earlyData1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612231525357_towns.cs" />
+    <Compile Include="Migrations\201612231525357_towns.Designer.cs">
+      <DependentUpon>201612231525357_towns.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AnnualReport.cs" />
+    <Compile Include="Models\Town.cs" />
     <Compile Include="Models\GardaStation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -225,6 +231,8 @@
     <Compile Include="Models\PriceRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\Analysis.cs" />
+    <Compile Include="Models\GeoCoordinate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -235,11 +243,18 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EmbeddedResource Include="Migrations\201612131836412_crime.resx">
-      <DependentUpon>201612131836412_crime.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612152004069_earlyData.resx">
+      <DependentUpon>201612152004069_earlyData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612152217081_earlyData1.resx">
+      <DependentUpon>201612152217081_earlyData1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612231525357_towns.resx">
+      <DependentUpon>201612231525357_towns.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="sampleData.csv" />
     <EmbeddedResource Include="crimeSample.csv" />
+    <EmbeddedResource Include="irishtownlands.csv" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\googleMap.js" />
     <Content Include="Scripts\historyChart.js" />
@@ -292,6 +307,7 @@
     <Content Include="Views\PriceRegister\Chart.cshtml" />
     <Content Include="Views\PriceRegister\GoogleMap.cshtml" />
     <EmbeddedResource Include="StationCoordinates.csv" />
+    <Content Include="Views\Analysis\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -303,11 +319,6 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612101632457_initial.resx">
-      <DependentUpon>201612101632457_initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -12,7 +12,7 @@
 {
     <div class="row">
         <div class="col-md-4">@Html.Label("Enter Address: ")</div>
-        <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
+        <div class="col-md-4">@Html.TextBox("SearchString", null, new { @class = "form-control" })</div>
         <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.counties, "Choose county...", new { @class = "form-control" })</div>
          <br />
 
@@ -61,7 +61,7 @@
                 </td>
 
                 <td>
-                    @Html.ActionLink("Analyse", "googleMap", new { address = item.Address }) 
+                    @Html.ActionLink("Analyse", "index", "Analysis", new { address = item.Address }, null) 
                     @*@Html.ActionLink("Details", "Details", new { id = item.PriceRegisterId }) |
                     @Html.ActionLink("Delete", "Delete", new { id = item.PriceRegisterId })*@
                 </td>

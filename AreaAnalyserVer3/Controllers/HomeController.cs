@@ -14,9 +14,11 @@ namespace AreaAnalyserVer3.Controllers
         
         public ActionResult Index()
         {
+            // Hack to debug seed method
             var conf = new Configuration();
             conf.SeedDebug(db);
-            var ppr = db.PriceRegister.OrderBy(i => i.DateOfSale);
+            //var ppr = db.PriceRegister.OrderBy(i => i.DateOfSale);
+            
             return View();
         }
 
