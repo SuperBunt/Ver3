@@ -1,0 +1,100 @@
+﻿@model  AreaAnalyserVer3.ViewModels.Analysis
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Analysis</h2>
+@Html.ActionLink("Back to search", "search", "PriceRegister", null, null) 
+
+
+<h3>@Html.DisplayFor(m => m.Address)</h3>
+<input id="address" type="text" value="@Html.DisplayFor(m => m.Address)" hidden>
+<div id="map_canvas" style="width: 640px; height: 480px;"></div>
+<br>
+<div>
+    <h4>Crime Stats</h4>
+    <h5>Nearest station : <span>@Html.DisplayFor(m => m.Garda.Address)</span></h5>
+    <table class="table">
+        @if (Model.crimes != null)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayName("Attempted murder/assaults")
+                </th>
+                <th>
+                    @Html.DisplayName("Burglaries")
+                </th>
+                <th>
+                    @Html.DisplayName("Damage")
+                </th>
+                <th>
+                    @Html.DisplayName("Dangerous acts")
+                </th>
+                <th>
+                    @Html.DisplayName("Drug offences")
+                </th>
+            </tr>
+
+            foreach (var item in Model.crimes)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumAttemptedMurderAssault)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumBurglary)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumDamage)
+                    </td>
+                    <td>
+                        € @Html.DisplayFor(modelItem => item.NumDangerousActs)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumDrugs)
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+
+
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&callback=initMap"></script>
+<script type="text/javascript">
+
+     $(document).ready(function () {
+         initMap();
+   });
+   
+   function initMap() {
+       var map = new google.maps.Map(document.getElementById('map_canvas'), {
+           zoom: 10,
+           center: { lat: 53.3498, lng: -6.2603 }
+       });
+       var geocoder = new google.maps.Geocoder();
+
+       geocodeAddress(geocoder, map);
+
+       //document.getElementById('submit').addEventListener('click', function() {
+       //    geocodeAddress(geocoder, map);
+       //});
+   }
+
+   function geocodeAddress(geocoder, resultsMap) {
+       var address = document.getElementById('address').value;
+       geocoder.geocode({ 'address': address }, function (results, status) {
+           if (status === google.maps.GeocoderStatus.OK) {
+               resultsMap.setCenter(results[0].geometry.location);
+               var marker = new google.maps.Marker({
+                   map: resultsMap,
+                   position: results[0].geometry.location
+               });
+           } else {
+               alert('Geocode was not successful for the following reason: ' + status +"\nnot found: " + address);
+           }
+       });
+   }
+</script>  
