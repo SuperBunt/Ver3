@@ -11,14 +11,37 @@ namespace AreaAnalyserVer3.Models
 {
     public class Town
     {
+
         ApplicationDbContext db = new ApplicationDbContext();
 
         public Town() { }
+        public Town(int idNew, string address)
+        {
+            TownId = idNew;
+            Name = address;
+        }
 
         public int TownId { get; set; }
         public string Name { get; set; }
         public string County { get; set; }
         
+        // List of spelling variations of local area
+        public List<String> LocalSpellings {
+                get
+            {
+                List<String> towns = new List<String>();
+                var coord = GeoLocation;
+                
+                var query = from d in db.Town
+                            let distance = d.GeoLocation.Distance(coord)
+                            where distance < 500 // list of towns in 500 meteres
+                            select d.Name;
+
+                towns = query.ToList();
+                return towns;
+            }
+        }
+
         public DbGeography GeoLocation { get; set; }
 
         #region Methods
@@ -29,18 +52,18 @@ namespace AreaAnalyserVer3.Models
 
             var coord = GeoLocation;
 
-            var station = (from gs in db.GardaStation
-                           orderby gs.Point.Distance(coord)
-                           select gs).FirstOrDefault();
-            // find any locations within 5 kilometers ordered by distance
-            //db.GardaStation
-            //.Where(loc => loc.Point.Distance(coord) < 125000)
-            //.OrderBy(loc => loc.Point.Distance(coord))
-            //.Select(loc => new { Address = loc.Address, Distance = loc.Point.Distance(coord) });
-            gd = station;
+            var q1 = from f in db.GardaStation
+                     let distance = f.Point.Distance(coord)
+                     where distance < 50000  // gets garda station in 500 km radius, can be modified when complete list of stations added
+                     orderby distance
+                     select f;
+
+            gd = q1.FirstOrDefault();
 
             return gd;
         }
+
+        
 
         
         #endregion

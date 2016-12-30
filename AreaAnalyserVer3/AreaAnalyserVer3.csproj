@@ -308,6 +308,7 @@
     <Content Include="Views\PriceRegister\GoogleMap.cshtml" />
     <EmbeddedResource Include="StationCoordinates.csv" />
     <Content Include="Views\Analysis\Index.cshtml" />
+    <Content Include="Views\PriceRegister\HousesTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
