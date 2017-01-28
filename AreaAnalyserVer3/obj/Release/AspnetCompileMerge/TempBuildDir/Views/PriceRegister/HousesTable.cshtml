@@ -1,0 +1,41 @@
+﻿@model IEnumerable<AreaAnalyserVer3.Models.PriceRegister>
+
+<table class="table">
+    @if (Model != null)
+    {
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.County)
+            </th>
+
+        </tr>
+
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfSale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    € @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.County)
+                </td>
+
+            </tr>
+        }
+    }
+</table>

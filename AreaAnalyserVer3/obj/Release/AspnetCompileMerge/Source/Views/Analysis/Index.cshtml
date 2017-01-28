@@ -1,0 +1,194 @@
+﻿@model  AreaAnalyserVer3.ViewModels.Analysis
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section Amcharts {
+    @Scripts.Render("~/amcharts/amcharts.js")
+    @Scripts.Render("~/amcharts/serial.js")
+    @Scripts.Render("~/amcharts/pie.js")
+    @Scripts.Render("~/amcharts/plugins/dataloader/dataloader.min.js")
+}
+
+
+
+
+<h2>Analysis</h2>
+@*@Html.ActionLink("Back to search", "search", "PriceRegister", null, null)*@
+<div class="row">
+    <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
+    @using (Html.BeginForm())
+    {
+        
+            @*<div class="col-md-4">@Html.Label("Enter Address: ")</div>
+                <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>*@
+            @*<div class="col-md-4">@Html.DropDownList("id="this" ", (IEnumerable<SelectListItem>)ViewBag.inController, "placeholder", new { @class = "form-control" })</div>*@
+
+            <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
+            <br />
+            @*@Html.ActionLink("Arealyse", "Index", new { id = ViewBag.Town })*@
+            <input type="submit" value="Arealyse" />
+        
+
+    }
+</div>
+
+@if (IsPost)
+{
+    <h3>@Html.DisplayFor(m => m.Town.Name)</h3>
+    @*<input id="address" type="text" value="@Html.DisplayFor(m => m.Address)" hidden>*@
+    <input type="text" id="latitude" value=@Html.Raw(Model.Town.GeoLocation.Latitude) hidden/>
+    <input type="text" id="longitude" value=@Html.Raw(Model.Town.GeoLocation.Longitude) hidden/>
+    
+
+        <div id="map_canvas" style="width: 640px; height: 480px;"></div>
+        <br>
+        <div>
+            <h4>Crime Stats</h4>
+            <h5>Nearest station : <span>@Html.DisplayFor(m => m.Garda.Address)</span></h5>
+            <table class="table">
+                @if (Model.Crimes != null)
+                {
+                    <tr>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Attempted murder/assaults")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Burglaries")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Damage")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Dangerous acts")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Drug offences")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Year")
+                        </th>
+                    </tr>
+
+                    foreach (var item in Model.Crimes)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumAttemptedMurderAssault)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumBurglary)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumDamage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumDangerousActs)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumDrugs)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Year)
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <h3>Sold Properties</h3>
+            <table class="table">
+                @if (Model.HousesInArea != null)
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Date Sold")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Address")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Price")
+                        </th>
+                        <th>
+                            @Html.DisplayName("County")
+                        </th>
+
+                    </tr>
+
+                    foreach (var item in Model.HousesInArea)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateOfSale)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address)
+                            </td>
+                            <td>
+                                € @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.County)
+                            </td>
+
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+}
+
+
+
+
+
+<script type="text/javascript">
+        // cascading dropdown list for towns by county
+    $("#County").change(function () {
+        $("#TownID").empty();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetTowns")',
+            dataType: 'json',
+            data: { county: $("#County").val() },
+            success: function (townList) {
+
+                $.each(townList, function (i, locale) {
+                    $("#TownID").append('<option value ="'
+                    + locale.TownId + '">'
+                        + locale.Name + ' </option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+        return false;
+    })
+
+
+</script>
+@section map {
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&region=IE"></script>
+  @*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&callback=initMap"></script>*@
+    <script>
+         // map the co-ordinates from hidden fields (longitude, latitude) after page loads
+        //$(window).load(function () {
+        //    var latitude = document.getElementById('latitude').value;
+        //    var longitude = document.getElementById('longitude').value;
+        //    var latlng = new google.maps.LatLng(latitude, longitude);
+        //    var map = new google.maps.Map(document.getElementById('map_canvas'), {
+        //        zoom: 12,
+        //        center: latlng
+        //        //center: { lat: 52.852, lng: -6.2169444 }
+        //    });
+        //    var marker = new google.maps.Marker({
+        //        position: latlng,
+        //        map: map
+        //    });
+        //});
+    </script>
+}

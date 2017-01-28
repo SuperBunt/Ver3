@@ -1,0 +1,77 @@
+﻿@model IEnumerable<AreaAnalyserVer3.Models.PriceRegister>
+
+@{
+    ViewBag.Title = "Chart";
+}
+
+@section Amcharts {
+    @Scripts.Render("https://www.amcharts.com/lib/3/amcharts.js")
+    @Scripts.Render("https://www.amcharts.com/lib/3/serial.js")
+    @*@Scripts.Render("https://www.amcharts.com/lib/3/plugins/export/export.min.js")*@
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    @Scripts.Render("https://www.amcharts.com/lib/3/themes/dark.js")
+    @Scripts.Render("http://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js")
+    @Scripts.Render("~/Scripts/historyChart.js")
+}
+
+<h2>Property Price Register History</h2>
+
+
+
+<div class="row">
+    <div class="col-sm-8">
+        <div id="chartdiv" style="width: 800px; height: 600px"></div>
+
+    </div>
+</div>
+
+<table class="table">
+    @if (Model != null)
+    {
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.County)
+            </th>
+
+        </tr>
+
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfSale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    € @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.County)
+                </td>
+
+            </tr>
+        }
+    }
+</table>
+
+<script>
+    $(function () { generateChart() });
+</script>
+@*<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <script src="https://www.amcharts.com/lib/3/themes/dark.js"></script>
+
+    <div id="chartdiv"></div>*@

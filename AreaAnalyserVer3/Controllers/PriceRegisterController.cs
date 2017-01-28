@@ -103,9 +103,38 @@ namespace AreaAnalyserVer3.Controllers
         // GET: PriceRegister/Chart
         public ActionResult Chart()
         {
-            GetHistory();
-            return View();         
+            //GetChartData();
+            var houses = (from p in db.PriceRegister
+                         select p).Take(50);
+            houses.OrderByDescending(p => p.DateOfSale).ToList();
+            GetChartData();
+
+            return View(houses);         
         }
+
+        private void GetData(IEnumerable<PriceRegister> houses)
+        {
+            var monthly = houses.GroupBy(p => new
+            {
+                p.DateOfSale.Month,
+                p.DateOfSale.Year,
+                p.Price
+            }).Select(y => new
+            {
+                DateSold = (y.Key.Month + "-" + y.Key.Year).ToString(),
+                AvgPrice = y.Average(x => x.Price)
+            }).ToList();
+
+            var emptyList = new List<Tuple<string, double>>()
+                .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+
+            foreach (var row in monthly)
+            {
+                emptyList.Add(new {  ds = row.DateSold, name = row.AvgPrice });
+            }
+        }
+
+
 
         // Simple view with just map and address location
         //public ActionResult GoogleMap(string address)
@@ -122,35 +151,43 @@ namespace AreaAnalyserVer3.Controllers
         }
 
         // Get Price Register data for chart
-        public JsonResult GetHistory()
+        public JsonResult GetChartData()
         {
+            
             db.Configuration.ProxyCreationEnabled = false;
+            //IEnumerable<object> query;
+            //SELECT county, avg(Price)avgPrice, CONCAT(MONTH(date_of_sale), '-', YEAR(date_of_sale)) dt
+            //FROM[dbo].[arealyser_ppr]
+            //group by County, MONTH(date_of_sale), YEAR(date_of_sale)
+            //order by dt
+            var houses = (from p in db.PriceRegister
+                          select p).Take(50);
+            houses.OrderByDescending(p => p.DateOfSale).ToList();
 
-            var query = from ppr in db.PriceRegister
-                      group ppr by ppr.County into grouping
-                      select new
-                      {
-                          County = grouping.Key,
-                          AvgPrice = grouping.Average(x => x.Price), 
-                          DateSold = grouping.GroupBy(x => x.DateOfSale.Month)                 
-                      };
-
-            var pprList = query.ToList();
-            foreach (var i in pprList)
+            var monthly = houses.GroupBy(p => new
             {
-                Console.WriteLine(i.ToString());
-            }
+                p.DateOfSale.Month,
+                p.DateOfSale.Year,
+                p.Price
+            }).Select(y => new
+            {
+                DateSold = (y.Key.Month + "-" + y.Key.Year).ToString(),
+                AvgPrice = y.Average(x => x.Price)
+            }).
+            OrderByDescending(p => p.DateSold).
+            ToList();
 
-            //var houses = from p in db.PriceRegister
-            //             group p by p.County
-            //             select new {
-            //             };
+            var emptyList = new List<Tuple<string, string>>()
+                .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+
+            foreach (var row in monthly)
+            {
+                emptyList.Add(new { ds = row.DateSold, name = row.AvgPrice.ToString() });
+            }
 
             
 
-            // var pprList = houses.ToList();
-
-            return Json(pprList, JsonRequestBehavior.AllowGet);
+            return Json(emptyList, JsonRequestBehavior.AllowGet);
         }
     }
 }

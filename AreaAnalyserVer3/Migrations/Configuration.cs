@@ -31,7 +31,7 @@ namespace AreaAnalyserVer3.Migrations
             //context.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.arealyser_ppr");
             Assembly assembly = Assembly.GetExecutingAssembly();
             string resourceName = "AreaAnalyserVer3.sampleData.csv";
-            #region ppr
+            //#region ppr
             //using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             //{
             //    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
@@ -54,8 +54,8 @@ namespace AreaAnalyserVer3.Migrations
             //            //var dateConvert = csvReader.GetField<DateTime>(0);
             //            toAdd.County = csvReader.GetField<string>(3);
             //            toAdd.NotFullMarket = csvReader.GetField<int>(4);
-            //            houses.Add(toAdd);
-            //            //context.PriceRegister.Add(toAdd);
+            //            //houses.Add(toAdd);
+            //            context.PriceRegister.Add(toAdd);
             //            //toAdd.Price = csvReader.GetField<string>(3);
             //        }
 
@@ -63,10 +63,10 @@ namespace AreaAnalyserVer3.Migrations
 
             //}
             //context.SaveChanges();
-            #endregion 
+            //#endregion 
 
             // Add Gardastations to the database
-            #region StationCordinates 
+            //#region StationCordinates 
 
             //resourceName = "AreaAnalyserVer3.StationCoordinates.csv";
             //var stations = new List<GardaStation>();
@@ -78,11 +78,14 @@ namespace AreaAnalyserVer3.Migrations
             //        csvReader.Configuration.WillThrowOnMissingField = false;
             //        double lat = 0.0;
             //        double lon = 0.0;
+            //        string[] loc = new string[3];
             //        while (csvReader.Read())
             //        {
             //            // populate Garda stations list
             //            GardaStation toAdd = new GardaStation();
             //            toAdd.Address = csvReader.GetField<string>(0);
+            //            loc = toAdd.Address.Split(',');
+            //            toAdd.Address = loc[0];
             //            lat = csvReader.GetField<double>(1);
             //            //toAdd.Latitiude = DbGeography(getLat);
             //            lon = csvReader.GetField<double>(2);
@@ -95,7 +98,7 @@ namespace AreaAnalyserVer3.Migrations
             //}
             //stations.ForEach(s => context.GardaStation.Add(s));
             //context.SaveChanges();
-            #endregion
+            //#endregion
 
             // Build a list of offences, add station id then add to database 
             #region crime
@@ -116,6 +119,7 @@ namespace AreaAnalyserVer3.Migrations
                     while (csvReader.Read())
                     {
                         string toStrip = "";
+                        string[] loc = new string[3];
                         foreach (var yr in years)
                         {
                             Offence crime = new Offence();
@@ -140,6 +144,8 @@ namespace AreaAnalyserVer3.Migrations
 
                             }
                             crime.StationAddress = csvReader.GetField<string>(1);
+                            loc = crime.StationAddress.Split(',');
+                            crime.StationAddress = loc[0];
                             listOfOffences.Add(crime);
                             //Console.WriteLine(crime.ToString());
                         }
@@ -151,27 +157,24 @@ namespace AreaAnalyserVer3.Migrations
                               select i;
 
                 gdQuery.ToList();
-
-                //foreach (var o in listOfOffences)
-                //{
-                //    foreach (var s in gdQuery)
-                //    {
-                //        if (o.StationAddress.Contains(s.Address))
-                //            o.StationId = s.StationId;
-                //    }
-                //}
+                //List<Offence> tempOffenceList = new List<Offence>();
 
                 foreach (var s in gdQuery)
                 {
                     var offences = listOfOffences.Where(x => x.StationAddress.Contains(s.Address));
-                    foreach (var off in offences)
+                    if (offences != null)
                     {
-                        off.StationId = s.StationId;
-                        //context.Offence.Add(off);
-                    }
+                        foreach (var off in offences)
+                        {
+                            off.StationId = s.StationId;
+                            //tempOffenceList.Add(off);
+                            context.Offence.Add(off);
+                        }
+                    }              
                 }
                 // Add the offences to the database
-                //context.SaveChanges();
+                //tempOffenceList.ForEach(o => context.Offence.Add(o));
+                context.SaveChanges();
                 #endregion
             }
             #endregion
@@ -179,75 +182,75 @@ namespace AreaAnalyserVer3.Migrations
 
             // Generate and annual reports
             #region AnnualReports
-            //List<AnnualReport> StationReports = new List<AnnualReport>();
+            List<AnnualReport> StationReports = new List<AnnualReport>();
 
-            //// Retrieve the table of Garda stations
-            //var query = from i in context.GardaStation
-            //            select i;
-            //query.ToList();
+            // Retrieve the table of Garda stations
+            var query = from i in context.GardaStation
+                        select i;
+            query.ToList();
 
-            //// loop through each garda station and add reports          
-            //foreach (var s in query)
-            //{
-            //    // Generate report for every year for each station
-            //    List<Offence> result = listOfOffences.FindAll(x => x.StationAddress.Contains(s.Address));
+            // loop through each garda station and add reports          
+            foreach (var s in query)
+            {
+                // Generate report for every year for each station
+                List<Offence> result = listOfOffences.FindAll(x => x.StationAddress.Contains(s.Address));
 
-            //    foreach (var yr in years)
-            //    {
-            //        AnnualReport report = new AnnualReport();
-            //        report.Year = yr;
-            //        report.StationId = s.StationId;
-            //        foreach (var c in result)
-            //        {
-            //            if (c.Year == yr)
-            //            {
-            //                switch (c.TypeOfOffence)
-            //                {
-            //                    case "Attempts/threats to murder, assaults, harassments and related offences":
-            //                        report.NumAttemptedMurderAssault = c.Amount;
-            //                        break;
-            //                    case "Dangerous or negligent acts":
-            //                        report.NumDangerousActs = c.Amount;
-            //                        break;
-            //                    case "Kidnapping and related offences":
-            //                        report.NumKidnapping = c.Amount;
-            //                        break;
-            //                    case "Robbery, extortion and hijacking offences":
-            //                        report.NumRobbery = c.Amount;
-            //                        break;
-            //                    case "Burglary and related offences":
-            //                        report.NumBurglary = c.Amount;
-            //                        break;
-            //                    case "Theft and related offences":
-            //                        report.NumTheft = c.Amount;
-            //                        break;
-            //                    case "Fraud, deception and related offences":
-            //                        report.NumFraud = c.Amount;
-            //                        break;
-            //                    case "Controlled drug offences":
-            //                        report.NumDrugs = c.Amount;
-            //                        break;
-            //                    case "Weapons and Explosives Offences":
-            //                        report.NumWeapons = c.Amount;
-            //                        break;
-            //                    case "Damage to property and to the environment":
-            //                        report.NumDamage = c.Amount;
-            //                        break;
-            //                    case "Public order and other social code offences":
-            //                        report.NumPublicOrder = c.Amount;
-            //                        break;
-            //                    case "Offences against government, justice procedures and organisation of crime":
-            //                        report.NumGovernment = c.Amount;
-            //                        break;
-            //                }
-            //            }
-            //        }
-            //        StationReports.Add(report);
-            //    }
+                foreach (var yr in years)
+                {
+                    AnnualReport report = new AnnualReport();
+                    report.Year = yr;
+                    report.StationId = s.StationId;
+                    foreach (var c in result)
+                    {
+                        if (c.Year == yr)
+                        {
+                            switch (c.TypeOfOffence)
+                            {
+                                case "Attempts/threats to murder, assaults, harassments and related offences":
+                                    report.NumAttemptedMurderAssault = c.Amount;
+                                    break;
+                                case "Dangerous or negligent acts":
+                                    report.NumDangerousActs = c.Amount;
+                                    break;
+                                case "Kidnapping and related offences":
+                                    report.NumKidnapping = c.Amount;
+                                    break;
+                                case "Robbery, extortion and hijacking offences":
+                                    report.NumRobbery = c.Amount;
+                                    break;
+                                case "Burglary and related offences":
+                                    report.NumBurglary = c.Amount;
+                                    break;
+                                case "Theft and related offences":
+                                    report.NumTheft = c.Amount;
+                                    break;
+                                case "Fraud, deception and related offences":
+                                    report.NumFraud = c.Amount;
+                                    break;
+                                case "Controlled drug offences":
+                                    report.NumDrugs = c.Amount;
+                                    break;
+                                case "Weapons and Explosives Offences":
+                                    report.NumWeapons = c.Amount;
+                                    break;
+                                case "Damage to property and to the environment":
+                                    report.NumDamage = c.Amount;
+                                    break;
+                                case "Public order and other social code offences":
+                                    report.NumPublicOrder = c.Amount;
+                                    break;
+                                case "Offences against government, justice procedures and organisation of crime":
+                                    report.NumGovernment = c.Amount;
+                                    break;
+                            }
+                        }
+                    }
+                    StationReports.Add(report);
+                }
 
-            //}
-            //StationReports.ForEach(s => context.AnnualReport.Add(s));
-            //context.SaveChanges();
+            }
+            StationReports.ForEach(s => context.AnnualReport.Add(s));
+            context.SaveChanges();
             #endregion
 
 
@@ -282,7 +285,6 @@ namespace AreaAnalyserVer3.Migrations
                             lon = csvReader.GetField<double>(5);
                             toAdd.GeoLocation = CreatePoint(lat, lon);
                             //towns.Add(toAdd);
-                            Console.WriteLine(toAdd.Name.ToString());
                             context.Town.Add(toAdd);
                         }
                         catch (Exception e)

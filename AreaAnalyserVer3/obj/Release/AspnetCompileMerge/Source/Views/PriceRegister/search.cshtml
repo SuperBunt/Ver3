@@ -1,0 +1,72 @@
+﻿@model IEnumerable<AreaAnalyserVer3.Models.PriceRegister>
+
+@{
+    ViewBag.Title = "search";
+}
+
+<h2>Search your area</h2>
+
+<br />
+
+@using (Html.BeginForm("search", "PriceRegister", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-4">@Html.Label("Enter Address: ")</div>
+        <div class="col-md-4">@Html.TextBox("SearchString", null, new { @class = "form-control" })</div>
+        <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.counties, "Choose county...", new { @class = "form-control" })</div>
+         <br />
+
+        <input type="submit" value="Search" />
+    </div>
+    @*@if (TempData["Error"] != null)
+            {
+        <p style="color:red">@TempData["Error"]</p>
+
+        }*@
+<br />
+<table class="table">
+    @if (Model != null)
+    {
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.County)
+            </th>
+
+            <th></th>
+        </tr>
+
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfSale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    € @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.County)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Analyse", "index", "Analysis", new { address = item.Address }, null) 
+                    @*@Html.ActionLink("Details", "Details", new { id = item.PriceRegisterId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PriceRegisterId })*@
+                </td>
+            </tr>
+        }
+    }
+</table>
+}

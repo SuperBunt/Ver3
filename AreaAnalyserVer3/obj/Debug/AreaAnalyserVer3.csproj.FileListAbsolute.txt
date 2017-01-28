@@ -87,5 +87,5 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\Microsoft.Owin.Security.
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.pdb
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.csprojResolveAssemblyReference.cache
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.Migrations.towns.resources
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.csprojResolveAssemblyReference.cache
