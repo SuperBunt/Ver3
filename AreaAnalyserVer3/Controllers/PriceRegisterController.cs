@@ -103,11 +103,11 @@ namespace AreaAnalyserVer3.Controllers
         // GET: PriceRegister/Chart
         public ActionResult Chart()
         {
-            //GetChartData();
+            
             var houses = (from p in db.PriceRegister
                          select p).Take(50);
             houses.OrderByDescending(p => p.DateOfSale).ToList();
-            GetChartData();
+            
 
             return View(houses);         
         }
@@ -161,7 +161,7 @@ namespace AreaAnalyserVer3.Controllers
             //group by County, MONTH(date_of_sale), YEAR(date_of_sale)
             //order by dt
             var houses = (from p in db.PriceRegister
-                          select p).Take(50);
+                          select p).Take(10);
             houses.OrderByDescending(p => p.DateOfSale).ToList();
 
             var monthly = houses.GroupBy(p => new
@@ -171,23 +171,41 @@ namespace AreaAnalyserVer3.Controllers
                 p.Price
             }).Select(y => new
             {
-                DateSold = (y.Key.Month + "-" + y.Key.Year).ToString(),
+                //DateSold = (y.Key.Year + "-" + y.Key.Month).ToString(),
+                MonthSold = y.Key.Month,
+                YearSold = y.Key.Year,
                 AvgPrice = y.Average(x => x.Price)
             }).
-            OrderByDescending(p => p.DateSold).
+            //OrderByDescending(p => p.DateSold).
             ToList();
 
-            var emptyList = new List<Tuple<string, string>>()
+            var emptyList = new List<Tuple<string, double>>()
                 .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
 
             foreach (var row in monthly)
             {
-                emptyList.Add(new { ds = row.DateSold, name = row.AvgPrice.ToString() });
+                string month = row.MonthSold.ToString().PadLeft(2, '0');
+                string date_sold = row.YearSold.ToString() + "-" + month;
+                emptyList.Add(new { ds = date_sold, name = row.AvgPrice });
             }
 
-            
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(emptyList);
 
-            return Json(emptyList, JsonRequestBehavior.AllowGet);
+            var list = emptyList.OrderByDescending(d => d.ds);
+
+            //var emptyList = new List<Tuple<string, double>>()
+            //    .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+
+            //foreach (var row in monthly)
+            //{
+            //    emptyList.Add(new { ds = row.DateSold, name = row.AvgPrice });
+            //}
+
+            output = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+
+            //return output;
+
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
     }
 }

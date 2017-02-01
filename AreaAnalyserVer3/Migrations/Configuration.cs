@@ -26,9 +26,7 @@ namespace AreaAnalyserVer3.Migrations
 
         protected override void Seed(AreaAnalyserVer3.Models.ApplicationDbContext context)
         {
-            //context.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.AnnualReport");
-            //context.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.GardaStation");
-            //context.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.arealyser_ppr");
+            
             Assembly assembly = Assembly.GetExecutingAssembly();
             string resourceName = "AreaAnalyserVer3.sampleData.csv";
             //#region ppr

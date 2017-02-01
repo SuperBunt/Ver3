@@ -2,38 +2,62 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>Arealyse</h1>
+<div class="container">
+    <h1>Welcome to the Arealyser</h1>
     <p class="lead">Use the arealyser to research and analyse your chosen area.</p>
-    @*<p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>*@
+    <div class="row">
+       @using (Html.BeginForm())
+            {
+        <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
+        <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
+                <br />
+                <input type="submit" value="Arealyse" />
+       }
+    </div>
 </div>
 
-<div class="row">
-    @using (Html.BeginForm("Index", "Analysis", FormMethod.Get))
+<script type="text/javascript">
+        // cascading dropdown list for towns by county
+        $("#County").change(function () {
+            $("#TownID").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetTowns")',
+                dataType: 'json',
+                data: { county: $("#County").val() },
+                success: function (townList) {
+
+                    $.each(townList, function (i, locale) {
+                        $("#TownID").append('<option value ="'
+                        + locale.TownId + '">'
+                            + locale.Name + ' </option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+            return false;
+        })
+
+
+</script>
+
+
+@*@using (Html.BeginForm("search", "PriceRegister", FormMethod.Get))
     {
-        <div class="row">
-            <div class="col-md-4">@Html.Label("Enter Address: ")</div>
-            <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
-            <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.Counties, "Choose county...", new { @class = "form-control" })</div>
-            <br />
+     <div class="row">
+         <div class="col-md-4">@Html.Label("Enter Address: ")</div>
+         <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
+         <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.counties, "Choose county...", new { @class = "form-control" })</div>
+         <br />
 
-            <input type="submit" value="Search" />
-        </div>
+         <input type="submit" value="Search" />
+     </div>
 
-    }
-   @*@using (Html.BeginForm("search", "PriceRegister", FormMethod.Get))
-   {
-    <div class="row">
-        <div class="col-md-4">@Html.Label("Enter Address: ")</div>
-        <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
-        <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.counties, "Choose county...", new { @class = "form-control" })</div>
-        <br />
-
-        <input type="submit" value="Search" />
-    </div>
-
-   }*@
-    @*<div class="col-md-4">
+    }*@
+@*<div class="col-md-4">
         <h2>Getting started</h2>
         <p>
             ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
@@ -52,4 +76,3 @@
         <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
     </div>*@
-</div>

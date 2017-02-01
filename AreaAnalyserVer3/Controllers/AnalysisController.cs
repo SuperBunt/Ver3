@@ -16,26 +16,26 @@ namespace AreaAnalyserVer3.Controllers
 
         // GET: Analysis
         [HttpGet]
-        public ActionResult Index()
-        {
-            // Hack to debug Seed method in configuration
-            //var conf = new Configuration();
-            //conf.SeedDebug(db);
-            Analysis area = new Analysis();
+        //public ActionResult Index()
+        //{
+        //    // Hack to debug Seed method in configuration
+        //    //var conf = new Configuration();
+        //    //conf.SeedDebug(db);
+        //    Analysis area = new Analysis();
             
-            ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList().OrderBy(x => x.County), "County", "County");
-            ViewBag.TownID = new SelectList(
-            new List<SelectListItem>
-            {
-                new SelectListItem{Text="Choose area", Value="id"}
-            }
-            , "Value", "Text"); // First parameter is the display text on screen, Second parameter is the value
+        //    ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList().OrderBy(x => x.County), "County", "County");
+        //    ViewBag.TownID = new SelectList(
+        //    new List<SelectListItem>
+        //    {
+        //        new SelectListItem{Text="Choose area", Value="id"}
+        //    }
+        //    , "Value", "Text"); // First parameter is the display text on screen, Second parameter is the value
         
-            return View(area);
-        }
+        //    return View(area);
+        //}
 
-        // POST
-        [HttpPost]
+        //// POST
+        //[HttpPost]
         public ActionResult Index(string TownID)
         {
             Analysis area = new Analysis();
@@ -48,13 +48,14 @@ namespace AreaAnalyserVer3.Controllers
             , "Value", "Text");
             area.Town = db.Town.Find(Int32.Parse(TownID));
             // Gets houses in local area, allows for irish spellings
-            List<PriceRegister> houses = new List<PriceRegister>();
-            var query = from p in db.PriceRegister
-                        select p;
-            var suggestions = (from a in query
-                               where area.Town.LocalSpellings.Any(word => a.Address.Contains(word))
-                               select a);
-            area.HousesInArea = suggestions.OrderByDescending(x => x.DateOfSale).ToList();
+            //List<PriceRegister> houses = new List<PriceRegister>();
+            //var query = from p in db.PriceRegister
+            //            select p;
+            //var suggestions = (from a in query
+            //                   where area.Town.LocalSpellings.Any(word => a.Address.Contains(word))
+            //                   select a);
+            //area.HousesInArea = suggestions.OrderByDescending(x => x.DateOfSale).ToList();
+            area.HousesInArea = GetLocalHouses(TownID);
             // Average Price over last 6 months
             double avg = 0;
             try
@@ -70,6 +71,71 @@ namespace AreaAnalyserVer3.Controllers
             area.Crimes = db.AnnualReport.Where(x => x.StationId.Equals(area.Garda.StationId)).OrderByDescending(x => x.Year).ToList();
             
             return View(area);
+        }
+
+        // Get Price Register data for chart
+        public JsonResult GetChartData(string id)
+        {
+            var houses = GetLocalHouses(id);
+
+            var monthly = houses.GroupBy(p => new
+            {
+                p.DateOfSale.Month,
+                p.DateOfSale.Year,
+                p.Price
+            }).Select(y => new
+            {
+                //DateSold = (y.Key.Year + "-" + y.Key.Month).ToString(),
+                MonthSold = y.Key.Month,
+                YearSold = y.Key.Year,
+                AvgPrice = y.Average(x => x.Price)
+            }).
+            //OrderByDescending(p => p.DateSold).
+            ToList();
+
+            var emptyList = new List<Tuple<string, double>>()
+                .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+
+            foreach (var row in monthly)
+            {
+                string month = row.MonthSold.ToString().PadLeft(2, '0');
+                string date_sold = row.YearSold.ToString() + "-" + month;
+                emptyList.Add(new { ds = date_sold, name = row.AvgPrice });
+            }
+
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(emptyList);
+
+            var list = emptyList.OrderBy(d => d.ds);
+
+            //var emptyList = new List<Tuple<string, double>>()
+            //    .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+
+            //foreach (var row in monthly)
+            //{
+            //    emptyList.Add(new { ds = row.DateSold, name = row.AvgPrice });
+            //}
+
+            output = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+
+            //return output;
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        public List<PriceRegister> GetLocalHouses(string id)
+        {
+            var Town = db.Town.Find(Int32.Parse(id));
+            // Gets houses in local area, allows for irish spellings
+            List<PriceRegister> houses = new List<PriceRegister>();
+            var query = from p in db.PriceRegister
+                        select p;
+            var suggestions = (from a in query
+                               where Town.LocalSpellings.Any(word => a.Address.Contains(word))
+                               select a);
+
+            var HousesInArea = suggestions.OrderByDescending(x => x.DateOfSale).ToList();
+
+            return HousesInArea;
         }
 
         // GET: Analysis/Details/5
