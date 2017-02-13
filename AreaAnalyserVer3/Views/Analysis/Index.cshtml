@@ -10,6 +10,25 @@
     @Scripts.Render("~/amcharts/pie.js")
     @Scripts.Render("~/amcharts/plugins/dataloader/dataloader.min.js")
     @Scripts.Render("~/Scripts/historyChart.js")
+
+    @*@Scripts.Render("~/Scripts/jquery.tablesorter.min.js")
+    @Scripts.Render("~/Scripts/jquery.tablesorter.pager.js")*@
+
+    @Scripts.Render("~/Scripts/tablesorter/jquery.tablesorter.combined.min.js")
+    @Scripts.Render("~/Scripts/pager/jquery.tablesorter.pager.js")
+    @Scripts.Render("~/Content/theme.green.css")
+    @Scripts.Render("~/Content/theme.green.css")
+    @*<link href="~/Scripts/pager/jquery.tablesorter.pager.css" rel="stylesheet" />*@
+   
+
+<script type="text/javascript">
+$(function() {
+		$("table")
+			.tablesorter({widthFixed: true, widgets: ['zebra']})
+			.tablesorterPager({container: $("#pager")});
+	});
+</script>
+
 }
 
 
@@ -36,7 +55,7 @@
     @*@if (IsPost)
         {*@
     <div id="home" class="tab-pane fade in active">
-        
+
 
         <h1>@Html.DisplayFor(m => m.Town.Name)</h1>
         @*<input id="address" type="text" value="@Html.DisplayFor(m => m.Address)" hidden>*@
@@ -45,9 +64,23 @@
         <input type="text" id="townId" value=@Html.Raw(Model.Town.TownId) hidden />
         @*@Html.ActionLink("Back to search", "search", "PriceRegister", null, null)*@
 
-        
+
         @*<div id="map_canvas" style="width: 640px; height: 480px;"></div>*@
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+        @*@foreach (var image in Model.WikiImages)
+            {
+                <img src='@image.Url' height='50' width='50' style="float: left; margin: 5px;" />
+                <br />
+            }*@
+
+        @foreach (var item in Model.WikiResults)
+            {
+            <h3><a href="@string.Format("https://en.wikipedia.org/wiki/{0}", @item.PageTitle)">@item.PageTitle</a></h3>
+
+            <p>@item.PageContent</p>
+        }
+
+
     </div>
 
     <div id="Property" class="tab-pane fade">
@@ -102,38 +135,61 @@
         </div>
 
         <div class="container">
-            <table class="table">
+            <table id="pprTable" class="tablesorter table table-striped">
                 @if (Model.HousesInArea != null)
                 {
-                    <tr>
-                        <th>
-                            @Html.Display("Date Sold")
-                        </th>
-                        <th>
-                            @Html.Display("Address")
-                        </th>
-                        <th>
-                            @Html.Display("Price")
-                        </th>
-                    </tr>
-
-                    foreach (var item in Model.HousesInArea)
-                    {
+                    <thead>
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateOfSale)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Address)
-                            </td>
-                            <td>
-                                € @Html.DisplayFor(modelItem => item.Price)
-                            </td>
-
+                            <th>
+                                @Html.Display("Date Sold")
+                            </th>
+                            <th>
+                                @Html.Display("Address")
+                            </th>
+                            <th>
+                                @Html.Display("Price")
+                            </th>
                         </tr>
-                    }
-                }
+                    </thead>
+                    <tbody>
+
+                        @{
+                            foreach (var item in Model.HousesInArea)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DateOfSale)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Address)
+                                    </td>
+                                    <td>
+                                        € @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                            }
             </table>
+            <div id="pager" class="pager">
+                <form>
+                    <img src="@Url.Content("~/Content/images/first.png")" class="first" />
+                    <img src="@Url.Content("~/Content/images/prev.png")" class="prev" />
+                    <input type="text" class="pagedisplay" />
+                    <img src="@Url.Content("~/Content/images/next.png")" class="next" />
+                    <img src="@Url.Content("~/Content/images/last.png")" class="last" />
+                    <select class="pagesize">
+                        <option selected="selected" value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -143,6 +199,7 @@
 
         <h4>Crime Stats</h4>
         <h5>Nearest station : <span>@Html.DisplayFor(m => m.Garda.Address)</span></h5>
+        <div id="chartcrime" style="width: 100%; height: 600px; background-color: #FFFFFF;"></div>
         <table class="table">
             @if (Model.Crimes != null)
             {
@@ -192,6 +249,7 @@
                 }
             }
         </table>
+
     </div>
 
 
@@ -204,53 +262,52 @@
 <script>
     $(document).ready(function () {
         generateChart();
+        generateCrimeChart();
+        //$("#pprTable")
+        //.tablesorter({ widthFixed: true, widgets: ['zebra'] })
+        //.tablesorterPager({ container: $("#pager") });
     });
 </script>
 
+@*<script type="text/javascript">
+window.onload = function()
+{
+    $(function () {
+        alert('tablesorter function');
+        $("#pprTable").tablesorter({ widthFixed: true, sortList: [[0, 0]] })
+        .tablesorterPager({ container: $("#pager"), size: $(".pagesize option:selected").val() });
+    });
+}
+</script>*@
 
 @*<script type="text/javascript">
-    // cascading dropdown list for towns by county
-    $("#County").change(function () {
-        $("#TownID").empty();
-
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("GetTowns")',
-            dataType: 'json',
-            data: { county: $("#County").val() },
-            success: function (townList) {
-
-                $.each(townList, function (i, locale) {
-                    $("#TownID").append('<option value ="'
-                    + locale.TownId + '">'
-                        + locale.Name + ' </option>');
-                });
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-        });
-        return false;
-    })
+    $(function () {
+        alert('tablesorter function');
+        $("table.tablesorter").tablesorter({ widthFixed: true, sortList: [[0, 0]] })
+        .tablesorterPager({ container: $("#pager"), size: $(".pagesize option:selected").val() });
+    });
 </script>*@
-@section map {
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&region=IE"></script>
-    @*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&callback=initMap"></script>*@
-    <script>
-        // map the co-ordinates from hidden fields (longitude, latitude) after page loads
-        //$(window).load(function () {
-        //    var latitude = document.getElementById('latitude').value;
-        //    var longitude = document.getElementById('longitude').value;
-        //    var latlng = new google.maps.LatLng(latitude, longitude);
-        //    var map = new google.maps.Map(document.getElementById('map_canvas'), {
-        //        zoom: 12,
-        //        center: latlng
-        //        //center: { lat: 52.852, lng: -6.2169444 }
-        //    });
-        //    var marker = new google.maps.Marker({
-        //        position: latlng,
-        //        map: map
-        //    });
-        //});
-    </script>
-}
+
+
+
+    @section map {
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&region=IE"></script>
+        @*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&callback=initMap"></script>*@
+        <script>
+            // map the co-ordinates from hidden fields (longitude, latitude) after page loads
+            //$(window).load(function () {
+            //    var latitude = document.getElementById('latitude').value;
+            //    var longitude = document.getElementById('longitude').value;
+            //    var latlng = new google.maps.LatLng(latitude, longitude);
+            //    var map = new google.maps.Map(document.getElementById('map_canvas'), {
+            //        zoom: 12,
+            //        center: latlng
+            //        //center: { lat: 52.852, lng: -6.2169444 }
+            //    });
+            //    var marker = new google.maps.Marker({
+            //        position: latlng,
+            //        map: map
+            //    });
+            //});
+        </script>
+    }

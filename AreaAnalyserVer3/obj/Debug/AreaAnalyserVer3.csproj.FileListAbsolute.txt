@@ -88,4 +88,13 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\Microsoft.Owin.Security.
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.pdb
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.Migrations.towns.resources
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\IQToolkit.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\LinqToWiki.Core.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\LinqToWiki.Generated.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\RestSharp.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\LinqToWiki.Core.pdb
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\LinqToWiki.Core.xml
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\LinqToWiki.Generated.pdb
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\LinqToWiki.Generated.xml
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\RestSharp.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.csprojResolveAssemblyReference.cache

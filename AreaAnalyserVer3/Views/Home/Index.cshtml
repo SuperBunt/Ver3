@@ -14,6 +14,9 @@
                 <input type="submit" value="Arealyse" />
        }
     </div>
+
+    <div id="dvMap" style="width: 500px; height: 500px">
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -44,35 +47,24 @@
 
 </script>
 
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+        window.onload = function () {
+            var mapOptions = {
+                center: new google.maps.LatLng(53.1424, -7.6921),
+                zoom: 7,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var infoWindow = new google.maps.InfoWindow();
+            var latlngbounds = new google.maps.LatLngBounds();
+            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+            google.maps.event.addListener(map, 'click', function (e) {
+                alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
+            });
+        }
+</script>
 
-@*@using (Html.BeginForm("search", "PriceRegister", FormMethod.Get))
-    {
-     <div class="row">
-         <div class="col-md-4">@Html.Label("Enter Address: ")</div>
-         <div class="col-md-4">@Html.TextBox("SearchString", new { @class = "form-control" })</div>
-         <div class="col-md-4">@Html.DropDownList("county", (IEnumerable<SelectListItem>)ViewBag.counties, "Choose county...", new { @class = "form-control" })</div>
-         <br />
 
-         <input type="submit" value="Search" />
-     </div>
 
-    }*@
-@*<div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>*@
+
+

@@ -36,6 +36,8 @@ namespace AreaAnalyserVer3.ViewModels
         public List<SelectListItem> Townlands { get; set; }
         public List<AnnualReport> Crimes { get; set; }
         public List<PriceRegister> HousesInArea { get; set; }
+        public List<WikiContent> WikiResults { get; set; }
+        public IEnumerable<WikiImage> WikiImages { get; set; }
         public DateTime SixMonthsAgo { get; set; }
         [DisplayName("Avg. price")]
         public double AveragePriceLast6mths { get; set; }

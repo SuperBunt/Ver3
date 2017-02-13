@@ -87,208 +87,6 @@
             "url": myUrl, // controller function call
             "format": "json",
         }
-        //            "dataProvider": [
-        //  {
-        //    "ds": "9-2014",
-        //    "name": 525000
-        //},
-        //{
-        //    "ds": "9-2013",
-        //    "name": 880000
-        //},
-        //{
-        //    "ds": "9-2012",
-        //    "name": 302000
-        //},
-        //{
-        //    "ds": "9-2011",
-        //    "name": 670000
-        //},
-        //{
-        //    "ds": "8-2014",
-        //    "name": 596000
-        //},
-        //{
-        //    "ds": "8-2013",
-        //    "name": 280000
-        //},
-        //{
-        //    "ds": "8-2012",
-        //    "name": 145000
-        //},
-        //{
-        //    "ds": "8-2011",
-        //    "name": 753303.96
-        //},
-        //{
-        //    "ds": "7-2014",
-        //    "name": 325000
-        //},
-        //{
-        //    "ds": "7-2013",
-        //    "name": 252000
-        //},
-        //{
-        //    "ds": "7-2012",
-        //    "name": 383259
-        //},
-        //{
-        //    "ds": "7-2011",
-        //    "name": 365000
-        //},
-        //{
-        //    "ds": "6-2014",
-        //    "name": 475000
-        //},
-        //{
-        //    "ds": "6-2013",
-        //    "name": 295000
-        //},
-        //{
-        //    "ds": "6-2012",
-        //    "name": 335000
-        //},
-        //{
-        //    "ds": "6-2011",
-        //    "name": 190000
-        //},
-        //{
-        //    "ds": "5-2014",
-        //    "name": 232000
-        //},
-        //{
-        //    "ds": "5-2013",
-        //    "name": 370000
-        //},
-        //{
-        //    "ds": "5-2012",
-        //    "name": 215000
-        //},
-        //{
-        //    "ds": "5-2011",
-        //    "name": 263000
-        //},
-        //{
-        //    "ds": "4-2014",
-        //    "name": 440529
-        //},
-        //{
-        //    "ds": "4-2013",
-        //    "name": 300000
-        //},
-        //{
-        //    "ds": "4-2012",
-        //    "name": 220000
-        //},
-        //{
-        //    "ds": "4-2011",
-        //    "name": 157500
-        //},
-        //{
-        //    "ds": "3-2014",
-        //    "name": 550000
-        //},
-        //{
-        //    "ds": "3-2013",
-        //    "name": 275428
-        //},
-        //{
-        //    "ds": "3-2012",
-        //    "name": 340000
-        //},
-        //{
-        //    "ds": "3-2011",
-        //    "name": 165000
-        //},
-        //{
-        //    "ds": "2-2015",
-        //    "name": 370044
-        //},
-        //{
-        //    "ds": "2-2014",
-        //    "name": 237500
-        //},
-        //{
-        //    "ds": "2-2013",
-        //    "name": 216000
-        //},
-        //{
-        //    "ds": "2-2012",
-        //    "name": 325991.19
-        //},
-        //{
-        //    "ds": "2-2011",
-        //    "name": 234000
-        //},
-        //{
-        //    "ds": "12-2014",
-        //    "name": 950000
-        //},
-        //{
-        //    "ds": "12-2013",
-        //    "name": 655000
-        //},
-        //{
-        //    "ds": "12-2012",
-        //    "name": 260000
-        //},
-        //{
-        //    "ds": "12-2011",
-        //    "name": 400000
-        //},
-        //{
-        //    "ds": "1-2015",
-        //    "name": 320010
-        //},
-        //{
-        //    "ds": "1-2014",
-        //    "name": 195000
-        //},
-        //{
-        //    "ds": "1-2013",
-        //    "name": 343612.33
-        //},
-        //{
-        //    "ds": "1-2012",
-        //    "name": 285000
-        //},
-        //{
-        //    "ds": "1-2011",
-        //    "name": 270000
-        //},
-        //{
-        //    "ds": "11-2014",
-        //    "name": 682819
-        //},
-        //{
-        //    "ds": "11-2013",
-        //    "name": 315000
-        //},
-        //{
-        //    "ds": "11-2012",
-        //    "name": 630000
-        //},
-        //{
-        //    "ds": "11-2011",
-        //    "name": 771000
-        //},
-        //{
-        //    "ds": "10-2014",
-        //    "name": 615000
-        //},
-        //{
-        //    "ds": "10-2013",
-        //    "name": 398230.07
-        //},
-        //{
-        //    "ds": "10-2012",
-        //    "name": 250000
-        //},
-        //{
-        //    "ds": "10-2011",
-        //    "name": 260000
-        //}
-        //]
     });
 
     chart.addListener("rendered", zoomChart);
@@ -301,33 +99,133 @@
 
 }
 
-function generatePie() {
-    
-
-    alert("hello");
-    AmCharts.makeChart("chartdiv", {
-        "type": "pie",
-        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-        "titleField": "category",
-        "valueField": "column-1",
-        "allLabels": [],
-        "balloon": {},
-        "legend": {
-            "enabled": true,
-            "align": "center",
-            "markerType": "circle"
-        },
-        "titles": [],
-        "dataProvider": [
-            {
-                "category": "category 1",
-                "column-1": 8
-            },
-            {
-                "category": "category 2",
-                "column-1": 6
-            }
-        ]
-    });
+function generateCrimeChart() {
+    var id = document.getElementById('townId').value
+    var myUrl = "/Analysis/GetCrimeData/" + id
+    AmCharts.makeChart("chartcrime",
+				{
+				    "type": "serial",
+				    "categoryField": "Year",
+				    "dataDateFormat": "YYYY",
+				    "theme": "default",
+				    "categoryAxis": {
+				        "minPeriod": "YYYY",
+				        "parseDates": true
+				    },
+				    "chartCursor": {
+				        "enabled": true,
+				        "animationDuration": 0,
+				        "categoryBalloonDateFormat": "YYYY"
+				    },
+				    "chartScrollbar": {
+				        "enabled": true
+				    },
+				    "trendLines": [],
+				    "graphs": [
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "round",
+						    "id": "AmGraph-1",
+						    "title": "NumAttemptedMurderAssault",
+						    "valueField": "NumAttemptedMurderAssault"
+						},
+						{
+						    "balloonText": "[[title]]  [[value]]",
+						    "bullet": "square",
+						    "id": "AmGraph-2",
+						    "title": "NumBurglary",
+						    "valueField": "NumBurglary"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-3",
+						    "title": "NumDamage",
+						    "valueField": "NumDamage"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-4",
+						    "title": "NumDangerousActs",
+						    "valueField": "NumDangerousActs"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-5",
+						    "title": "NumDrugs",
+						    "valueField": "NumDrugs"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-6",
+						    "title": "NumFraud",
+						    "valueField": "NumFraud"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-7",
+						    "title": "NumGovernment",
+						    "valueField": "NumGovernment"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-8",
+						    "title": "NumPublicOrder",
+						    "valueField": "NumPublicOrder"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-9",
+						    "title": "NumRobbery",
+						    "valueField": "NumRobbery"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-10",
+						    "lineColor": "#61306A",
+						    "title": "NumTheft",
+						    "valueField": "NumTheft"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-11",
+						    "title": "NumWeapons",
+						    "valueField": "NumWeapons"
+						},
+						{
+						    "balloonText": "[[title]] [[value]]",
+						    "id": "AmGraph-12",
+						    "title": "NumKidnapping",
+						    "valueField": "NumKidnapping"
+						}
+				    ],
+				    "guides": [],
+				    "valueAxes": [
+						{
+						    "id": "ValueAxis-1",
+						    "title": "Axis title"
+						}
+				    ],
+				    "allLabels": [
+						{
+						    "id": "Label-1"
+						}
+				    ],
+				    "balloon": {},
+				    "legend": {
+				        "enabled": true,
+				        "useGraphSettings": true
+				    },
+				    "titles": [
+						{
+						    "id": "Title-1",
+						    "size": 15,
+						    "text": "Chart Title"
+						}
+				    ],
+				    "dataLoader": {
+				        "url": myUrl, // controller function call
+				        "format": "json",
+				    }
+				});
 
 }

@@ -38,7 +38,6 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Owin.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\EntityFramework.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\CsvHelper.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\AreaAnalyserVer3.pdb
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Google.Apis.pdb
@@ -65,8 +64,16 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.Ow
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\EntityFramework.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\CsvHelper.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\obj\Debug\AreaAnalyserVer3.Tests.csprojResolveAssemblyReference.cache
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\obj\Debug\AreaAnalyserVer3.Tests.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\obj\Debug\AreaAnalyserVer3.Tests.pdb
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\IQToolkit.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\LinqToWiki.Core.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\LinqToWiki.Generated.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\RestSharp.dll
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\LinqToWiki.Core.pdb
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\LinqToWiki.Core.xml
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\LinqToWiki.Generated.pdb
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\LinqToWiki.Generated.xml
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3.Tests\bin\Debug\RestSharp.xml

@@ -18,7 +18,7 @@ namespace AreaAnalyserVer3.Controllers
             // Hack to debug seed method
             //var conf = new Configuration();
             //conf.SeedDebug(db);
-            
+
 
             ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList().OrderBy(x => x.County), "County", "County");
             ViewBag.TownID = new SelectList(
