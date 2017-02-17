@@ -6,6 +6,7 @@ using LinqToWiki.Generated;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -22,7 +23,7 @@ namespace AreaAnalyserVer3.Controllers
         
         public ActionResult Index(string TownID)
         {
-            Analysis area = new Analysis();
+            Analysis area = new Analysis(TownID);
             ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList(), "County", "County");
             ViewBag.TownID = new SelectList(
             new List<SelectListItem>
@@ -31,40 +32,11 @@ namespace AreaAnalyserVer3.Controllers
             }
             , "Value", "Text");
             area.Town = db.Town.Find(Int32.Parse(TownID));
-
-            area.HousesInArea = GetLocalHouses(TownID);
-            // Average Price over last 6 months
-            double avg = 0;
-            try
-            {
-                avg = area.HousesInArea.Average(p => (p.Price));
-            }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine(e + ", No house sold in last 6 months");
-            }
-            area.AveragePriceLast6mths = avg;
+            // Locate the nearest Garda station to the town
             area.Garda = area.Town.FindNearestGardaStation();
+            // Retrieve the crimes stats
             area.Crimes = db.AnnualReport.Where(x => x.StationId.Equals(area.Garda.StationId)).OrderBy(x => x.Year).ToList();
-            var crimelist = area.Crimes.Select(r => new
-            {
-                r.Year,
-                r.NumAttemptedMurderAssault,
-                r.NumBurglary,
-                r.NumDamage,
-                r.NumDangerousActs,
-                r.NumDrugs,
-                r.NumFraud,
-                r.NumGovernment,
-                r.NumKidnapping,
-                r.NumPublicOrder,
-                r.NumRobbery,
-                r.NumTheft,
-                r.NumWeapons
-            });
-
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(crimelist);
-            // Wiki components
+            
             var wiki = new Wiki("Wiki", "https://en.wikipedia.org", "/w/api.php");
             string wiki_search = area.Town.Name + ", " + area.Town.County;
 
@@ -89,56 +61,35 @@ namespace AreaAnalyserVer3.Controllers
         // Get Price Register data for chart
         public JsonResult GetChartData(string id)
         {
-            var houses = GetLocalHouses(id);
+            var town = db.Town.Find(Int32.Parse(id));
+            //  Town.LocalSpellings is used to allow for irish spellings of the town 
 
-            var monthly = houses.GroupBy(p => new
-            {
-                p.DateOfSale.Month,
-                p.DateOfSale.Year,
-                p.Price
-            }).Select(y => new
-            {
-                //DateSold = (y.Key.Year + "-" + y.Key.Month).ToString(),
-                MonthSold = y.Key.Month,
-                YearSold = y.Key.Year,
-                AvgPrice = y.Average(x => x.Price)
-            }).
-            //OrderByDescending(p => p.DateSold).
-            ToList();
 
-            var emptyList = new List<Tuple<string, double>>()
-                .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+            var houses = (from a in db.PriceRegister
+                          where town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(town.County))
+                          select a).OrderByDescending(x => x.DateOfSale).ToList();
 
-            foreach (var row in monthly)
-            {
-                string month = row.MonthSold.ToString().PadLeft(2, '0');
-                string date_sold = row.YearSold.ToString() + "-" + month;
-                emptyList.Add(new { ds = date_sold, name = row.AvgPrice });
-            }
 
-            string output = Newtonsoft.Json.JsonConvert.SerializeObject(emptyList);
 
-            var list = emptyList.OrderBy(d => d.ds);
+            var avg = (houses.OrderBy(x => x.DateOfSale)
+               .GroupBy(x => new { x.DateOfSale.Year, x.DateOfSale.Month })
+               .Select(p => new
+               {
+                   date_sold = string.Format("{0},{1}", p.Key.Year, p.Key.Month),
+                   avg_price = p.Average(i => i.Price)
+               }));
 
-            //var emptyList = new List<Tuple<string, double>>()
-            //    .Select(t => new { ds = t.Item1, name = t.Item2 }).ToList();
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(avg);
 
-            //foreach (var row in monthly)
-            //{
-            //    emptyList.Add(new { ds = row.DateSold, name = row.AvgPrice });
-            //}
-
-            output = Newtonsoft.Json.JsonConvert.SerializeObject(list);
-
-            //return output;
-
-            return Json(list, JsonRequestBehavior.AllowGet);
+            return Json(avg, JsonRequestBehavior.AllowGet);
         }
 
         // Get Price Register data for chart
         public JsonResult GetCrimeData(string id)
         {
             var Town = db.Town.Find(Int32.Parse(id));
+
+
 
             var garda = Town.FindNearestGardaStation();
             var query = db.AnnualReport.Where(x => x.StationId.Equals(garda.StationId)).OrderBy(x => x.Year).ToList();
@@ -164,20 +115,7 @@ namespace AreaAnalyserVer3.Controllers
             return Json(crimelist, JsonRequestBehavior.AllowGet);
         }
 
-        public List<PriceRegister> GetLocalHouses(string id)
-        {
-            var Town = db.Town.Find(Int32.Parse(id));
-            //  Town.LocalSpellings is used to allow for irish spellings of the town         
-            var HousesInArea = (from a in db.PriceRegister
-                               where Town.LocalSpellings.Any(word => a.Address.Contains(word))
-                               select a).OrderByDescending(x => x.DateOfSale).ToList();
-
-            //var HousesInArea = suggestions.OrderByDescending(x => x.DateOfSale).ToList();
-
-            return HousesInArea;
-        }
-
-       
+            
         public JsonResult GetCounties()
         {
             var counties = new SelectList(db.Town, "County", "County");
@@ -195,7 +133,51 @@ namespace AreaAnalyserVer3.Controllers
             IEnumerable<Object> townList = query;
             return Json(townList);
         }
+        
+        public ActionResult FindNearestTownId(double lat, double lng)
+        {
+            var coord = CreatePoint(lat, lng);
+            try
+            {
 
-       
+                var query = (from f in db.Town
+                             let distance = f.GeoLocation.Distance(coord)
+                             where distance < 20000  // gets nearest town in 10 km radius
+                             orderby distance
+                             select new { f.TownId, f.Name } ).FirstOrDefault();
+
+                string id = query.TownId.ToString();
+
+                // return RedirectToAction("Index", "Analysis", new { TownID = id });
+
+                return Json(new { result = "Redirect", url = Url.Action("Index", "Analysis", new { TownID = id }), townName = query.Name }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //TODO: log
+                return Json(new { ok = false, message = ex.Message });
+            }
+           
+        }
+
+        public static DbGeography CreatePoint(double lat, double lon)
+        {
+            int srid = 4326;
+            string wkt = String.Format("POINT({0} {1})", lon, lat);
+
+            return DbGeography.PointFromText(wkt, srid);
+        }
+        // required for the property chart
+        public List<PriceRegister> GetLocalHouses(string id)
+        {
+            var Town = db.Town.Find(Int32.Parse(id));
+            //  Town.LocalSpellings is used to allow for irish spellings of the town         
+            var HousesInArea = (from a in db.PriceRegister
+                                where Town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(Town.County))
+                                select a).OrderByDescending(x => x.DateOfSale).ToList();
+
+            return HousesInArea;
+        }
+
     }
 }

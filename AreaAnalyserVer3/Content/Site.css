@@ -22,3 +22,14 @@ select,
 textarea {
     max-width: 280px;
 }
+
+#myCarousel {
+font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+justify-content:center;
+background-color: #ff0000;
+-webkit-background-clip: text;
+-moz-background-clip: text;
+background-clip: text;
+color: #00ff90;
+text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
+}

@@ -4,13 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
-   @*BE AWARE OF THE POSITION OF EACH SCRIPT, CAN HAVE KNOCK-ON EFFECTS IF NOT IN CORRECT ORDER*@
-    
+    @*BE AWARE OF THE POSITION OF EACH SCRIPT, CAN HAVE KNOCK-ON EFFECTS IF NOT IN CORRECT ORDER*@
+
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/custom.css")
+    @Styles.Render("~/Scripts/jquery-ui-1.12.1.min.js")
 
     @if (IsSectionDefined("Amcharts"))
     {
@@ -41,14 +42,11 @@
             </div>
         </div>*@
     <div class="jumbotron my-header">
-        <h1>
+        <h1 id="mainHeader">
             Arealyser   <a href="@Url.Action("Index", "Home", null)">
                 <img src="~/Images/TargetA.png" style="width: 130px;">
             </a>
         </h1>
-        @*<img src="~/Images/TargetA.png" />*@
-
-        @*@Html.ActionLink("go here", "Chart", "PriceRegister")*@
     </div>
     <div class="container body-content">
         @RenderBody()

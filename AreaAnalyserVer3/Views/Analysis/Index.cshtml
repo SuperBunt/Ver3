@@ -12,22 +12,21 @@
     @Scripts.Render("~/Scripts/historyChart.js")
 
     @*@Scripts.Render("~/Scripts/jquery.tablesorter.min.js")
-    @Scripts.Render("~/Scripts/jquery.tablesorter.pager.js")*@
+        @Scripts.Render("~/Scripts/jquery.tablesorter.pager.js")*@
 
     @Scripts.Render("~/Scripts/tablesorter/jquery.tablesorter.combined.min.js")
     @Scripts.Render("~/Scripts/pager/jquery.tablesorter.pager.js")
     @Scripts.Render("~/Content/theme.green.css")
-    @Scripts.Render("~/Content/theme.green.css")
     @*<link href="~/Scripts/pager/jquery.tablesorter.pager.css" rel="stylesheet" />*@
-   
 
-<script type="text/javascript">
-$(function() {
-		$("table")
-			.tablesorter({widthFixed: true, widgets: ['zebra']})
-			.tablesorterPager({container: $("#pager")});
-	});
-</script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("table")
+                .tablesorter({ widthFixed: true, widgets: ['zebra'] })
+                .tablesorterPager({ container: $("#pager") });
+        });
+    </script>
 
 }
 
@@ -114,7 +113,7 @@ $(function() {
                         </div>
 
                         <div class="item">
-                            <h2>@Html.Display("% diff in price")</h2>
+                            <h2>@Html.DisplayNameFor(m => m.PercentDiff)</h2>
                             <h3>@Html.DisplayFor(m => m.PercentDiff)</h3>
                         </div>
 
@@ -135,7 +134,7 @@ $(function() {
         </div>
 
         <div class="container">
-            <table id="pprTable" class="tablesorter table table-striped">
+            <table id="pprTable" class="table table-striped tablesorter">
                 @if (Model.HousesInArea != null)
                 {
                     <thead>
@@ -176,11 +175,12 @@ $(function() {
             </table>
             <div id="pager" class="pager">
                 <form>
-                    <img src="@Url.Content("~/Content/images/first.png")" class="first" />
-                    <img src="@Url.Content("~/Content/images/prev.png")" class="prev" />
+
+                    <img src="~/Images/icons/first.png" class="first" />
+                    <img src="~/Images/icons/prev.png" class="prev" />
                     <input type="text" class="pagedisplay" />
-                    <img src="@Url.Content("~/Content/images/next.png")" class="next" />
-                    <img src="@Url.Content("~/Content/images/last.png")" class="last" />
+                    <img src="~/Images/icons/next.png" class="next" />
+                    <img src="~/Images/icons/last.png" class="last" />
                     <select class="pagesize">
                         <option selected="selected" value="5">5</option>
                         <option value="10">10</option>
@@ -199,8 +199,10 @@ $(function() {
 
         <h4>Crime Stats</h4>
         <h5>Nearest station : <span>@Html.DisplayFor(m => m.Garda.Address)</span></h5>
-        <div id="chartcrime" style="width: 100%; height: 600px; background-color: #FFFFFF;"></div>
-        <table class="table">
+
+        <div id="chartcrime" style="width: 100%; height: 600px; "></div>
+
+        <table class="table table-striped">
             @if (Model.Crimes != null)
             {
                 <tr>
@@ -259,55 +261,120 @@ $(function() {
 </div>
 
 
-<script>
-    $(document).ready(function () {
-        generateChart();
-        generateCrimeChart();
-        //$("#pprTable")
-        //.tablesorter({ widthFixed: true, widgets: ['zebra'] })
-        //.tablesorterPager({ container: $("#pager") });
-    });
-</script>
 
-@*<script type="text/javascript">
-window.onload = function()
-{
-    $(function () {
-        alert('tablesorter function');
-        $("#pprTable").tablesorter({ widthFixed: true, sortList: [[0, 0]] })
-        .tablesorterPager({ container: $("#pager"), size: $(".pagesize option:selected").val() });
-    });
+
+
+
+
+
+@section map {
+    <script>
+        var name = '@Model.Town.Name';
+        $
+        $(document).ready(function () {
+            crimeChart();
+            $("h1").text(name);
+        });
+    </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&region=IE"></script>
+    @*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&callback=initMap"></script>*@
+    <script>
+        var chart1 = AmCharts.makeChart("chartdiv",
+            {
+                "type": "serial",
+                "categoryField": "ds",
+                "dataDateFormat": "YYYY-MM",
+                "backgroundColor": "#BBBBBB",
+                "borderColor": "#CC0000",
+                "percentPrecision": 0,
+                "theme": "default",
+                "categoryAxis": {
+                    "minPeriod": "MM",
+                    "parseDates": true
+                },
+                "valueScrollbar": {
+                    "enabled": true,
+                    "backgroundAlpha": 0,
+                    "backgroundColor": "#DA2222",
+                    "offset": 12,
+                    "oppositeAxis": false,
+                    "scrollbarHeight": 10
+                },
+                "chartCursor": {
+                    "enabled": true,
+                    "categoryBalloonDateFormat": "MMM YYYY",
+                    "pan": true,
+                    "valueBalloonsEnabled": false,
+                    "valueLineAlpha": 0
+                },
+                "chartScrollbar": {
+                    "enabled": true
+                },
+                "trendLines": [],
+                "graphs": [
+                    {
+                        "balloonText": "€ [[value]]",
+                        "bullet": "round",
+                        "bulletAlpha": 0.99,
+                        "bulletBorderAlpha": 0.65,
+                        "bulletBorderColor": "#FF0000",
+                        "bulletColor": "#FFFFFF",
+                        "id": "AmGraph-2",
+                        "lineColor": "#1A350A",
+                        "lineThickness": 2,
+                        "title": "Price",
+                        "type": "smoothedLine",
+                        "valueField": "name"
+                    }
+                ],
+                "guides": [],
+                "valueAxes": [
+                    {
+                        "id": "ValueAxis-1",
+                        "autoRotateAngle": 1.8,
+                        "fillAlpha": 0.03,
+                        "gridAlpha": 0.21,
+                        "gridColor": "#1A350A",
+                        "gridCount": 0,
+                        "offset": 50,
+                        "title": "Avg. Price  €"
+                    }
+                ],
+                "allLabels": [],
+                "balloon": {
+                    "animationDuration": 1.02,
+                    "fadeOutDuration": 0.52,
+                    "fixedPosition": false,
+                    "offsetX": 3,
+                    "offsetY": 12
+                },
+                "legend": {
+                    "enabled": true,
+                    "useGraphSettings": true
+                },
+                "titles": [
+                    {
+                        "color": "#2F4F1C",
+                        "id": "Title-1",
+                        "size": 15,
+                        "text": "Property Prices"
+                    }
+                ],
+                "dataLoader": {
+                    "url": myUrl, // controller function call
+                    "format": "json",
+                }
+            });
+
+        chart.addListener("rendered", zoomChart);
+
+        zoomChart();
+
+        function zoomChart() {
+            chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+        }
+
+
+    </script>
 }
-</script>*@
-
-@*<script type="text/javascript">
-    $(function () {
-        alert('tablesorter function');
-        $("table.tablesorter").tablesorter({ widthFixed: true, sortList: [[0, 0]] })
-        .tablesorterPager({ container: $("#pager"), size: $(".pagesize option:selected").val() });
-    });
-</script>*@
-
-
-
-    @section map {
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&region=IE"></script>
-        @*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrhbqEZBoAebuzCTde9t8agomyfnRcM9s&callback=initMap"></script>*@
-        <script>
-            // map the co-ordinates from hidden fields (longitude, latitude) after page loads
-            //$(window).load(function () {
-            //    var latitude = document.getElementById('latitude').value;
-            //    var longitude = document.getElementById('longitude').value;
-            //    var latlng = new google.maps.LatLng(latitude, longitude);
-            //    var map = new google.maps.Map(document.getElementById('map_canvas'), {
-            //        zoom: 12,
-            //        center: latlng
-            //        //center: { lat: 52.852, lng: -6.2169444 }
-            //    });
-            //    var marker = new google.maps.Marker({
-            //        position: latlng,
-            //        map: map
-            //    });
-            //});
-        </script>
-    }

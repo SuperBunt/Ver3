@@ -1,7 +1,7 @@
 ﻿function generateChart() {
     var id = document.getElementById('townId').value
     var myUrl = "/Analysis/GetChartData/" + id
-    
+
     AmCharts.makeChart("chartdiv",
 				{
 				    "type": "serial",
@@ -83,11 +83,11 @@
 						    "text": "Property Prices"
 						}
 				    ],
-        "dataLoader": {
-            "url": myUrl, // controller function call
-            "format": "json",
-        }
-    });
+				    "dataLoader": {
+				        "url": myUrl, // controller function call
+				        "format": "json",
+				    }
+				});
 
     chart.addListener("rendered", zoomChart);
 
@@ -96,13 +96,12 @@
     function zoomChart() {
         chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
     }
-
 }
 
-function generateCrimeChart() {
+function crimeChart() {
     var id = document.getElementById('townId').value
-    var myUrl = "/Analysis/GetCrimeData/" + id
-    AmCharts.makeChart("chartcrime",
+    var crimeUrl = "/Analysis/GetCrimeData/" + id
+    var chart1 = AmCharts.makeChart("chartcrime",
 				{
 				    "type": "serial",
 				    "categoryField": "Year",
@@ -126,75 +125,112 @@ function generateCrimeChart() {
 						    "balloonText": "[[title]] [[value]]",
 						    "bullet": "round",
 						    "id": "AmGraph-1",
-						    "title": "NumAttemptedMurderAssault",
+						    "lineThickness": 2,
+						    "title": "Attempted assaults/murder",
+						    "type": "smoothedLine",
 						    "valueField": "NumAttemptedMurderAssault"
 						},
 						{
 						    "balloonText": "[[title]]  [[value]]",
 						    "bullet": "square",
 						    "id": "AmGraph-2",
-						    "title": "NumBurglary",
+						    "lineThickness": 2,
+						    "title": "Burglaries",
+						    "type": "smoothedLine",
 						    "valueField": "NumBurglary"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "bubble",
 						    "id": "AmGraph-3",
-						    "title": "NumDamage",
+						    "lineThickness": 2,
+						    "title": "Damage",
+						    "type": "smoothedLine",
 						    "valueField": "NumDamage"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "bubble",
 						    "id": "AmGraph-4",
-						    "title": "NumDangerousActs",
+						    "lineThickness": 2,
+						    "title": "Dangerous Acts",
+						    "type": "smoothedLine",
 						    "valueField": "NumDangerousActs"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "bubble",
 						    "id": "AmGraph-5",
-						    "title": "NumDrugs",
+						    "lineThickness": 2,
+						    "title": "Controlled drug",
+						    "type": "smoothedLine",
 						    "valueField": "NumDrugs"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "bubble",
+						    "hidden": true,
 						    "id": "AmGraph-6",
-						    "title": "NumFraud",
+						    "lineThickness": 2,
+						    "title": "Fraud",
+						    "topRadius": 0,
+						    "type": "smoothedLine",
 						    "valueField": "NumFraud"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "square",
+						    "hidden": true,
 						    "id": "AmGraph-7",
-						    "title": "NumGovernment",
+						    "lineThickness": 2,
+						    "title": "Government",
+						    "type": "smoothedLine",
 						    "valueField": "NumGovernment"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "square",
 						    "id": "AmGraph-8",
-						    "title": "NumPublicOrder",
+						    "lineThickness": 2,
+						    "title": "Public Order",
+						    "type": "smoothedLine",
 						    "valueField": "NumPublicOrder"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "square",
 						    "id": "AmGraph-9",
-						    "title": "NumRobbery",
+						    "lineThickness": 2,
+						    "title": "Robbery",
+						    "type": "smoothedLine",
 						    "valueField": "NumRobbery"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "square",
 						    "id": "AmGraph-10",
 						    "lineColor": "#61306A",
-						    "title": "NumTheft",
+						    "lineThickness": 2,
+						    "title": "Theft",
+						    "type": "smoothedLine",
 						    "valueField": "NumTheft"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "square",
 						    "id": "AmGraph-11",
-						    "title": "NumWeapons",
+						    "lineThickness": 2,
+						    "title": "Weapons",
+						    "type": "smoothedLine",
 						    "valueField": "NumWeapons"
 						},
 						{
 						    "balloonText": "[[title]] [[value]]",
+						    "bullet": "square",
 						    "id": "AmGraph-12",
-						    "title": "NumKidnapping",
+						    "lineThickness": 2,
+						    "title": "Kidnapping",
+						    "type": "smoothedLine",
 						    "valueField": "NumKidnapping"
 						}
 				    ],
@@ -219,11 +255,97 @@ function generateCrimeChart() {
 						{
 						    "id": "Title-1",
 						    "size": 15,
-						    "text": "Chart Title"
+						    "text": "Crime Statistics"
 						}
 				    ],
 				    "dataLoader": {
-				        "url": myUrl, // controller function call
+				        "url": crimeUrl, // controller function call
+				        "format": "json",
+				    }
+				});
+    var chart2 = AmCharts.makeChart("chartdiv",
+				{
+				    "type": "serial",
+				    "categoryField": "date_sold",
+				    "dataDateFormat": "YYYY-MM",
+				    "backgroundColor": "#BBBBBB",
+				    "borderColor": "#CC0000",
+				    "percentPrecision": 0,
+				    "theme": "default",
+				    "categoryAxis": {
+				        "minPeriod": "MM",
+				        "parseDates": true
+				    },
+				    "valueScrollbar": {
+				        "enabled": true,
+				        "backgroundAlpha": 0,
+				        "backgroundColor": "#DA2222",
+				        "offset": 12,
+				        "oppositeAxis": false,
+				        "scrollbarHeight": 10
+				    },
+				    "chartCursor": {
+				        "enabled": true,
+				        "categoryBalloonDateFormat": "MMM YYYY",
+				        "pan": true,
+				        "valueBalloonsEnabled": false,
+				        "valueLineAlpha": 0
+				    },
+				    "chartScrollbar": {
+				        "enabled": true
+				    },
+				    "trendLines": [],
+				    "graphs": [
+						{
+						    "balloonText": "€ [[value]]",
+						    "bullet": "round",
+						    "bulletAlpha": 0.99,
+						    "bulletBorderAlpha": 0.65,
+						    "bulletBorderColor": "#FF0000",
+						    "bulletColor": "#FFFFFF",
+						    "id": "AmGraph-2",
+						    "lineColor": "#1A350A",
+						    "lineThickness": 2,
+						    "title": "Price",
+						    "type": "smoothedLine",
+						    "valueField": "avg_price"
+						}
+				    ],
+				    "guides": [],
+				    "valueAxes": [
+						{
+						    "id": "ValueAxis-1",
+						    "autoRotateAngle": 1.8,
+						    "fillAlpha": 0.03,
+						    "gridAlpha": 0.21,
+						    "gridColor": "#1A350A",
+						    "gridCount": 0,
+						    "offset": 50,
+						    "title": "Avg. Price  €"
+						}
+				    ],
+				    "allLabels": [],
+				    "balloon": {
+				        "animationDuration": 1.02,
+				        "fadeOutDuration": 0.52,
+				        "fixedPosition": false,
+				        "offsetX": 3,
+				        "offsetY": 12
+				    },
+				    "legend": {
+				        "enabled": true,
+				        "useGraphSettings": true
+				    },
+				    "titles": [
+						{
+						    "color": "#2F4F1C",
+						    "id": "Title-1",
+						    "size": 15,
+						    "text": "Property Prices"
+						}
+				    ],
+				    "dataLoader": {
+				        "url": "/Analysis/GetChartData/" + id, // controller function call
 				        "format": "json",
 				    }
 				});

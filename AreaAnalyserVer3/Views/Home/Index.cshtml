@@ -6,62 +6,116 @@
     <h1>Welcome to the Arealyser</h1>
     <p class="lead">Use the arealyser to research and analyse your chosen area.</p>
     <div class="row">
-       @using (Html.BeginForm())
+        @using (Html.BeginForm())
             {
-        <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
-        <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
-                <br />
+            <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
+            <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
+            <br />
                 <input type="submit" value="Arealyse" />
-       }
+        }
     </div>
-
-    <div id="dvMap" style="width: 500px; height: 500px">
+    <div id="divConfirmDialog" title="Arealyser">
+        <h1 id="demo">Hello</h1>
+    </div>
+    <div id="selectMap" style="width: 500px; height: 500px">
     </div>
 </div>
 
 <script type="text/javascript">
-        // cascading dropdown list for towns by county
-        $("#County").change(function () {
-            $("#TownID").empty();
+    // cascading dropdown list for towns by county
+    $("#County").change(function () {
+        $("#TownID").empty();
 
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("GetTowns")',
-                dataType: 'json',
-                data: { county: $("#County").val() },
-                success: function (townList) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetTowns")',
+            dataType: 'json',
+            data: { county: $("#County").val() },
+            success: function (townList) {
 
-                    $.each(townList, function (i, locale) {
-                        $("#TownID").append('<option value ="'
-                        + locale.TownId + '">'
-                            + locale.Name + ' </option>');
-                    });
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-            return false;
-        })
+                $.each(townList, function (i, locale) {
+                    $("#TownID").append('<option value ="'
+                    + locale.TownId + '">'
+                        + locale.Name + ' </option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+        return false;
+    })
 
 
 </script>
 
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
-        window.onload = function () {
-            var mapOptions = {
-                center: new google.maps.LatLng(53.1424, -7.6921),
-                zoom: 7,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var infoWindow = new google.maps.InfoWindow();
-            var latlngbounds = new google.maps.LatLngBounds();
-            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-            google.maps.event.addListener(map, 'click', function (e) {
-                alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
-            });
+    window.onload = function () {
+        var mapOptions = {
+            center: new google.maps.LatLng(53.1424, -7.6921),
+            zoom: 7,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var infoWindow = new google.maps.InfoWindow();
+        var latlngbounds = new google.maps.LatLngBounds();
+        var map = new google.maps.Map(document.getElementById("selectMap"), mapOptions);
+
+        google.maps.event.addListener(map, 'click', function (e) {
+            // alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
+            myFunction(e);
+            //$('#divConfirmDialog').dialog('open');
+        });
+
+        $('#divConfirmDialog').dialog({
+            dialogClass: 'dialogShadow',
+            resizable: false,
+            height: 100,
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                "Continue": function () {
+                    findId();
+                    $(this).dialog("close");
+                },
+                "Back": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+
+    function findId() {
+        alert("Hoping to pass coords!!");
+    }
+
+    function myFunction(e) {
+        var txt;
+        var lat = e.latLng.lat();
+        var lng = e.latLng.lng();
+        
+        var r = confirm("This the confirm box.\nLatitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
+        if (r == true) {
+            txt = "You pressed OK!";
+            $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("FindNearestTownId", "Analysis")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+                    dataType: "json",
+                    success: function (Redirect) {
+                        alert(Redirect.to)
+                        window.location = Redirect.url;
+                    },
+                    error: function () {
+                        alert('error happened');
+                    }
+                });
+        } else {
+            txt = "You pressed Cancel!";
         }
+        document.getElementById("demo").innerHTML = txt;
+    }
 </script>
 
 
