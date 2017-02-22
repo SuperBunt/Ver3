@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Mail";
+}
+
+<h2>Mail</h2>
+
+<div class="container-fluid">
+    <h1>Mail Server</h1>
+    <p class="lead">This sample app uses the Mail API to read messages in your inbox.</p>
+    @if (Request.IsAuthenticated)
+    {
+        <p>Welcome, @(ViewBag.UserName)!</p>
+    }
+    else
+    {
+        <p><a href="@Url.Action("SignIn", "Home", null, Request.Url.Scheme)" class="btn btn-primary btn-lg">Click here to login</a></p>
+        <p><a href="@Url.Action("SignOut", "Home")" class="btn btn-primary btn-lg">Click here to log out</a></p>
+    }
+</div>

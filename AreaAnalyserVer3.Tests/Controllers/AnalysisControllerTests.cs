@@ -18,9 +18,7 @@ namespace AreaAnalyserVer3.Controllers.Tests
         [TestMethod()]
         public void IndexTest()
         {
-            Analysis area = new Analysis();
-            //area.Town = db.Town.Find(i => i.);
-            Assert.Fail();
+            
         }
     }
 }

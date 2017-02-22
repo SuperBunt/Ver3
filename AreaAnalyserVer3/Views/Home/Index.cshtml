@@ -5,7 +5,7 @@
 <div class="container">
     <h1>Welcome to the Arealyser</h1>
     <p class="lead">Use the arealyser to research and analyse your chosen area.</p>
-    <div class="row">
+    @*<div class="row">
         @using (Html.BeginForm())
             {
             <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
@@ -18,7 +18,30 @@
         <h1 id="demo">Hello</h1>
     </div>
     <div id="selectMap" style="width: 500px; height: 500px">
-    </div>
+    </div>*@
+</div>
+
+<div class="container-fluid">
+    <h1>Mail Server</h1>
+    <p class="lead">This sample app uses the Mail API to read messages in your inbox.</p>
+    @if (Request.IsAuthenticated)
+    {
+        <p>Welcome, @(ViewBag.UserName)!</p>
+        <p><a href="@Url.Action("SignOut", "Home")" class="btn btn-primary btn-lg">Click here to log out</a></p>
+    }
+    else
+    {
+        <p><a href="@Url.Action("SignIn", "Home", null, Request.Url.Scheme)" class="btn btn-primary btn-lg">Click here to login</a></p>       
+    }
+
+    <ul class="nav navbar-nav">
+        
+        @if (Request.IsAuthenticated)
+        {
+            <li>@Html.ActionLink("Inbox", "Inbox", "Home")</li>
+            <li>@Html.ActionLink("Sign Out", "SignOut", "Home")</li>
+        }
+    </ul>
 </div>
 
 <script type="text/javascript">
