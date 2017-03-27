@@ -15,6 +15,9 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 using AreaAnalyserVer3.TokenStorage;
 using Microsoft.Identity.Client;
+using AreaAnalyserVer3.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 [assembly: OwinStartup(typeof(AreaAnalyserVer3.App_Start.StartupOwin))]
 
@@ -33,7 +36,7 @@ namespace AreaAnalyserVer3.App_Start
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
-
+            
             app.UseOpenIdConnectAuthentication(
               new OpenIdConnectAuthenticationOptions
               {

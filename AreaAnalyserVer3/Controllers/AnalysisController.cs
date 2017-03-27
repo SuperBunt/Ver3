@@ -6,8 +6,10 @@ using LinqToWiki.Generated;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Spatial;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -20,7 +22,7 @@ namespace AreaAnalyserVer3.Controllers
 
         // GET: Analysis
         [HttpGet]
-        
+
         public ActionResult Index(string TownID)
         {
             Analysis area = new Analysis(TownID);
@@ -36,24 +38,8 @@ namespace AreaAnalyserVer3.Controllers
             area.Garda = area.Town.FindNearestGardaStation();
             // Retrieve the crimes stats
             area.Crimes = db.AnnualReport.Where(x => x.StationId.Equals(area.Garda.StationId)).OrderBy(x => x.Year).ToList();
-            
-            var wiki = new Wiki("Wiki", "https://en.wikipedia.org", "/w/api.php");
-            string wiki_search = area.Town.Name + ", " + area.Town.County;
 
-            try
-            {
-                area.WikiResults = (from s in wiki.Query.search(wiki_search)
-                                    select new WikiContent { PageTitle = s.title, PageContent = s.snippet }).ToList().Take(5).ToList();
-                foreach(var c in area.WikiResults)
-                {
-                    c.PageContent = c.PageContent.Replace("<span class=\"searchmatch\">", "");
-                    c.PageContent = c.PageContent.Replace("</span>", "");
-                }
-            }
-            catch(ApiErrorException e)
-            {
-                Console.WriteLine(e);
-            }
+            area.WikiResults = GetWiki(area.Town.Name, area.Town.County);
 
             return View(area);
         }
@@ -68,9 +54,7 @@ namespace AreaAnalyserVer3.Controllers
             var houses = (from a in db.PriceRegister
                           where town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(town.County))
                           select a).OrderByDescending(x => x.DateOfSale).ToList();
-
-
-
+            
             var avg = (houses.OrderBy(x => x.DateOfSale)
                .GroupBy(x => new { x.DateOfSale.Year, x.DateOfSale.Month })
                .Select(p => new
@@ -85,11 +69,9 @@ namespace AreaAnalyserVer3.Controllers
         }
 
         // Get Price Register data for chart
-        public JsonResult GetCrimeData(string id)
+        public async Task<JsonResult> GetCrimeData(string id)
         {
             var Town = db.Town.Find(Int32.Parse(id));
-
-
 
             var garda = Town.FindNearestGardaStation();
             var query = db.AnnualReport.Where(x => x.StationId.Equals(garda.StationId)).OrderBy(x => x.Year).ToList();
@@ -111,11 +93,11 @@ namespace AreaAnalyserVer3.Controllers
             });
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(crimelist);
-                        
+
             return Json(crimelist, JsonRequestBehavior.AllowGet);
         }
 
-            
+
         public JsonResult GetCounties()
         {
             var counties = new SelectList(db.Town, "County", "County");
@@ -179,5 +161,40 @@ namespace AreaAnalyserVer3.Controllers
             return HousesInArea;
         }
 
+        private List<WikiContent> GetWiki(string name,string county)
+        {
+            var wiki = new Wiki("Wiki", "https://en.wikipedia.org", "/w/api.php");
+            string wiki_search = name + ", " + county;
+
+            try
+            {
+                //area.WikiResults = (from s in wiki.Query.search(wiki_search)
+                //                    select new WikiContent { PageTitle = s.title, PageContent = s.snippet }).ToList().Take(5).ToList();
+                //foreach (var c in area.WikiResults)
+                //{
+                //    c.PageContent = c.PageContent.Replace("<span class=\"searchmatch\">", "");
+                //    c.PageContent = c.PageContent.Replace("</span>", "");
+                //}
+                
+                   var query = (from s in wiki.Query.search(wiki_search)
+                                select new WikiContent { PageTitle = s.title, PageContent = s.snippet }).ToList().Take(5).ToList();
+
+
+
+                   foreach (var c in query)
+                   {
+                       c.PageContent = c.PageContent.Replace("<span class=\"searchmatch\">", "");
+                       c.PageContent = c.PageContent.Replace("</span>", "");
+                   }
+                   return query;
+              
+            }
+            catch (ApiErrorException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+           
+        }
     }
 }

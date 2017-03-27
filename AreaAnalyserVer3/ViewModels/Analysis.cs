@@ -10,6 +10,8 @@ using System.Data.Entity.Spatial;
 using System.Collections.ObjectModel;
 using System.Web.Mvc;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace AreaAnalyserVer3.ViewModels
 {
@@ -22,8 +24,8 @@ namespace AreaAnalyserVer3.ViewModels
         public Analysis(string TownID)
         {
             sixMonthsAgo = DateTime.Today.AddMonths(-6);
-            housesInArea = GetLocalHouses(TownID);
-            averagePriceLast6mths = housesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Average(p => p.Price);
+            //housesInArea = GetLocalHouses(TownID);
+            // averagePriceLast6mths 
         }
         // fields
         private DateTime sixMonthsAgo;
@@ -37,32 +39,31 @@ namespace AreaAnalyserVer3.ViewModels
         public List<SelectListItem> Counties { get; set; }
         public List<SelectListItem> Townlands { get; set; }
         public List<AnnualReport> Crimes { get; set; }
-        public List<PriceRegister> HousesInArea
-        {
-            get
-            {
-                return housesInArea;
-            }
-            set
-            {
-                housesInArea = value;
+        public List<PriceRegister> HousesInArea {
+            get {
+                var county = db.PriceRegister.Where(x => x.County.Equals(Town.County));
+                //  Town.LocalSpellings is used to allow for irish spellings of the town         
+                var query = (from a in county
+                             where Town.LocalSpellings.Any(word => a.Address.Contains(word))
+                             select a);
+
+                return query.ToList();
             }
         }
         public List<WikiContent> WikiResults { get; set; }
         //public IEnumerable<WikiImage> WikiImages { get; set; }
         public DateTime SixMonthsAgo { get; set; }
         [DisplayName("Avg. price")]
-        public double AveragePriceLast6mths 
+        public double AveragePriceLast6mths
         {
             get
             {
-                return averagePriceLast6mths;
+                if (NumSoldinLast6mths > 0)
+                    return averagePriceLast6mths = housesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Average(p => p.Price);
+                else
+                    return 0;
             }
-            set
-            {
-                averagePriceLast6mths = value;
-            }
-        }
+      }
         [DisplayName("% diff from national average")]
         public int PercentDiff
         {
@@ -71,7 +72,11 @@ namespace AreaAnalyserVer3.ViewModels
                 var national = db.PriceRegister.Where(y => y.DateOfSale > sixMonthsAgo);
                 double nationalAvg = national.Average(p => (p.Price));
                 // double localAvg = HousesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Average(p => (p.Price));
-
+                // If no house sold in last 6 months then the average is 0
+                if (national.Count() == 0)
+                {
+                    return 0;
+                }
                 double diff = nationalAvg - averagePriceLast6mths;
 
                 return Convert.ToInt32((diff / averagePriceLast6mths) * 100);
@@ -82,8 +87,7 @@ namespace AreaAnalyserVer3.ViewModels
         {
             get
             {
-                int count;
-                return count = housesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Count();
+                return housesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Count();
             }
         }
         #region Methods
@@ -92,12 +96,13 @@ namespace AreaAnalyserVer3.ViewModels
         public List<PriceRegister> GetLocalHouses(string id)
         {
             var Town = db.Town.Find(Int32.Parse(id));
+            var county = db.PriceRegister.Where(x => x.County.Equals(Town.County));
             //  Town.LocalSpellings is used to allow for irish spellings of the town         
-            var query = (from a in db.PriceRegister
-                                where Town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(Town.County))
-                                select a).OrderByDescending(x => x.DateOfSale).ToList();
-            
-            return query;
+            var query = (from a in county
+                         where Town.LocalSpellings.Any(word => a.Address.Contains(word))
+                         select a);
+
+            return query.ToList();
         }
 
     }

@@ -7,6 +7,10 @@ namespace AreaAnalyserVer3.Models
 {
     public class WikiContent
     {
+        public WikiContent()
+        {
+        }
+
         public string PageTitle { get; set; }
         public string PageContent { get; set; }
 
@@ -16,8 +20,6 @@ namespace AreaAnalyserVer3.Models
             PageContent = con;
         }
 
-        public WikiContent()
-        {
-        }
+        
     }
 }

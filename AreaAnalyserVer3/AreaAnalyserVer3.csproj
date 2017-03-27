@@ -89,6 +89,18 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Identity.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Identity.Client.1.0.304142221-alpha\lib\net45\Microsoft.Identity.Client.dll</HintPath>
       <Private>True</Private>
@@ -129,6 +141,14 @@
       <HintPath>..\packages\Microsoft.Spatial.6.13.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.4.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -146,6 +166,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -284,10 +308,22 @@
     <Compile Include="Migrations\201612231525357_towns.Designer.cs">
       <DependentUpon>201612231525357_towns.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703221210152_SchoolsBusinesses.cs" />
+    <Compile Include="Migrations\201703221210152_SchoolsBusinesses.Designer.cs">
+      <DependentUpon>201703221210152_SchoolsBusinesses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703251900553_schoolGPS.cs" />
+    <Compile Include="Migrations\201703251900553_schoolGPS.Designer.cs">
+      <DependentUpon>201703251900553_schoolGPS.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AnnualReport.cs" />
+    <Compile Include="Models\Business.cs" />
     <Compile Include="Models\DisplayMessage.cs" />
+    <Compile Include="Models\Email.cs" />
+    <Compile Include="Models\Leaver.cs" />
+    <Compile Include="Models\School.cs" />
     <Compile Include="Models\Town.cs" />
     <Compile Include="Models\GardaStation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -300,6 +336,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="TokenStorage\SessionTokenCache.cs" />
     <Compile Include="ViewModels\Analysis.cs" />
+    <Compile Include="ViewModels\Education.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="amcharts\amcharts.js" />
@@ -548,6 +585,7 @@
     <Content Include="Images\icons\loading.gif" />
     <Content Include="Images\icons\next.png" />
     <Content Include="Images\icons\prev.png" />
+    <Content Include="Images\NoAccess.jpeg" />
     <Content Include="Images\TargetA.png" />
     <Content Include="Images\TargetB.png" />
     <EmbeddedResource Include="Migrations\201612152004069_earlyData.resx">
@@ -558,6 +596,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612231525357_towns.resx">
       <DependentUpon>201612231525357_towns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703221210152_SchoolsBusinesses.resx">
+      <DependentUpon>201703221210152_SchoolsBusinesses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703251900553_schoolGPS.resx">
+      <DependentUpon>201703251900553_schoolGPS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="sampleData.csv" />
     <EmbeddedResource Include="crimeSample.csv" />
@@ -593,6 +637,7 @@
     <EmbeddedResource Include="PPR-ALL.csv" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %283%29.pubxml" />
+    <None Include="Properties\PublishProfiles\arealyser - Web Deploy %284%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy.pubxml" />
     <Content Include="pager\first.png" />
     <Content Include="pager\last.png" />
@@ -603,6 +648,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\googleMap.js" />
     <Content Include="Scripts\historyChart.js" />
+    <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -629,8 +675,68 @@
     <Content Include="Scripts\pager\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\tablesorter\extras\jquery.dragtable.mod.js" />
+    <Content Include="Scripts\tablesorter\extras\jquery.metadata.js" />
+    <Content Include="Scripts\tablesorter\extras\semver-mod.js" />
+    <Content Include="Scripts\tablesorter\extras\semver.js" />
     <Content Include="Scripts\tablesorter\jquery.tablesorter.combined.js" />
     <Content Include="Scripts\tablesorter\jquery.tablesorter.combined.min.js" />
+    <Content Include="Scripts\tablesorter\jquery.tablesorter.js" />
+    <Content Include="Scripts\tablesorter\jquery.tablesorter.widgets.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date-extract.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date-iso8601.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date-month.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date-range.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date-two-digit-year.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date-weekday.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-date.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-duration.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-feet-inch-fraction.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-file-type.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-globalize.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-huge-numbers.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-ignore-articles.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-image.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-input-select.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-metric.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-named-numbers.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-network.js" />
+    <Content Include="Scripts\tablesorter\parsers\parser-roman.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-alignChar.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-build-table.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-chart.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-columns.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-columnSelector.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-cssStickyHeaders.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-currentSort.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-editable.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-filter-formatter-html5.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-filter-formatter-jui.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-filter-formatter-select2.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-filter-type-insideRange.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-filter.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-formatter.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-grouping.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-headerTitles.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-lazyload.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-mark.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-math.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-output.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-pager.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-print.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-reflow.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-repeatheaders.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-resizable.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-saveSort.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-scroller.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-sort2Hash.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-sortTbodies.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-staticRow.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-stickyHeaders.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-storage.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-toggle.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-uitheme.js" />
+    <Content Include="Scripts\tablesorter\widgets\widget-view.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="sorter\asc.gif" />
     <Content Include="sorter\bg.gif" />
@@ -653,35 +759,15 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\PriceRegister\search.cshtml" />
-    <Content Include="Views\PriceRegister\Chart.cshtml" />
-    <Content Include="Views\PriceRegister\GoogleMap.cshtml" />
     <EmbeddedResource Include="StationCoordinates.csv" />
     <Content Include="Views\Analysis\Index.cshtml" />
-    <Content Include="Views\PriceRegister\HousesTable.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\AdminSecure.cshtml" />
     <Content Include="Views\Home\Mail.cshtml" />
-    <Content Include="Views\Home\Inbox.cshtml" />
+    <Content Include="Views\Admin\Inbox.cshtml" />
+    <Content Include="Views\Home\Sent.cshtml" />
+    <Content Include="Views\Admin\NoAccess.cshtml" />
+    <Content Include="Views\Admin\AddTown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -725,6 +811,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
+  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.11\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.11\tools\webjobs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

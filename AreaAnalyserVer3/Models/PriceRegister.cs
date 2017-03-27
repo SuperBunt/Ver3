@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace AreaAnalyserVer3.Models
 {
-    [Table("arealyser_ppr")]
+    [Table("PriceRegister")]
     public class PriceRegister
     {
         public PriceRegister() { }
@@ -20,12 +20,15 @@ namespace AreaAnalyserVer3.Models
         [Column("address")]
         public string Address { get; set; }
         [Column("price")]
+        [DisplayFormat(DataFormatString = " {0:N}", ApplyFormatInEditMode = true)]
         public double Price { get; set; }
         [DisplayName("Date sold")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Column("date_of_sale")]
         public DateTime DateOfSale { get; set; }
         [Column("county")]
+        [Index("IX_County", IsClustered = false)]
+        [MaxLength(16)]
         public string County { get; set; }
         [Column("not_full_market")]
         public int NotFullMarket { get; set; }

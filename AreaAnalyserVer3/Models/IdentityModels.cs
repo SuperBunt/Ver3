@@ -40,6 +40,9 @@ namespace AreaAnalyserVer3.Models
         public DbSet<AnnualReport> AnnualReport { get; set; }
         public DbSet<Offence> Offence { get; set; }
         public DbSet<Town> Town { get; set; }
+        public DbSet<School> School { get; set; }
+        public DbSet<Business> Business { get; set; }
+        public DbSet<Leaver> Leaving { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
