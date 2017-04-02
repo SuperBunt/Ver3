@@ -20,6 +20,11 @@
         @RenderSection("Amcharts");
     }
 
+    @if (IsSectionDefined("School"))
+    {
+        @RenderSection("School");
+    }
+
     <meta name="description" content="Home page" />
 </head>
 <body>
@@ -32,7 +37,7 @@
                     <span class="icon-bar"></span>
                 </button>*@
                 @Html.ActionLink("Arealyser", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Contact", "Contact", "Home", new { @class = "navbar-nav" })
+                @Html.ActionLink("Contact", "Contact", "Home", new { @class = "navbar-brand" })
             </div>
             @*<div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">

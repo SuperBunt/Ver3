@@ -1,0 +1,116 @@
+﻿@model AreaAnalyserVer3.Models.School
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>School</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FeePaying)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FeePaying)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaleEnrol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaleEnrol)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FemaleEnrol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FemaleEnrol)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ethos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ethos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Eircode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Eircode)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Co-ordinates")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GeoLocation.Longitude), @Html.DisplayFor(model => model.GeoLocation.Latitude), 
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SchoolId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

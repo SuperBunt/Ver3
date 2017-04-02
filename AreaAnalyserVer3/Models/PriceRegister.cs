@@ -17,8 +17,10 @@ namespace AreaAnalyserVer3.Models
         // properties
         [Column("id")]
         public int PriceRegisterId { get; set; }
+        public int? TownId { get; set; }
         [Column("address")]
         public string Address { get; set; }
+        public string PostCode { get; set; }
         [Column("price")]
         [DisplayFormat(DataFormatString = " {0:N}", ApplyFormatInEditMode = true)]
         public double Price { get; set; }
@@ -26,12 +28,13 @@ namespace AreaAnalyserVer3.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Column("date_of_sale")]
         public DateTime DateOfSale { get; set; }
-        [Column("county")]
-        [Index("IX_County", IsClustered = false)]
-        [MaxLength(16)]
-        public string County { get; set; }
+        
         [Column("not_full_market")]
-        public int NotFullMarket { get; set; }
+        public int? NotFullMarket { get; set; }
+
+        [ForeignKey("TownId")]
+        public virtual Town LocalTown { get; set; }
+
         public static SelectList counties = new SelectList(new[]
             {
                 new {id="Carlow", Name="Carlow"},
@@ -62,6 +65,7 @@ namespace AreaAnalyserVer3.Models
             },
         "ID", "Name", "Select County"
         );
+        
 
         public override string ToString()
         {

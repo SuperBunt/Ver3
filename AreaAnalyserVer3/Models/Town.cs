@@ -14,12 +14,12 @@ namespace AreaAnalyserVer3.Models
 {
     public class Town
     {
-
         ApplicationDbContext db = new ApplicationDbContext();
         // Constructor
         public Town() {
             LocalBusinesses = new List<Business>();
             Schools = new List<School>();
+            Houses = new List<PriceRegister>();
         }
         //Properties
         public int TownId { get; set; }
@@ -27,35 +27,19 @@ namespace AreaAnalyserVer3.Models
         public int ? GardaId { get; set; }
         public string Name { get; set; }
         public string IrishSpelling { get; set; }
-        [Index("IX_County", IsClustered = false)]
-        [MaxLength(16)]
-        public string County { get; set; }
+        public string OtherSpelling { get; set; }
+        public string PostCode { get; set; }
+        public int? Population { get; set; }
         public DbGeography GeoLocation { get; set; }
+        
         // DB Relationships
         public virtual ICollection<Business> LocalBusinesses { get; set; }
         public virtual ICollection<School> Schools { get; set; }
-        // ForeignKey reference
+        public virtual ICollection<PriceRegister> Houses { get; set; }
+
+        [ForeignKey("GardaId")]
         public virtual GardaStation Garda { get; set; }
-
         #region Methods
-        // List of spelling variations of local area
-        public List<String> LocalSpellings
-        {
-            get
-            {
-                List<String> towns = new List<String>();
-                var coord = GeoLocation;
-
-                var query = from d in db.Town
-                            let distance = d.GeoLocation.Distance(coord)
-                            where distance < 500 // list of towns in 500 meteres
-                            select d.Name;
-
-                towns = query.ToList();
-                return towns;
-            }
-        }
-        
         // Find nearest garda station
         public GardaStation FindNearestGardaStation()
         {
@@ -66,8 +50,7 @@ namespace AreaAnalyserVer3.Models
                                where distance < 50000  // gets garda station in 500 km radius, can be modified when complete list of stations added
                                orderby distance
                                select f).FirstOrDefault();
-                return station;
-            
+                return station;           
         }
         #endregion
     }

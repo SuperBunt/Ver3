@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Web;
@@ -14,9 +16,10 @@ namespace AreaAnalyserVer3.Models
             Towns = new List<Town>();
         }
 
-        [System.ComponentModel.DataAnnotations.Key]
+        [Key]
         public int StationId { get; set; }
-        public string Address { get; set; }
+        [DisplayName("Station")]
+        public string Name { get; set; }
         public DbGeography Point { get; set; }
         
         public virtual ICollection<AnnualReport> Reports { get; set; }

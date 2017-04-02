@@ -26,7 +26,7 @@ namespace AreaAnalyserVer3.Controllers
         public ActionResult Index(string TownID)
         {
             Analysis area = new Analysis(TownID);
-            ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList(), "County", "County");
+            ViewBag.County = new SelectList(PriceRegister.counties);
             ViewBag.TownID = new SelectList(
             new List<SelectListItem>
             {
@@ -39,7 +39,7 @@ namespace AreaAnalyserVer3.Controllers
             // Retrieve the crimes stats
             area.Crimes = db.AnnualReport.Where(x => x.StationId.Equals(area.Garda.StationId)).OrderBy(x => x.Year).ToList();
 
-            area.WikiResults = GetWiki(area.Town.Name, area.Town.County);
+            area.WikiResults = GetWiki(area.Town.Name, "Dublin");
 
             return View(area);
         }
@@ -50,10 +50,10 @@ namespace AreaAnalyserVer3.Controllers
             var town = db.Town.Find(Int32.Parse(id));
             //  Town.LocalSpellings is used to allow for irish spellings of the town 
 
-
-            var houses = (from a in db.PriceRegister
-                          where town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(town.County))
-                          select a).OrderByDescending(x => x.DateOfSale).ToList();
+            var houses = db.PriceRegister.Where(h => h.Address.Contains(id));
+            //var houses = (from a in db.PriceRegister
+            //              where town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(town.County))
+            //              select a).OrderByDescending(x => x.DateOfSale).ToList();
             
             var avg = (houses.OrderBy(x => x.DateOfSale)
                .GroupBy(x => new { x.DateOfSale.Year, x.DateOfSale.Month })
@@ -71,11 +71,16 @@ namespace AreaAnalyserVer3.Controllers
         // Get Price Register data for chart
         public async Task<JsonResult> GetCrimeData(string id)
         {
-            var Town = db.Town.Find(Int32.Parse(id));
+            List<AnnualReport> listReports = new List<AnnualReport>();
+            using (var db = new ApplicationDbContext())
+            {
+                var Town = db.Town.Find(Int32.Parse(id));
 
-            var garda = Town.FindNearestGardaStation();
-            var query = db.AnnualReport.Where(x => x.StationId.Equals(garda.StationId)).OrderBy(x => x.Year).ToList();
-            var crimelist = query.Select(r => new
+                listReports = Town.Garda.Reports.ToList();
+                //query = db.AnnualReport.Where(x => x.StationId.Equals(garda.StationId)).OrderBy(x => x.Year).ToList();
+            }
+            
+            var crimelist = listReports.Select(r => new
             {
                 r.Year,
                 r.NumAttemptedMurderAssault,
@@ -98,18 +103,18 @@ namespace AreaAnalyserVer3.Controllers
         }
 
 
-        public JsonResult GetCounties()
+        public JsonResult GetCounties() // XXXX Dublin
         {
             var counties = new SelectList(db.Town, "County", "County");
-            return Json(db.Town.Select(x => x.County.Distinct()).ToList(), JsonRequestBehavior.AllowGet);
+            return Json(db.Town.Select(x => x.Name.Distinct()).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        //Used for populating the drop down lists
+        //Used for populating the drop down lists       ******** XXxx Dublin
         public JsonResult GetTowns(string county)
         {
             db.Configuration.ProxyCreationEnabled = false;
             var query = from d in db.Town
-                        where d.County.Equals(county)
+                        where d.Name.Equals(county)
                         select new { TownId = d.TownId, Name = d.Name };
 
             IEnumerable<Object> townList = query;
@@ -155,7 +160,7 @@ namespace AreaAnalyserVer3.Controllers
             var Town = db.Town.Find(Int32.Parse(id));
             //  Town.LocalSpellings is used to allow for irish spellings of the town         
             var HousesInArea = (from a in db.PriceRegister
-                                where Town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(Town.County))
+                                where Town.IrishSpelling.Any(word => a.Address.Contains(word) && a.PostCode.Equals(Town.Name))
                                 select a).OrderByDescending(x => x.DateOfSale).ToList();
 
             return HousesInArea;

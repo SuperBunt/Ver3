@@ -25,7 +25,7 @@ namespace AreaAnalyserVer3.Models
              // : base("DefaultConnection", throwIfV1Schema: false)
              : base("AzureConnection", throwIfV1Schema: false)
         {
-        
+            //Database.SetInitializer<ApplicationDbContext>(new DropCreateDatabaseAlways<ApplicationDbContext>());
         }
 
         public static ApplicationDbContext Create()

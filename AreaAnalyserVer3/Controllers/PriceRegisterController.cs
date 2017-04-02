@@ -26,7 +26,7 @@ namespace AreaAnalyserVer3.Controllers
 
             if (!string.IsNullOrEmpty(county))
             {
-                houses = houses.Where(x => x.County == county);
+                houses = houses.Where(x => x.Address.Contains(county));
             }
             return View(houses);
         }

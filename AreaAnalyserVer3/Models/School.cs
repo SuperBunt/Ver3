@@ -18,13 +18,15 @@ namespace AreaAnalyserVer3.Models
         public int ? TownId { get; set; }
         [Required]
         public string Name { get; set; }
+        [MaxLength(5)]
+        public string Level { get; set; }
         public string Type { get; set; }
         public string County { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public char Gender { get; set; }
-        [MaxLength(10)]
+        [MaxLength(18)]
         public char? AttendanceType { get; set; }
         public int? FeePaying { get; set; }
         public int? MaleEnrol { get; set; }

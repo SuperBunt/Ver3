@@ -17,6 +17,7 @@ namespace AreaAnalyserVer3.ViewModels
 
         public Education(int id)
         {
+            TownId = id;
             localSchools = new List<School>();
             feederInfo = new List<Leaver>();
         }

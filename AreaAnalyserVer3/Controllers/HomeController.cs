@@ -30,16 +30,16 @@ namespace AreaAnalyserVer3.Controllers
         public ActionResult Index()
         {
             // Hack to debug seed method
-            var conf = new Migrations.Configuration();
-            conf.SeedDebug(db);
+           // var conf = new Migrations.Configuration();
+           // conf.SeedDebug(db);
 
-            ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList().OrderBy(x => x.County), "County", "County");
-            ViewBag.TownID = new SelectList(
-            new List<SelectListItem>
-            {
-                new SelectListItem{Text="Choose area", Value="id"}
-            }
-            , "Value", "Text"); // First parameter is the display text on screen, Second parameter is the value
+            //ViewBag.County = new SelectList(PriceRegister.counties);
+            //ViewBag.TownID = new SelectList(
+            //new List<SelectListItem>
+            //{
+            //    new SelectListItem{Text="Choose area", Value="id"}
+            //}
+            //, "Value", "Text"); // First parameter is the display text on screen, Second parameter is the value
 
             return View();
         }
@@ -102,7 +102,7 @@ namespace AreaAnalyserVer3.Controllers
         {
             db.Configuration.ProxyCreationEnabled = false;
             var query = from d in db.Town
-                        where d.County.Equals(county)
+                        where d.Name.Equals(county)
                         select new { TownId = d.TownId, Name = d.Name };
 
             IEnumerable<Object> townList = query;

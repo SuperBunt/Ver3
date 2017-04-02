@@ -58,6 +58,7 @@
 /// <reference path="../amcharts/themes/patterns.js" />
 /// <reference path="../amcharts/xy.js" />
 /// <reference path="bootstrap.min.js" />
+/// <reference path="education.js" />
 /// <reference path="googlemap.js" />
 /// <reference path="historychart.js" />
 /// <reference path="jquery.tablesorter.min.js" />

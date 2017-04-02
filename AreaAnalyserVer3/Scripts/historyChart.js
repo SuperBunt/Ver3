@@ -71,20 +71,20 @@ function myFunction(e) {
 
 
 
-    $.ajax({
-        type: "GET",
-        url: '@Url.Action("FindNearestTownId", "Analysis")',
-        contentType: "application/json; charset=utf-8",
-        data: { lat: e.latLng.lat(), lng: e.latLng.lng() },
-        dataType: "json",
-        success: function (Redirect) {
-            alert(Redirect.to)
-            window.location = Redirect.url;
-        },
-        error: function () {
-            alert('error happened');
-        }
-    });
+    //$.ajax({
+    //    type: "GET",
+    //    url: '@Url.Action("FindNearestTownId", "Analysis")',
+    //    contentType: "application/json; charset=utf-8",
+    //    data: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+    //    dataType: "json",
+    //    success: function (Redirect) {
+    //        alert(Redirect.to)
+    //        window.location = Redirect.url;
+    //    },
+    //    error: function () {
+    //        alert('error happened');
+    //    }
+    //});
 }
 
 

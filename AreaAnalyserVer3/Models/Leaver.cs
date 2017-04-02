@@ -32,6 +32,7 @@ namespace AreaAnalyserVer3.Models
         public int? QUB { get; set; }
         public int? UU { get; set; }
         public int? BlanchIT { get; set; }
+        public int? GMIT { get; set; }
         public int? NatCol { get; set; }
         public int? DIT { get; set; }
         [DisplayName("IT Tallaght")]
@@ -63,7 +64,7 @@ namespace AreaAnalyserVer3.Models
         public int? NCAD{ get; set; }
         public int? RCSI{ get; set; }
         public int? Shannon { get; set; }
-        public int DEIS { get; set; }
+        
         [DisplayFormat(DataFormatString = "{0:n0}%", ApplyFormatInEditMode = true)]
         public double Progressed { get; set; }
 

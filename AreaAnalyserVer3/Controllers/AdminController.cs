@@ -63,7 +63,7 @@ namespace AreaAnalyserVer3.Controllers
         //GET: Admin/AddTown
         public ActionResult AddTown()
         {
-            ViewBag.County = new SelectList(db.Town.GroupBy(t => t.County).Select(g => g.FirstOrDefault()).ToList().OrderBy(x => x.County), "County", "County");
+            ViewBag.County = new SelectList(PriceRegister.counties);
             string latitude = ViewBag.Latitude;
             string longitude = ViewBag.Longitude;
 
