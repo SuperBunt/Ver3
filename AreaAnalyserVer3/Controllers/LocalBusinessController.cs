@@ -105,7 +105,7 @@ namespace AreaAnalyserVer3.Controllers
             }
         }
 
-        private List<Business> GetLocalBusiness(int id, string name, string county)
+        public static List<Business> GetLocalBusiness(int id, string name, string county)
         {
             WebRequest request = WebRequest.Create(
               "http://www.localbusinesspages.ie/area.asp?area="+name+"&county="+county);
@@ -161,8 +161,11 @@ namespace AreaAnalyserVer3.Controllers
                 // Remove first 3 elements
                 int remove = Math.Min(list.Count, 3);
                 list.RemoveRange(0, remove);
+                using (var db = new ApplicationDbContext())
+                {
+                    list.ForEach(b => db.Business.Add(b));
+                }
                 return list;
-                //list.ForEach(b => db.Business.Add(b));
             }
             return null;
         }

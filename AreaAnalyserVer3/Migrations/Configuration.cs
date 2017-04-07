@@ -32,9 +32,9 @@ namespace AreaAnalyserVer3.Migrations
             //InsertGardaStations();
             //InsertCrime(context);
 
-           InsertPrimarySchools();
-           InsertPostPrimarySchools();
-           InsertFeederInfo(context);
+            //InsertPrimarySchools();
+            //InsertPostPrimarySchools();
+            InsertFeederInfo(context);
 
         }
 
@@ -73,12 +73,12 @@ namespace AreaAnalyserVer3.Migrations
                             //NewTown.GardaId = (int?)query;
                             context.Town.Add(NewTown);
                         }
-                        catch (Exception  e)
+                        catch (Exception e)
                         {
-                            Console.WriteLine("Reading towns: "+e);
-                            
+                            Console.WriteLine("Reading towns: " + e);
+
                         }
-                        
+
                     }
                 }
 
@@ -241,7 +241,7 @@ namespace AreaAnalyserVer3.Migrations
             {
                 string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/DubStations.csv";
                 var towns = (from town in context.Town
-                            select new { town.GeoLocation, town.Name }).ToList();
+                             select new { town.GeoLocation, town.Name }).ToList();
                 using (StreamReader reader = new StreamReader(file, Encoding.Default))
                 {
                     CsvReader csvReader = new CsvReader(reader);
@@ -493,13 +493,13 @@ namespace AreaAnalyserVer3.Migrations
                                     NewSchool.GeoLocation = CreatePoint(latDbl, lngDbl);
                                     var query = (from f in towns
                                                  let distance = f.GeoLocation.Distance(NewSchool.GeoLocation)
-                                                 where distance < 10000  // gets nearest town in 10 km radius
+                                                 where distance < 30000  // gets nearest town in 30 km radius
                                                  orderby distance
                                                  select f.TownId).FirstOrDefault();
                                     NewSchool.TownId = (int?)query;
+                                    context.School.Add(NewSchool);
                                 }
 
-                                context.School.Add(NewSchool);
                             }
                             catch (FormatException e)
                             {
@@ -532,7 +532,8 @@ namespace AreaAnalyserVer3.Migrations
         {
             string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Education/FeederTable.csv";
             var schools = (from sch in context.School
-                           select new { sch.SchoolId, sch.Name }).ToList();
+                           where sch.Level.Equals("post")
+                           select new { sch.SchoolId, sch.Name });
 
             try
             {
@@ -549,7 +550,7 @@ namespace AreaAnalyserVer3.Migrations
                         {
                             Leaver NewLeaver = new Leaver();
                             NewLeaver.Year = 2015;
-                            NewLeaver.Name = csvReader.GetField<string>(0);
+
                             NewLeaver.SatLeaving = csvReader.GetField<int>(1);
                             NewLeaver.UCD = csvReader.GetField<int?>(2);
                             NewLeaver.TCD = csvReader.GetField<int?>(3);
@@ -583,14 +584,16 @@ namespace AreaAnalyserVer3.Migrations
                             NewLeaver.RCSI = csvReader.GetField<int?>(31);
                             NewLeaver.Shannon = csvReader.GetField<int?>(32);
                             NewLeaver.Progressed = csvReader.GetField<double>(34);
-                            string[] name = new string[3];
-                            name = NewLeaver.Name.Split(',');
+                            NewLeaver.Name = csvReader.GetField<string>(0);
+                            NewLeaver.Name = NewLeaver.Name.TrimStart('*');
+                            NewLeaver.Name = NewLeaver.Name.Split(',')[0];
                             NewLeaver.SchoolId = (from i in schools
-                                                  where i.Name.ToUpper().Equals(name[0].ToUpper())
+                                                  where i.Name.ToUpper().Equals(NewLeaver.Name.ToUpper())
                                                   select i.SchoolId).Cast<int?>().FirstOrDefault();
 
                             NewLeaver.NumAccepted = csvReader.GetField<int>(33);
                             context.Leaving.Add(NewLeaver);
+
                         }
                         catch (FormatException e)
                         {
@@ -671,10 +674,8 @@ namespace AreaAnalyserVer3.Migrations
         internal static string MakeAddress(string[] lines)
         {
             char[] delim = new char[] { ',' };
-            //string concat = string.Format($"{lines[0]}, {lines[1]}, {lines[2]},{lines[3]}");
-            //NewSchool.Address = concat.TrimEnd(',');
             lines = lines.Where(item => item != string.Empty).ToArray();
-            string result = string.Join(",", lines);
+            string result = string.Join(", ", lines);
 
             return result;
         }

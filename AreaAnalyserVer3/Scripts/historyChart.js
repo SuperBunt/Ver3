@@ -188,7 +188,7 @@ function generateChart() {
     }
 }
 
-function crimeChart() {
+function generateCharts() {
     var id = document.getElementById('townId').value
     var crimeUrl = "/Analysis/GetCrimeData/" + id
     var chart1 = AmCharts.makeChart("chartcrime",

@@ -1,7 +1,7 @@
 ﻿@model  AreaAnalyserVer3.ViewModels.Analysis
 
 @{
-    ViewBag.Title = "Analysis";
+    ViewBag.Title = "Index";
 }
 
 @section Amcharts {
@@ -11,267 +11,322 @@
     @Scripts.Render("~/amcharts/plugins/dataloader/dataloader.min.js")
     @Scripts.Render("~/Scripts/historyChart.js")
 
-    <!-- Tablesorter: required -->
-    <link rel="stylesheet" href="../css/theme.green.css">
+    @*@Scripts.Render("~/Scripts/jquery.tablesorter.min.js")
+        @Scripts.Render("~/Scripts/jquery.tablesorter.pager.js")*@
 
-    @Scripts.Render("~/Scripts/tablesorter/jquery.tablesorter.js")
-    @Scripts.Render("~/Scripts/tablesorter/jquery.tablesorter.widgets.js")
-    @Scripts.Render("~/Scripts/tablesorter/widgets/widget-pager.js")
-    <!-- Tablesorter: optional -->
-    @*@Scripts.Render("~/Scripts/pager/jquery.tablesorter.pager.js")*@
-    @Scripts.Render("~/Scripts/pager/jquery.tablesorter.pager.css")
-
-
+    @Scripts.Render("~/Scripts/tablesorter/jquery.tablesorter.combined.min.js")
+    @Scripts.Render("~/Scripts/pager/jquery.tablesorter.pager.js")
     @Scripts.Render("~/Content/theme.green.css")
     @*<link href="~/Scripts/pager/jquery.tablesorter.pager.css" rel="stylesheet" />*@
 
-    <script>
-        $(function () {
-            if (typeof jQuery != 'undefined') {
-                alert("jQuery library is loaded!");
-            }
-            else
-            {
-                alert("jQuery library is not found!");
-            }
-            var $table = $("#pprTable");
 
-            $table
-                .tablesorter({ widthFixed: true, widgets: ['zebra', 'filter', 'pager'] })
+    <script type="text/javascript">
+        $(function () {
+            $("table")
+                .tablesorter({ widthFixed: true, widgets: ['zebra'] })
                 .tablesorterPager({ container: $("#pager") });
         });
     </script>
+
 }
 
-<ul class="nav nav-pills nav-justified">
-    <li class="active"><a data-toggle="pill" href="#home">Overview</a></li>
-    <li><a data-toggle="pill" href="#Property">Property</a></li>
-    <li><a data-toggle="pill" href="#Crime">Crime</a></li>
-</ul>
-
-@*<div class="container">
-        @using (Html.BeginForm())
-                {
-            <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
-                    <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
-                    <br />
-                    <input type="submit" value="Arealyse" />
-        }
-    </div>*@
-
-
-
-<div class="tab-content">
-
-    <div id="home" class="tab-pane fade in active">
-
-
-        <h1>@Html.DisplayFor(m => m.Town.Name)</h1>
-        @*<input id="address" type="text" value="@Html.DisplayFor(m => m.Address)" hidden>*@
-        @*<input type="text" id="latitude" value=@Html.Raw(Model.Town.GeoLocation.Latitude) hidden />
-        <input type="text" id="longitude" value=@Html.Raw(Model.Town.GeoLocation.Longitude) hidden />*@
-        <input type="text" id="townId" value=@Html.Raw(Model.Town.TownId) hidden />
-
-
-        @foreach (var item in Model.WikiResults)
-            {
-            <h3><a href="@string.Format("https://en.wikipedia.org/wiki/{0}", @item.PageTitle)">@item.PageTitle</a></h3>
-
-            <p>@item.PageContent</p>
-        }
-
-
+<div class="col-md-3">
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a data-toggle="pill" href="#Map">Map</a></li>
+        <li><a data-toggle="pill" href="#Home">Overview</a></li>
+        <li><a data-toggle="pill" href="#Property">Property</a></li>
+        <li><a data-toggle="pill" href="#Crime">Crime</a></li>
+        <li><a data-toggle="pill" href="#Education">Education</a></li>
+    </ul>
     </div>
 
-    <div id="Property" class="tab-pane fade">
-        <div class="container-fluid">
-            <div id="chartdiv" style="width: 100%; height: 600px"></div>
+    <div class="tab-content col-md-9">
+
+        <div id="Home" class="tab-pane fade">
+
+
+            <h1>@Html.DisplayFor(m => m.Town.Name)</h1>
+            @*<input id="address" type="text" value="@Html.DisplayFor(m => m.Address)" hidden>*@
+            <input type="text" id="latitude" value=@Html.Raw(Model.Town.GeoLocation.Latitude) hidden />
+            <input type="text" id="longitude" value=@Html.Raw(Model.Town.GeoLocation.Longitude) hidden />
+            <input type="text" id="townId" value=@Html.Raw(Model.Town.TownId) hidden />
+            @*@Html.ActionLink("Back to search", "search", "PriceRegister", null, null)*@
+
+
+            @foreach (var item in Model.WikiResults)
+            {
+                <h3><a href="@string.Format("https://en.wikipedia.org/wiki/{0}", @item.PageTitle)">@item.PageTitle</a></h3>
+
+                <p>@item.PageContent</p>
+            }
+
+
         </div>
-        <div class="container">
-            <h2>Stats</h2>
+
+        @*Map container*@
+        <div id="Map" class="tab-pane fade in active">
             <div class="container-fluid">
-                <br>
-                <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#myCarousel" data-slide-to="1"></li>
-                        <li data-target="#myCarousel" data-slide-to="2"></li>
 
-                    </ol>
+                <div id="localMap" style="width: 600px; height: 600px; background-color: yellow;"> </div>
 
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner center-block" role="listbox">
+            </div>
+        </div>
 
-                        <div class="item active">
-                            <h2>@Html.DisplayNameFor(m => m.AveragePriceLast6mths)</h2>
-                            <h3>@Html.DisplayFor(m => m.AveragePriceLast6mths)</h3>
+
+
+        <div id="Property" class="tab-pane fade">
+            <div class="container-fluid">
+                <div id="chartdiv" style="width: 100%; height: 600px"></div>
+            </div>
+            <div class="container">
+                <h2>Stats</h2>
+                <div class="container-fluid">
+                    <br>
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                            <li data-target="#myCarousel" data-slide-to="2"></li>
+
+                        </ol>
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox">
+
+                            <div class="item active">
+                                <h2>@Html.DisplayNameFor(m => m.AveragePriceLast6mths)</h2>
+                                <h3>@Html.DisplayFor(m => m.AveragePriceLast6mths)</h3>
+                            </div>
+
+                            <div class="item ">
+                                <h2>@Html.DisplayNameFor(m => m.NumSoldinLast6mths)</h2>
+                                <h3>@Html.DisplayFor(m => m.NumSoldinLast6mths)</h3>
+                            </div>
+
+                            <div class="item">
+                                <h2>@Html.DisplayNameFor(m => m.PercentDiff)</h2>
+                                <h3>@Html.DisplayFor(m => m.PercentDiff)</h3>
+                            </div>
+
                         </div>
 
-                        <div class="item ">
-                            <h2>@Html.DisplayNameFor(m => m.NumSoldinLast6mths)</h2>
-                            <h3>@Html.DisplayFor(m => m.NumSoldinLast6mths)</h3>
-                        </div>
-
-                        <div class="item">
-                            <h2>@Html.DisplayNameFor(m => m.PercentDiff)</h2>
-                            <h3>@Html.DisplayFor(m => m.PercentDiff)</h3>
-                        </div>
-
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
+                </div>
 
-                    <!-- Left and right controls -->
-                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+            </div>
+
+            <div class="container">
+                <table id="pprTable" class="table table-striped tablesorter">
+                    @if (Model.HousesInArea != null)
+            {
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.Display("Date Sold")
+                                </th>
+                                <th>
+                                    @Html.Display("Address")
+                                </th>
+                                <th>
+                                    @Html.Display("Price")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{
+                                foreach (var item in Model.HousesInArea)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateOfSale)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Address)
+                                        </td>
+                                        <td>
+                                            € @Html.DisplayFor(modelItem => item.Price)
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                                }
+                </table>
+                <div id="pager" class="pager">
+                    <form>
+
+                        <img src="~/Images/icons/first.png" class="first" />
+                        <img src="~/Images/icons/prev.png" class="prev" />
+                        <input type="text" class="pagedisplay" />
+                        <img src="~/Images/icons/next.png" class="next" />
+                        <img src="~/Images/icons/last.png" class="last" />
+                        <select class="pagesize">
+                            <option selected="selected" value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                        </select>
+                    </form>
                 </div>
             </div>
+        </div>
+
+
+
+        <div id="Crime" class="tab-pane fade">
+
+            <h4>Crime Stats</h4>
+            <h5>Nearest station : <span>@Html.DisplayFor(m => m.Garda.Name)</span></h5>
+
+            <div id="chartcrime" style="width: 100%; height: 600px; "></div>
+
+            <table class="table table-striped">
+                @if (Model.Crimes != null)
+            {
+                    <tr>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Attempted murder/assaults")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Burglaries")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Damage")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Dangerous acts")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Drug offences")
+                        </th>
+                        <th class="col-md-2">
+                            @Html.DisplayName("Year")
+                        </th>
+                    </tr>
+
+                    foreach (var item in Model.Crimes)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumAttemptedMurderAssault)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumBurglary)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumDamage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumDangerousActs)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumDrugs)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Year)
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
 
         </div>
-        <p>Filter any column: <input class="search" type="search" data-column="any"></p>
-        <div class="container">
 
-
-            @if (Model.HousesInArea != null)
-            {
-                <table id="pprTable" class="tablesorter table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.Display("Date Sold")
-                            </th>
-                            <th class="sorter-false">
-                                @Html.Display("Address")
-                            </th>
-                            <th class="filter-false">
-                                @Html.Display("Price")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @{
-                            foreach (var item in Model.HousesInArea)
-                            {
-
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DateOfSale)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Address)
-                                    </td>
-                                    <td>
-                                        € @Html.DisplayFor(modelItem => item.Price)
-                                    </td>
-
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-                            }
-            <div id="pager" class="pager">
-                <form>
-
-                    <img src="~/Images/icons/first.png" class="first" />
-                    <img src="~/Images/icons/prev.png" class="prev" />
-                    <input type="text" class="pagedisplay" />
-                    <img src="~/Images/icons/next.png" class="next" />
-                    <img src="~/Images/icons/last.png" class="last" />
-                    <select class="pagesize">
-                        <option selected="selected" value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="40">40</option>
-                    </select>
-                </form>
+        @*Education partial*@
+        <div id="Education" class="tab-pane fade in active">
+            <div class="container-fluid">
+                @Html.Partial("Education")
             </div>
         </div>
-        <p class="small">Data obtained from Property Services Regulatory Authority</p>
-    </div>
+        
 
-    <div id="Crime" class="tab-pane fade">
-
-        <h4>Crime Stats</h4>
-        <h5>Nearest station : <span>@Html.DisplayFor(m => m.Garda.Address)</span></h5>
-
-        <div id="chartcrime" style="width: 100%; height: 600px; "></div>
-
-        <table class="table table-striped">
-            @if (Model.Crimes != null)
-            {
-                <tr>
-                    <th class="col-md-2">
-                        @Html.DisplayName("Attempted murder/assaults")
-                    </th>
-                    <th class="col-md-2">
-                        @Html.DisplayName("Burglaries")
-                    </th>
-                    <th class="col-md-2">
-                        @Html.DisplayName("Damage")
-                    </th>
-                    <th class="col-md-2">
-                        @Html.DisplayName("Dangerous acts")
-                    </th>
-                    <th class="col-md-2">
-                        @Html.DisplayName("Drug offences")
-                    </th>
-                    <th class="col-md-2">
-                        @Html.DisplayName("Year")
-                    </th>
-                </tr>
-
-                foreach (var item in Model.Crimes)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumAttemptedMurderAssault)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumBurglary)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumDamage)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumDangerousActs)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumDrugs)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Year)
-                        </td>
-                    </tr>
-                }
-            }
-        </table>
+        @*}*@
 
     </div>
 
+    @section map {
+        <script>
+            var name = '@Model.Town.Name';
+            $
+            $(document).ready(function () {
+                generateCharts();
+                $("h1").text(name);
+            });
+        </script>
+    }
 
-
-    @*}*@
-
-</div>
-
-@section map {
-    <script>
-        var name = '@Model.Town.Name';
-        $
-        $(document).ready(function () {
-            crimeChart();
-            $("h1").text(name);
-        });
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
+            type="text/javascript">
     </script>
-}
 
+    <script type="text/javascript">
+        //declare a variable
+        var markers = [];
+        var id = document.getElementById('townId').value;
+        $.ajax({
+            async: false,
+            type: "POST",
+            dataType: "json",
+            url: '@Url.Action("GetMarkers", "Analysis")' + '?Id=' + id,
+            data: '{}',
+            success: function (result) {
+                //get address from controller action.....
 
+                markers = result.AddressResult;
+                alert("success getting markers");
+            }
 
+        });
+
+        function initMap() {
+            var myLatLong = { lat: @Model.Town.GeoLocation.Latitude, lng: @Model.Town.GeoLocation.Longitude };
+            var mapOptions = {
+                center: myLatLong,
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var infoWindow = new google.maps.InfoWindow();
+            var latlngbounds = new google.maps.LatLngBounds(new google.maps.LatLng(54.668922, -7.0100274), new google.maps.LatLng(55.121921664, -6.5620904));
+            var map = new google.maps.Map(document.getElementById("localMap"), mapOptions);
+            setMarkers(map, markers);
+
+        }
+
+        function setMarkers(map, markers) {
+
+            for (var i = 0; i < markers.length; i++) {
+                //alert("success getting marker "+[i]);
+                var data = markers[i];
+                var siteLatLng = new google.maps.LatLng(data.Latitude, data.Longitude);
+                var marker = new google.maps.Marker({
+                    position: siteLatLng,
+                    map: map,
+                    title: data.Description,
+                    icon: data.icon
+                });
+
+                var contentString = "Some content";
+
+                google.maps.event.addListener(marker, "click", function (e) {
+                    //myFunction(this.id);
+                    infowindow.setContent(this.title);
+                    infowindow.open(map, this);
+                });
+            }
+        }
+
+    </script>

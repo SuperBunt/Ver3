@@ -665,10 +665,11 @@
     <Content Include="pager\next.png" />
     <Content Include="pager\pager.css" />
     <Content Include="pager\prev.png" />
+    <Content Include="Scripts\analysisMap.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\education.js" />
-    <Content Include="Scripts\googleMap.js" />
+    <Content Include="Scripts\homeMaps.js" />
     <Content Include="Scripts\historyChart.js" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
@@ -783,7 +784,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <EmbeddedResource Include="StationCoordinates.csv" />
-    <Content Include="Views\Analysis\Index.cshtml" />
+    <Content Include="Views\Analysis\IndexVer1.cshtml" />
     <Content Include="Views\Admin\AdminSecure.cshtml" />
     <Content Include="Views\Home\Mail.cshtml" />
     <Content Include="Views\Admin\Inbox.cshtml" />
@@ -793,6 +794,8 @@
     <Content Include="Views\Education\Index.cshtml" />
     <Content Include="Views\Education\Details.cshtml" />
     <Content Include="Views\LocalBusiness\Index.cshtml" />
+    <Content Include="Views\Analysis\Index.cshtml" />
+    <Content Include="Views\Analysis\Education.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

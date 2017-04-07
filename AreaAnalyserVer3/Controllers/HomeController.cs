@@ -30,8 +30,8 @@ namespace AreaAnalyserVer3.Controllers
         public ActionResult Index()
         {
             // Hack to debug seed method
-           // var conf = new Migrations.Configuration();
-           // conf.SeedDebug(db);
+            var conf = new Migrations.Configuration();
+            conf.SeedDebug(db);
 
             //ViewBag.County = new SelectList(PriceRegister.counties);
             //ViewBag.TownID = new SelectList(
@@ -95,7 +95,20 @@ namespace AreaAnalyserVer3.Controllers
             return View(model);
         }
 
-        
+        //Populate the markers
+        public JsonResult GetMarkers()
+        {
+            var towns = from t in db.Town
+                        select t;
+            // Create a ist of merkers from the town data
+            var markers = new List<Object>();
+            foreach(var t in towns)
+            {
+                markers.Add(new  { Id = t.TownId,  Latitude = t.GeoLocation.Latitude, Longitude = t.GeoLocation.Longitude, Description = t.Name });
+            }
+
+            return Json(new { AddressResult = markers });
+        }
 
         //Used for populating the drop down lists
         public JsonResult GetTowns(string county)

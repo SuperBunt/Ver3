@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Research &Aacute; Analyse your chosen area</title>
+    <title>@ViewBag.Title - Research &amp; Analyse your chosen area</title>
     @*BE AWARE OF THE POSITION OF EACH SCRIPT, CAN HAVE KNOCK-ON EFFECTS IF NOT IN CORRECT ORDER*@
 
     @Scripts.Render("~/bundles/modernizr")
@@ -51,7 +51,7 @@
     </div>
     <div id="mainHeader" class="jumbotron my-header">
         <div class="container">
-            <h1 class="pull-left"> Arealyser </h1>
+            <h1 class="pull-left"> Arealyser&nbsp;&nbsp; </h1>
             <a href="@Url.Action("Index", "Home", null)" class="">
                 <img src="~/Images/TargetA.png" alt="Return to home" style="width: 90px;">
             </a>
@@ -62,21 +62,24 @@
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Arealyser</p>
+            <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @RenderSection("scripts", required: false)*@
 
 </body>
+
 @if (IsSectionDefined("map"))
 {
     @RenderSection("map");
 }
 
-    @*@if (IsSectionDefined("Scripts"))
-        {
-            @RenderSection("Scripts");
-        }*@
+@if (IsSectionDefined("education"))
+{
+    @RenderSection("education");
+}
+
 </html>

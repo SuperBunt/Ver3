@@ -21,10 +21,14 @@ namespace AreaAnalyserVer3.ViewModels
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
+        public Analysis() {
+            sixMonthsAgo = DateTime.Today.AddMonths(-6);
+        }
+
         public Analysis(string TownID)
         {
             sixMonthsAgo = DateTime.Today.AddMonths(-6);
-            AreaName = TownID;
+            //AreaName = TownID;
             //housesInArea = GetLocalHouses(TownID);
             // averagePriceLast6mths 
         }
@@ -32,22 +36,24 @@ namespace AreaAnalyserVer3.ViewModels
         private DateTime sixMonthsAgo;
         private List<PriceRegister> housesInArea;
         private double averagePriceLast6mths;
+        
+
 
         // Properties
         //public String Address { get; set; }
         public Town Town { get; set; }
+        public int NumBusinesses;
+        public int NumSchools;
         public string AreaName { get; set; }
         public GardaStation Garda { get; set; }
+
         public List<SelectListItem> Counties { get; set; }
-        public List<SelectListItem> Townlands { get; set; }
+        public List<Business> Businesses { get; set; }
         public List<AnnualReport> Crimes { get; set; }
+        public List<School> Schools { get; set; }
+
         public List<PriceRegister> HousesInArea {
             get {
-                //var county = db.PriceRegister.Where(x => x.t.Equals(Town.County));
-                //  Town.LocalSpellings is used to allow for irish spellings of the town         
-                //var query = (from a in county
-                //             where Town.LocalSpellings.Any(word => a.Address.Contains(word))
-                //             select a);
                 var query = db.PriceRegister.Where(x => x.Address.Contains(AreaName));
 
                 return query.ToList();

@@ -6,18 +6,18 @@
     <h1>Welcome to the Arealyser</h1>
     <p class="lead">Use the arealyser to research and analyse your chosen area.</p>
     @*<div class="row">
-        @using (Html.BeginForm())
-            {
-            <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
-            <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
-            <br />
-                <input type="submit" value="Arealyse" />
-        }
-    </div>*@
+            @using (Html.BeginForm())
+                {
+                <div class="col-md-4">@Html.DropDownList("County", (SelectList)ViewBag.County, "Choose county...", new { @class = "form-control" })</div>
+                <div class="col-md-4">@Html.DropDownList("TownID", (SelectList)ViewBag.TownID, new { @class = "form-control" })</div>
+                <br />
+                    <input type="submit" value="Arealyse" />
+            }
+        </div>*@
     <div id="divConfirmDialog" title="Arealyser">
-     
+
     </div>
-    <div id="selectMap" style="width: 800px; height: 800px">
+    <div id="selectMap" style="width: 600px; height: 600px">
     </div>
 </div>
 
@@ -50,103 +50,90 @@
 
 
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
-        type="text/javascript"></script>
-@*<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>*@
+
+@section Map{
+@*@Scripts.Render("~/Scripts/homeMaps.js")*@
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
+            type="text/javascript">
+
+    </script>
+
 <script type="text/javascript">
+    //declare a variable
+    var markers = [];
+
+    $.ajax({
+        async: false,
+        type: "POST",
+        dataType: "json",
+        url: '@Url.Action("GetMarkers", "Home")',
+        data: '{}',
+        success: function (result) {
+            //get address from controller action.....
+            markers = result.AddressResult;
+        }
+
+    });
+
     function initMap() {
         var myLatLong = { lat: 53.3498, lng: -6.2603 };
         var mapOptions = {
             center: myLatLong,
-            zoom: 8,
+            zoom: 11,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var infoWindow = new google.maps.InfoWindow();
         var latlngbounds = new google.maps.LatLngBounds(new google.maps.LatLng(54.668922, -7.0100274), new google.maps.LatLng(55.121921664, -6.5620904));
         var map = new google.maps.Map(document.getElementById("selectMap"), mapOptions);
+        setMarkers(map, markers);
 
-        //google.maps.event.addListener(map, 'click', function (e) {
-        //    // alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
-        //    myFunction(e);
-        //    //$('#divConfirmDialog').dialog('open');
-        //});
-
-        var marker = new google.maps.Marker({
-            position: myLatLong,
-            map: map,
-            title: 'Click to arealyse'
-        });
-
-        marker.addListener('click', function () {
-            alert("You clicked me!!")
-        });
-
-        //$('#divConfirmDialog').dialog({
-        //    dialogClass: 'dialogShadow',
-        //    resizable: false,
-        //    height: 100,
-        //    autoOpen: false,
-        //    modal: true,
-        //    buttons: {
-        //        "Continue": function () {
-        //            findId();
-        //            $(this).dialog("close");
-        //        },
-        //        "Back": function () {
-        //            $(this).dialog("close");
-        //        }
-        //    }
-        //});
     }
 
     function myFunction(e) {
-        var txt;
-        var lat = e.latLng.lat();
-        var lng = e.latLng.lng();
+        //var txt;
+        //var lat = e.latLng.lat();
+        //var lng = e.latLng.lng();
+        alert(e);
 
-            $.ajax({
-                    type: "GET",
-                    url: '@Url.Action("FindNearestTownId", "Analysis")',
-                    contentType: "application/json; charset=utf-8",
-                    data: { lat: e.latLng.lat(), lng: e.latLng.lng() },
-                    dataType: "json",
-                    success: function (Redirect) {
-                        // alert(Redirect.to)
-                        window.location = Redirect.url;
-                    },
-                    error: function () {
-                        alert('error happened');
-                    }
-                });
-       
-        
-        @*var r = confirm("This the confirm box.\nLatitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
-        if (r == true) {
-            txt = "You pressed OK!";
-            $.ajax({
-                    type: "GET",
-                    url: '@Url.Action("FindNearestTownId", "Analysis")',
-                    contentType: "application/json; charset=utf-8",
-                    data: { lat: e.latLng.lat(), lng: e.latLng.lng() },
-                    dataType: "json",
-                    success: function (Redirect) {
-                        alert(Redirect.to)
-                        window.location = Redirect.url;
-                    },
-                    error: function () {
-                        alert('error happened');
-                    }
-                });
-        } else {
-            txt = "You pressed Cancel!";
-        }
-        document.getElementById("demo").innerHTML = txt;*@
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("FindNearestTownId", "Analysis")',
+            contentType: "application/json; charset=utf-8",
+            data: { Id: e },
+            dataType: "json",
+            success: function () {
+                alert("Success")
+                window.location = Redirect.url;
+            },
+            error: function () {
+                alert('error happened');
+            }
+        });
     }
+
+
+    function setMarkers(map, markers) {
+
+        for (var i = 0; i < markers.length; i++) {
+            var data = markers[i];
+            var siteLatLng = new google.maps.LatLng(data.Latitude, data.Longitude);
+            var marker = new google.maps.Marker({
+                position: siteLatLng,
+                map: map,
+                title: data.Description,
+                id: data.Id
+            });
+
+            var contentString = "Some content";
+
+            google.maps.event.addListener(marker, "click", function (e) {
+                //myFunction(this.id);
+                window.location = '@Url.Action("Index", "Analysis")'+'?Id='+this.id;
+                infowindow.setContent(this.title);
+                infowindow.open(map, this);
+            });
+        }
+    }
+
 </script>
-
-
-
-
-
-
-
+}
