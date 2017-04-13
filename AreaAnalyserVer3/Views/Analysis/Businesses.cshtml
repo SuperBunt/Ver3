@@ -1,0 +1,43 @@
+﻿@model AreaAnalyserVer3.ViewModels.Analysis
+
+<h3>Local Businesses</h3>
+
+<table class="table table-striped">
+    @if (Model.Businesses != null)
+            {
+        <tr>
+            <th class="col-md-2">
+                @Html.DisplayName("Category")
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayName("Name")
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayName("Address")
+            </th>
+            <th class="col-md-2">
+                @Html.DisplayName("Phone")
+            </th>
+        </tr>
+
+        foreach (var item in Model.Businesses)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                
+            </tr>
+        }
+    }
+</table>
+

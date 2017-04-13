@@ -25,16 +25,22 @@ namespace AreaAnalyserVer3.Models
         public string Address { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public char Gender { get; set; }
+        [Column(TypeName = "char")]
+        [StringLength(2)]
+        public string Gender { get; set; }
         [MaxLength(18)]
-        public char? AttendanceType { get; set; }
+        public string AttendanceType { get; set; }
         public int? FeePaying { get; set; }
         public int? MaleEnrol { get; set; }
         public int? FemaleEnrol { get; set; }
         public int? Total { get; set; }
         public string Ethos { get; set; }
-        public char?  Gaeltacht { get; set; }
-        public char? DEIS { get; set; }
+        [Column(TypeName = "char")]
+        [StringLength(2)]
+        public string  Gaeltacht { get; set; }
+        [Column(TypeName = "char")]
+        [StringLength(2)]
+        public string DEIS { get; set; }
         [MaxLength(8)]
         public string Eircode { get; set; }
         public DbGeography GeoLocation { get; set; }

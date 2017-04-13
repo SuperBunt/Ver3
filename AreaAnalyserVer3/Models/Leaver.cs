@@ -31,35 +31,36 @@ namespace AreaAnalyserVer3.Models
         public int? StAngelas { get; set; }
         public int? QUB { get; set; }
         public int? UU { get; set; }
+        [DisplayName("Blanch IT")]
         public int? BlanchIT { get; set; }
         public int? GMIT { get; set; }
         public int? NatCol { get; set; }
         public int? DIT { get; set; }
         [DisplayName("IT Tallaght")]
         public int? ITTD { get; set; }
-        [DisplayName("IT Tallaght")]
+        [DisplayName("Athlone IT")]
         public int? AthloneIT { get; set; }
         [DisplayName("Cork IT")]
         public int? Cork { get; set; }
         [DisplayName("Dundalk IT")]
         public int? Dundalk { get; set; }
         public int? IADT { get; set; }
-        [DisplayName("IT Carlow")]
+        [DisplayName("Carlow IT")]
         public int? ITCarlow { get; set; }
-        [DisplayName("IT Sligo")]
+        [DisplayName("Sligo IT")]
         public int? ITSligo { get; set; }
-        [DisplayName("IT Tralee")]
+        [DisplayName("Tralee IT")]
         public int? ITTralee { get; set; }
-        [DisplayName("IT Letterkenny")]
+        [DisplayName("Letterkenny IT")]
         public int? ITLetterkenny { get; set; }
-        [DisplayName("IT Limerick")]
+        [DisplayName("Limerick IT")]
         public int? ITLimerick { get; set; }
         public int? WIT { get; set; }
         [DisplayName("Marino Instit of Ed")]
         public int? Marino { get; set; }
         [DisplayName("C of I College of Ed")]
         public int? CofI { get; set; }
-        [DisplayName("IT Tallaght")]
+        [DisplayName("Mary Immac.")]
         public int? MaryImac { get; set; }
         public int? NCAD{ get; set; }
         public int? RCSI{ get; set; }

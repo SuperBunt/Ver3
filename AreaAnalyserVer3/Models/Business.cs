@@ -21,6 +21,9 @@ namespace AreaAnalyserVer3.Models
         public string Category  { get; set; }
         public string Phone { get; set; }
         public DbGeography GeoLocation { get; set; }
+        [Column(TypeName = "char")]
+        [StringLength(2)]
+        public string geocoded { get; set; }
         [ForeignKey("TownId")]
         public virtual Town Town { get; set; }
     }

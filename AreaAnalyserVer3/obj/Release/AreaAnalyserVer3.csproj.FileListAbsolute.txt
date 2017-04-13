@@ -194,11 +194,6 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\ko\System.Spatial.resour
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\ru\System.Spatial.resources.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.Migrations.earlyData.resources
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.Migrations.earlyData1.resources
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.Migrations.towns.resources
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.Migrations.SchoolsBusinesses.resources
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.Migrations.schoolGPS.resources
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.csproj.GenerateResource.Cache
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Release\AreaAnalyserVer3.pdb

@@ -1,4 +1,4 @@
-﻿using AreaAnalyserVer3.Migrations;
+﻿
 using AreaAnalyserVer3.Models;
 using AreaAnalyserVer3.ViewModels;
 using LinqToWiki;
@@ -39,6 +39,7 @@ namespace AreaAnalyserVer3.Controllers
                              Schools = town.Schools.ToList(),
                              NumSchools = town.Schools.Count(),
                              Crimes = town.Garda.Reports.ToList(),
+                             Businesses = town.LocalBusinesses.ToList()
                          }).Single();
                 }
 
@@ -70,18 +71,33 @@ namespace AreaAnalyserVer3.Controllers
                 // Add school markers
                 foreach (var s in query.Schools)
                 {
-                    markers.Add(new { Id = s.TownId, Latitude = s.GeoLocation.Latitude, Longitude = s.GeoLocation.Longitude, Description = s.Name, Colour = "HUE_GREEN" });
+                    markers.Add(new { Id = s.TownId, Latitude = s.GeoLocation.Latitude, Longitude = s.GeoLocation.Longitude, Description = s.Name, Label = 'S' });
                 }
                 //Add business markers
                 //foreach (var s in query.Businesses)
                 //{
                 //    markers.Add(new { Id = s.TownId, Latitude = s.GeoLocation.Latitude, Longitude = s.GeoLocation.Longitude, Description = s.Name, Colour = "HUE_VIOLET" });
                 //}
-                markers.Add(new { Latitude = 53.3486, Longitude = -6.2718, Description = "Local shop", icon = @"~Content/icons/incomes.png" });
-                markers.Add(new { Latitude = 53.396, Longitude = -6.2688, Description = "Another Local shop", icon = @"~Content/icons/incomes.png" });
-                markers.Add(new { Latitude = 53.496, Longitude = -6.218, Description = "Te village Inn", icon = @"~Content/icons/incomes.png" });
-                markers.Add(new { Latitude = 53.346, Longitude = -6.618, Description = "Local Hairdresser", icon = @"~Content/icons/incomes.png" });
-                markers.Add(new { Latitude = 53.349, Longitude = -6.261, Description = "Local shop", icon = @"~Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.3486, Longitude = -6.2718, Description = "Local shop", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.396, Longitude = -6.2688, Description = "Another Local shop", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.496, Longitude = -6.218, Description = "The village Inn", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.346, Longitude = -6.618, Description = "Local Hairdresser", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.349, Longitude = -6.261, Description = "Martins butchers", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.3486, Longitude = -6.2718, Description = "Local shop", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.396, Longitude = -6.2688, Description = "Another Local shop", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.496, Longitude = -6.218, Description = "Luigis", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.346, Longitude = -6.618, Description = "Billys Barbers", icon = @"../../Content/icons/incomes.png" });
+                markers.Add(new { Latitude = 53.349, Longitude = -6.261, Description = "Centra", icon = @"../../Content/icons/incomes.png" });
+                //markers.Add(new { Latitude = 53.3486, Longitude = -6.2718, Description = "Local shop", Label = 'B' });
+                //markers.Add(new { Latitude = 53.396, Longitude = -6.2688, Description = "Another Local shop", Label = 'B' });
+                //markers.Add(new { Latitude = 53.496, Longitude = -6.218, Description = "The village Inn", Label = 'B' });
+                //markers.Add(new { Latitude = 53.346, Longitude = -6.618, Description = "Local Hairdresser", Label = 'B' });
+                //markers.Add(new { Latitude = 53.349, Longitude = -6.261, Description = "Martins butchers", Label = 'B' });
+                //markers.Add(new { Latitude = 53.3486, Longitude = -6.2718, Description = "Local shop", Label = 'B' });
+                //markers.Add(new { Latitude = 53.396, Longitude = -6.2688, Description = "Another Local shop", Label = 'B' });
+                //markers.Add(new { Latitude = 53.496, Longitude = -6.218, Description = "Luigis", Label = 'B' });
+                //markers.Add(new { Latitude = 53.346, Longitude = -6.618, Description = "Billys Barbers", Label = 'B' });
+                //markers.Add(new { Latitude = 53.349, Longitude = -6.261, Description = "Centra", Label = 'B' });
 
                 return Json(new { AddressResult = markers }, JsonRequestBehavior.AllowGet);
             }

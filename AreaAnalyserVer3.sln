@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaAnalyserVer3", "AreaAna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaAnalyserVer3.Tests", "AreaAnalyserVer3.Tests\AreaAnalyserVer3.Tests.csproj", "{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdatePPR", "UpdatePPR\UpdatePPR.csproj", "{58A40290-B886-4F96-8BD3-F073B4B3B4A9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{F9A4A034-BF96-4833-8419-86890F7EC2CE}"
 EndProject
 Global
@@ -28,10 +26,6 @@ Global
 		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDF22B9D-ED53-46EF-8B87-6817BDFB01BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58A40290-B886-4F96-8BD3-F073B4B3B4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58A40290-B886-4F96-8BD3-F073B4B3B4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58A40290-B886-4F96-8BD3-F073B4B3B4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58A40290-B886-4F96-8BD3-F073B4B3B4A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F9A4A034-BF96-4833-8419-86890F7EC2CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F9A4A034-BF96-4833-8419-86890F7EC2CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9A4A034-BF96-4833-8419-86890F7EC2CE}.Release|Any CPU.ActiveCfg = Release|Any CPU

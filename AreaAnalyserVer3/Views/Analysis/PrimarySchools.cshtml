@@ -1,0 +1,57 @@
+﻿@model AreaAnalyserVer3.ViewModels.Analysis
+
+ 
+<h3>Primary Schools&nbsp;&nbsp;<button data-toggle="collapse" data-target="#primary"><span><i class="fa fa-bars toggle-btn"></i></span></button></h3>
+
+<div id="primary" class="collapse in">
+    <div id="primary">
+        @if (Model.Schools != null)
+        {
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Name")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Type")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Ethos")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Enrolled")
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Schools)
+                {
+                    if (item.Level == "prim")
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ethos)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Total)
+                            </td>
+                            <td>
+                                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+
+                                @Html.ActionLink("Details", "Details", new { id = item.SchoolId })
+                                @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+    </div>
+</div>
+

@@ -310,29 +310,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612152004069_earlyData.cs" />
-    <Compile Include="Migrations\201612152004069_earlyData.Designer.cs">
-      <DependentUpon>201612152004069_earlyData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612152217081_earlyData1.cs" />
-    <Compile Include="Migrations\201612152217081_earlyData1.Designer.cs">
-      <DependentUpon>201612152217081_earlyData1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612231525357_towns.cs" />
-    <Compile Include="Migrations\201612231525357_towns.Designer.cs">
-      <DependentUpon>201612231525357_towns.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703221210152_SchoolsBusinesses.cs" />
-    <Compile Include="Migrations\201703221210152_SchoolsBusinesses.Designer.cs">
-      <DependentUpon>201703221210152_SchoolsBusinesses.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703251900553_schoolGPS.cs" />
-    <Compile Include="Migrations\201703251900553_schoolGPS.Designer.cs">
-      <DependentUpon>201703251900553_schoolGPS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703301855175_Dublin.cs" />
-    <Compile Include="Migrations\201703301855175_Dublin.Designer.cs">
-      <DependentUpon>201703301855175_Dublin.cs</DependentUpon>
+    <Compile Include="Migrations\201704121016042_Dublin.cs" />
+    <Compile Include="Migrations\201704121016042_Dublin.Designer.cs">
+      <DependentUpon>201704121016042_Dublin.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -552,6 +532,17 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom.css" />
+    <Content Include="Content\icons\glossy-green-button-hover.png" />
+    <Content Include="Content\icons\glossy-green-button-md.png" />
+    <Content Include="Content\icons\Icons-Land-Vista-Map-Markers-Map-Marker-Marker-Outside-Azure.ico" />
+    <Content Include="Content\icons\incomes.png" />
+    <Content Include="Content\icons\MapMarker_Marker_Outside_Pink.png" />
+    <Content Include="Content\icons\Optimized-glossy-green-button-md.png" />
+    <Content Include="Content\icons\scale-justice-crime-law-ethics-balance-3f7a26cacefd3896-512x512.png" />
+    <Content Include="Content\icons\School_Supplies-512.png" />
+    <Content Include="Content\icons\service-512.png" />
+    <Content Include="Content\icons\soldHouse.jpeg" />
+    <Content Include="Content\icons\Town_marker.png" />
     <Content Include="Content\theme.green.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -606,23 +597,8 @@
     <Content Include="Images\NoAccess.jpeg" />
     <Content Include="Images\TargetA.png" />
     <Content Include="Images\TargetB.png" />
-    <EmbeddedResource Include="Migrations\201612152004069_earlyData.resx">
-      <DependentUpon>201612152004069_earlyData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612152217081_earlyData1.resx">
-      <DependentUpon>201612152217081_earlyData1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612231525357_towns.resx">
-      <DependentUpon>201612231525357_towns.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703221210152_SchoolsBusinesses.resx">
-      <DependentUpon>201703221210152_SchoolsBusinesses.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703251900553_schoolGPS.resx">
-      <DependentUpon>201703251900553_schoolGPS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703301855175_Dublin.resx">
-      <DependentUpon>201703301855175_Dublin.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704121016042_Dublin.resx">
+      <DependentUpon>201704121016042_Dublin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="sampleData.csv" />
     <EmbeddedResource Include="crimeSample.csv" />
@@ -659,6 +635,7 @@
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %284%29.pubxml" />
+    <None Include="Properties\PublishProfiles\arealyser - Web Deploy %285%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy.pubxml" />
     <Content Include="pager\first.png" />
     <Content Include="pager\last.png" />
@@ -784,7 +761,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <EmbeddedResource Include="StationCoordinates.csv" />
-    <Content Include="Views\Analysis\IndexVer1.cshtml" />
     <Content Include="Views\Admin\AdminSecure.cshtml" />
     <Content Include="Views\Home\Mail.cshtml" />
     <Content Include="Views\Admin\Inbox.cshtml" />
@@ -795,7 +771,10 @@
     <Content Include="Views\Education\Details.cshtml" />
     <Content Include="Views\LocalBusiness\Index.cshtml" />
     <Content Include="Views\Analysis\Index.cshtml" />
-    <Content Include="Views\Analysis\Education.cshtml" />
+    <Content Include="Views\Analysis\PrimarySchools.cshtml" />
+    <Content Include="Views\Analysis\PostPrimary.cshtml" />
+    <Content Include="Views\Analysis\Feeder.cshtml" />
+    <Content Include="Views\Analysis\Businesses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

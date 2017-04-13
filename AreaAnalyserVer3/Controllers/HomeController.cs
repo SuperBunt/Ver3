@@ -1,4 +1,4 @@
-﻿using AreaAnalyserVer3.Migrations;
+﻿
 using AreaAnalyserVer3.Models;
 using AreaAnalyserVer3.TokenStorage;
 using AreaAnalyserVer3.ViewModels;
@@ -29,9 +29,14 @@ namespace AreaAnalyserVer3.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            // Hack to debug seed method
-            var conf = new Migrations.Configuration();
-            conf.SeedDebug(db);
+            // Hack to debug seed method unless debugging seed method
+
+            //   ********** ENSURE THIS IS COMMENTED OUT  ************
+
+            //var conf = new Migrations.Configuration();
+            //conf.SeedDebug(db);
+
+            //  ******************************************************
 
             //ViewBag.County = new SelectList(PriceRegister.counties);
             //ViewBag.TownID = new SelectList(
@@ -104,7 +109,7 @@ namespace AreaAnalyserVer3.Controllers
             var markers = new List<Object>();
             foreach(var t in towns)
             {
-                markers.Add(new  { Id = t.TownId,  Latitude = t.GeoLocation.Latitude, Longitude = t.GeoLocation.Longitude, Description = t.Name });
+                markers.Add(new  { Id = t.TownId,  Latitude = t.GeoLocation.Latitude, Longitude = t.GeoLocation.Longitude, Description = t.Name, icon = @"../../Content/icons/Town_marker.png" });
             }
 
             return Json(new { AddressResult = markers });

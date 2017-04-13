@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "NoAccess";
+}
+
+<h2>Restricted content</h2>
+
+<h3>oops, you should not be here!!</h3>
+
+<div class="container-fluid">
+    <img src="~/Images/NoAccess.jpeg" />
+</div>
+<a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">Back</a>
+<p><a href="@Url.Action("SignIn", "Admin", null, Request.Url.Scheme)">Click here to login</a></p>

@@ -1,4 +1,4 @@
-namespace AreaAnalyserVer3.Migrations
+﻿namespace AreaAnalyserVer3.Migrations
 {
     using CsvHelper;
     using EntityFramework.Seeder;
@@ -28,16 +28,97 @@ namespace AreaAnalyserVer3.Migrations
         {
             // Uncomment Debug workround in Home Controller to debug
             //InsertProperties();
-            //InsertTowns();
-            //InsertGardaStations();
-            //InsertCrime(context);
 
-            //InsertPrimarySchools();
-            //InsertPostPrimarySchools();
-            InsertFeederInfo(context);
+            // Garda stations MUST be inserted before the towns
+            // InsertGardaStations();
+            // InsertCrime();
 
+            // Towns MUST be inserted before the schools and businesses
+            // InsertTowns();
+            // InsertPrimarySchools();
+            // InsertPostPrimarySchools();
+            // InsertFeederInfo();
+            // InsertBusinesses();
         }
 
+        // Insert the garda stations
+        private void InsertGardaStations()
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/DubStations.csv";
+                var towns = (from town in context.Town
+                             select new { town.GeoLocation, town.Name }).ToList();
+                using (StreamReader reader = new StreamReader(file, Encoding.Default))
+                {
+                    CsvReader csvReader = new CsvReader(reader);
+                    csvReader.Configuration.WillThrowOnMissingField = false;
+                    csvReader.ReadHeader();
+                    double latDbl, lngDbl = 0.0;
+                    double? lat = 0.0;
+                    double? lng = 0.0;
+                    string[] loc = new string[3];
+                    while (csvReader.Read())
+                    {
+                        try
+                        {
+                            // populate Garda stations list
+                            GardaStation toAdd = new GardaStation();
+                            toAdd.Name = csvReader.GetField<string>(0);
+
+                            latDbl = csvReader.GetField<double>(1);
+                            lngDbl = csvReader.GetField<double>(2);
+                            toAdd.Point = CreatePoint(latDbl, lngDbl);
+                            context.GardaStation.Add(toAdd);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Reading staions: " + e);
+                        }
+                    }
+                }
+
+                SaveChanges(context);
+            }
+        }
+
+        // Insert the local businesses from csv file to the database
+        private void InsertBusinesses()
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                string resourceName = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/Businesses.csv";
+                using (StreamReader reader = new StreamReader(resourceName, Encoding.UTF8))
+                {
+                    CsvReader csvReader = new CsvReader(reader);
+                    csvReader.Configuration.WillThrowOnMissingField = false;
+                    csvReader.Configuration.Delimiter = "\t";
+
+                    while (csvReader.Read())
+                    {
+                        try
+                        {
+                            Business NewBusiness = new Business();
+                            NewBusiness.TownId = csvReader.GetField<int>(0);
+                            NewBusiness.Category = csvReader.GetField<string>(1);
+                            NewBusiness.Name = csvReader.GetField<string>(2);
+                            NewBusiness.Address = csvReader.GetField<string>(3);
+                            NewBusiness.Phone = csvReader.GetField<string>(4);
+                            NewBusiness.GeoLocation = CreatePoint(53.344926, -6.20609283);
+                            NewBusiness.geocoded = "N";
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Reading businesses: " + e);
+                        }
+                    }
+                }
+                // Add towns to the database
+                SaveChanges(context);
+            }
+        }
+
+        // Insert the towns from csv file to the database
         private void InsertTowns()
         {
             using (var context = new ApplicationDbContext())
@@ -49,8 +130,9 @@ namespace AreaAnalyserVer3.Migrations
                     csvReader.Configuration.WillThrowOnMissingField = false;
                     csvReader.Configuration.Delimiter = ",";
 
-                    //var stations = from t in context.GardaStation
-                    //               select new { t.StationId, t.Point, t.Name };
+                    var stations = from t in context.GardaStation
+                                   select new { t.StationId, t.Point, t.Name };
+
                     double lat = 0.0;
                     double lon = 0.0;
                     while (csvReader.Read())
@@ -64,13 +146,23 @@ namespace AreaAnalyserVer3.Migrations
                             lon = csvReader.GetField<double>(5);
                             NewTown.GeoLocation = CreatePoint(lat, lon);
                             NewTown.Population = csvReader.GetField<int?>(7);
-                            // cannot find garda until after they are inserted!!
-                            //var query = (from f in stations
-                            //             let distance = f.Point.Distance(NewTown.GeoLocation)
-                            //             where distance < 20000  // gets nearest town in 20 km radius
-                            //             orderby distance
-                            //             select f.StationId).FirstOrDefault();
-                            //NewTown.GardaId = (int?)query;
+                            // Check if any garda station names matches the town name 
+                            // otherwise find the nearest station
+                            if (stations.Any(x => x.Name.Equals(NewTown.Name)))
+                            {
+                                var garda = stations.First(t => t.Name.Equals(NewTown.Name));
+                                NewTown.GardaId = garda.StationId;
+                            }
+                            else
+                            {
+                                var query = (from f in stations
+                                             let distance = f.Point.Distance(NewTown.GeoLocation)
+                                             where distance < 80000  // gets nearest station in 60 km radius
+                                             orderby distance
+                                             select f.StationId).FirstOrDefault();
+                                if(query > 0 && query < stations.Count())  // Ensure the station is valid
+                                    NewTown.GardaId = query;
+                            }
                             context.Town.Add(NewTown);
                         }
                         catch (Exception e)
@@ -78,86 +170,77 @@ namespace AreaAnalyserVer3.Migrations
                             Console.WriteLine("Reading towns: " + e);
 
                         }
-
                     }
                 }
-
                 // Add towns to the database
                 SaveChanges(context);
             }
         }
-        // 
-        private void InsertCrime(ApplicationDbContext context)
+
+        private void InsertCrime()
         {
-
-            string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/DublinCrime.csv";
-            // List of all offences
-            List<Offence> listOfOffences = new List<Offence>();
-            // Array to itearte through years
-            int[] years = { 2010, 2011, 2012, 2013, 2014, 2015, 2016 };
-
-            using (StreamReader reader = new StreamReader(file, Encoding.Default))
+            using (var db = new ApplicationDbContext())
             {
-                CsvReader csvReader = new CsvReader(reader);
-                csvReader.Configuration.WillThrowOnMissingField = false;
-                csvReader.ReadHeader();
-                // build a list of each offence by station and year
-                while (csvReader.Read())
+                string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/DublinCrime.csv";
+                // List of all offences
+                List<Offence> listOfOffences = new List<Offence>();
+                // Array to itearte through years
+                int[] years = { 2010, 2011, 2012, 2013, 2014, 2015, 2016 };
+
+                using (StreamReader reader = new StreamReader(file, Encoding.Default))
                 {
-
-                    string[] loc = new string[3];
-                    foreach (var yr in years)
+                    CsvReader csvReader = new CsvReader(reader);
+                    csvReader.Configuration.WillThrowOnMissingField = false;
+                    csvReader.ReadHeader();
+                    // build a list of each offence by station and year
+                    while (csvReader.Read())
                     {
-                        Offence crime = new Offence();
-                        crime.TypeOfOffence = csvReader.GetField<string>(0);
 
-                        crime.Year = yr;
-                        switch (yr)
+                        string[] loc = new string[3];
+                        foreach (var yr in years)
                         {
-                            case 2010:
-                                crime.Amount = csvReader.GetField<int>(2);
-                                break;
-                            case 2011:
-                                crime.Amount = csvReader.GetField<int>(3);
-                                break;
-                            case 2012:
-                                crime.Amount = csvReader.GetField<int>(4);
-                                break;
-                            case 2013:
-                                crime.Amount = csvReader.GetField<int>(5);
-                                break;
-                            case 2014:
-                                crime.Amount = csvReader.GetField<int>(6);
-                                break;
-                            case 2015:
-                                crime.Amount = csvReader.GetField<int>(7);
-                                break;
-                            case 2016:
-                                crime.Amount = csvReader.GetField<int>(8);
-                                break;
+                            Offence crime = new Offence();
+                            crime.TypeOfOffence = csvReader.GetField<string>(0);
 
+                            crime.Year = yr;
+                            switch (yr)
+                            {
+                                case 2010:
+                                    crime.Amount = csvReader.GetField<int>(2);
+                                    break;
+                                case 2011:
+                                    crime.Amount = csvReader.GetField<int>(3);
+                                    break;
+                                case 2012:
+                                    crime.Amount = csvReader.GetField<int>(4);
+                                    break;
+                                case 2013:
+                                    crime.Amount = csvReader.GetField<int>(5);
+                                    break;
+                                case 2014:
+                                    crime.Amount = csvReader.GetField<int>(6);
+                                    break;
+                                case 2015:
+                                    crime.Amount = csvReader.GetField<int>(7);
+                                    break;
+                                case 2016:
+                                    crime.Amount = csvReader.GetField<int>(8);
+                                    break;
+
+                            }
+                            crime.StationAddress = csvReader.GetField<string>(1);
+
+                            loc = crime.StationAddress.Split(',');
+                            crime.StationAddress = loc[0];
+                            listOfOffences.Add(crime);
+                            //context.SaveChanges();
                         }
-                        crime.StationAddress = csvReader.GetField<string>(1);
-
-                        loc = crime.StationAddress.Split(',');
-                        crime.StationAddress = loc[0];
-                        //if (nextLine) { 
-                        //id = (from i in context.GardaStation
-                        //                   where i.Address.Equals(crime.StationAddress)
-                        //                   select i.StationId).FirstOrDefault();
-                        //    nextLine = false;
-                        //}
-                        //crime.StationId = id;
-                        listOfOffences.Add(crime);
-                        //context.Offence.Add(crime);
+                        AddReports(ref listOfOffences);
                     }
-                    //context.SaveChanges();
                 }
-                AddReports(ref listOfOffences);
             }
-
         }
-
+        // Insert the annual reports for each garda station
         public void AddReports(ref List<Offence> listOfOffences)
         {
             using (var context = new ApplicationDbContext())
@@ -234,60 +317,7 @@ namespace AreaAnalyserVer3.Migrations
             }
 
         }
-
-        private void InsertGardaStations()
-        {
-            using (var context = new ApplicationDbContext())
-            {
-                string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/DubStations.csv";
-                var towns = (from town in context.Town
-                             select new { town.GeoLocation, town.Name }).ToList();
-                using (StreamReader reader = new StreamReader(file, Encoding.Default))
-                {
-                    CsvReader csvReader = new CsvReader(reader);
-                    csvReader.Configuration.WillThrowOnMissingField = false;
-                    csvReader.ReadHeader();
-                    double latDbl, lngDbl = 0.0;
-                    double? lat = 0.0;
-                    double? lng = 0.0;
-                    string[] loc = new string[3];
-                    while (csvReader.Read())
-                    {
-                        try
-                        {
-                            // populate Garda stations list
-                            GardaStation toAdd = new GardaStation();
-                            toAdd.Name = csvReader.GetField<string>(0);
-
-                            latDbl = csvReader.GetField<double>(1);
-                            lngDbl = csvReader.GetField<double>(2);
-                            toAdd.Point = CreatePoint(latDbl, lngDbl);
-                            //// if the longitude and latitude are null
-                            //if ((lat.HasValue && !Double.IsNaN(lat.Value)) && (lng.HasValue && !Double.IsNaN(lng.Value)))
-                            //{
-                            //    // find the matching town name and assign the co-ordinates
-                            //    var query = towns.SingleOrDefault(x => x.Name == toAdd.Name);
-                            //    toAdd.Point = query.GeoLocation;
-                            //}
-                            //else
-                            //{
-                            //    // else use the values obtained from csvreader to create point
-                            //    latDbl = lat.Value;
-                            //    lngDbl = lng.Value;
-                            //    toAdd.Point = CreatePoint(latDbl, lngDbl);
-                            //}
-                            context.GardaStation.Add(toAdd);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("Reading staions: " + e);
-                        }
-                    }
-                }
-
-                SaveChanges(context);
-            }
-        }
+       
 
         private void InsertProperties()
         {
@@ -300,7 +330,7 @@ namespace AreaAnalyserVer3.Migrations
                 csvReader.Configuration.WillThrowOnMissingField = false;
                 //csvReader.ReadHeader();
                 csvReader.Configuration.Delimiter = "\t";
-                char[] MyChar = { '�', ',', '*' };
+                char[] MyChar = { '', ',', '*' };
                 var houses = new List<PriceRegister>();
                 string postCode = "";
                 // Read the file row by row
@@ -358,8 +388,8 @@ namespace AreaAnalyserVer3.Migrations
                 double? lat, lng = 0;
                 double latDbl, lngDbl = 0;
                 var towns = from town in context.Town
-                            select new { town.TownId, town.GeoLocation };
-                // towns.ToList();
+                            select new { town.TownId, town.Name, town.GeoLocation };
+                towns.ToList();
                 try
                 {
                     using (StreamReader reader = new StreamReader(file, Encoding.UTF8))
@@ -383,8 +413,7 @@ namespace AreaAnalyserVer3.Migrations
                                 address[3] = csvReader.GetField<string>(5);
                                 NewSchool.Address = MakeAddress(address);
                                 NewSchool.Email = csvReader.GetField<string>(6);
-                                NewSchool.DEIS = csvReader.GetField<char?>(7);
-                                NewSchool.Gaeltacht = csvReader.GetField<char?>(9);
+                                NewSchool.DEIS = csvReader.GetField<string>(9);
                                 NewSchool.Ethos = csvReader.GetField<string>(10);
                                 NewSchool.Total = csvReader.GetField<int?>(11);
                                 NewSchool.Eircode = csvReader.GetField<string>(14);
@@ -401,15 +430,25 @@ namespace AreaAnalyserVer3.Migrations
                                     latDbl = lat.Value;
                                     lngDbl = lng.Value;
                                     NewSchool.GeoLocation = CreatePoint(latDbl, lngDbl);
+                                }
+                                // Check if the address contains a town name  
+                                // otherwise find the nearest town
+                                if (towns.Any(x => NewSchool.Address.Contains(x.Name)))
+                                {
+                                    var townId = towns.First(t => NewSchool.Address.Contains(t.Name));
+                                    NewSchool.TownId = townId.TownId;
+                                }
+                                else
+                                {
                                     var query = (from f in towns
                                                  let distance = f.GeoLocation.Distance(NewSchool.GeoLocation)
-                                                 where distance < 40000  // gets nearest town in 40 km radius
+                                                 where distance < 60000  // gets nearest town in 60 km radius
                                                  orderby distance
                                                  select f.TownId).FirstOrDefault();
-                                    NewSchool.TownId = (int?)query;
-                                    // Only add the school if it has a geolocation
-                                    context.School.Add(NewSchool);
+                                    if(query > 0 && query < towns.Count())
+                                        NewSchool.TownId = (int?)query; // Ensures the search returned a valid id
                                 }
+                                context.School.Add(NewSchool);
                             }
                             catch (FormatException e)
                             {
@@ -474,7 +513,7 @@ namespace AreaAnalyserVer3.Migrations
                                 NewSchool.Eircode = csvReader.GetField<string>(8);
                                 NewSchool.Phone = csvReader.GetField<string>(10);
                                 gender = csvReader.GetField<string>(11);
-                                NewSchool.Gender = gender[0];
+                                NewSchool.Gender = gender[0].ToString();
                                 NewSchool.Type = csvReader.GetField<string>(12);
                                 NewSchool.FeePaying = csvReader.GetField<char?>(14);
                                 NewSchool.Ethos = csvReader.GetField<string>(15);
@@ -528,94 +567,97 @@ namespace AreaAnalyserVer3.Migrations
         }
 
         // Insert the school feeder tables
-        public void InsertFeederInfo(ApplicationDbContext context)
+        public void InsertFeederInfo()
         {
-            string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Education/FeederTable.csv";
-            var schools = (from sch in context.School
-                           where sch.Level.Equals("post")
-                           select new { sch.SchoolId, sch.Name });
-
-            try
+            using (var context = new ApplicationDbContext())
             {
 
-                using (StreamReader reader = new StreamReader(file, Encoding.UTF8))
+                string file = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/DublinFeeder.csv";
+                var schools = (from sch in context.School
+                               where sch.Level.Equals("post")
+                               select new { sch.SchoolId, sch.Name });
+                try
                 {
-                    CsvReader csvReader = new CsvReader(reader);
-                    csvReader.Configuration.WillThrowOnMissingField = false;
-                    //csvReader.ReadHeader();
-                    csvReader.Configuration.Delimiter = "\t";
-                    while (csvReader.Read())
+
+                    using (StreamReader reader = new StreamReader(file, Encoding.UTF8))
                     {
-                        try
+                        CsvReader csvReader = new CsvReader(reader);
+                        csvReader.Configuration.WillThrowOnMissingField = false;
+                        //csvReader.ReadHeader();
+                        csvReader.Configuration.Delimiter = "\t";
+                        while (csvReader.Read())
                         {
-                            Leaver NewLeaver = new Leaver();
-                            NewLeaver.Year = 2015;
+                            try
+                            {
+                                Leaver NewLeaver = new Leaver();
+                                NewLeaver.Year = 2015;
 
-                            NewLeaver.SatLeaving = csvReader.GetField<int>(1);
-                            NewLeaver.UCD = csvReader.GetField<int?>(2);
-                            NewLeaver.TCD = csvReader.GetField<int?>(3);
-                            NewLeaver.DCU = csvReader.GetField<int?>(4);
-                            NewLeaver.UL = csvReader.GetField<int?>(5);
-                            NewLeaver.Maynooth = csvReader.GetField<int?>(6);
-                            NewLeaver.NUIG = csvReader.GetField<int?>(7);
-                            NewLeaver.UCC = csvReader.GetField<int?>(8);
-                            NewLeaver.StAngelas = csvReader.GetField<int?>(9);
-                            NewLeaver.QUB = csvReader.GetField<int?>(10);
-                            NewLeaver.UU = csvReader.GetField<int?>(11);
-                            NewLeaver.BlanchIT = csvReader.GetField<int?>(12);
-                            NewLeaver.NatCol = csvReader.GetField<int?>(13);
-                            NewLeaver.DIT = csvReader.GetField<int?>(14);
-                            NewLeaver.ITTD = csvReader.GetField<int?>(15);
-                            NewLeaver.AthloneIT = csvReader.GetField<int?>(16);
-                            NewLeaver.Cork = csvReader.GetField<int?>(17);
-                            NewLeaver.Dundalk = csvReader.GetField<int?>(18);
-                            NewLeaver.GMIT = csvReader.GetField<int?>(19);
-                            NewLeaver.IADT = csvReader.GetField<int?>(20);
-                            NewLeaver.ITCarlow = csvReader.GetField<int?>(21);
-                            NewLeaver.ITSligo = csvReader.GetField<int?>(22);
-                            NewLeaver.ITTralee = csvReader.GetField<int?>(23);
-                            NewLeaver.ITLetterkenny = csvReader.GetField<int?>(24);
-                            NewLeaver.ITLimerick = csvReader.GetField<int?>(25);
-                            NewLeaver.WIT = csvReader.GetField<int?>(26);
-                            NewLeaver.Marino = csvReader.GetField<int?>(27);
-                            NewLeaver.CofI = csvReader.GetField<int?>(28);
-                            NewLeaver.MaryImac = csvReader.GetField<int?>(29);
-                            NewLeaver.NCAD = csvReader.GetField<int?>(30);
-                            NewLeaver.RCSI = csvReader.GetField<int?>(31);
-                            NewLeaver.Shannon = csvReader.GetField<int?>(32);
-                            NewLeaver.Progressed = csvReader.GetField<double>(34);
-                            NewLeaver.Name = csvReader.GetField<string>(0);
-                            NewLeaver.Name = NewLeaver.Name.TrimStart('*');
-                            NewLeaver.Name = NewLeaver.Name.Split(',')[0];
-                            NewLeaver.SchoolId = (from i in schools
-                                                  where i.Name.ToUpper().Equals(NewLeaver.Name.ToUpper())
-                                                  select i.SchoolId).Cast<int?>().FirstOrDefault();
+                                NewLeaver.SatLeaving = csvReader.GetField<int>(1);
+                                NewLeaver.UCD = csvReader.GetField<int?>(2);
+                                NewLeaver.TCD = csvReader.GetField<int?>(3);
+                                NewLeaver.DCU = csvReader.GetField<int?>(4);
+                                NewLeaver.UL = csvReader.GetField<int?>(5);
+                                NewLeaver.Maynooth = csvReader.GetField<int?>(6);
+                                NewLeaver.NUIG = csvReader.GetField<int?>(7);
+                                NewLeaver.UCC = csvReader.GetField<int?>(8);
+                                NewLeaver.StAngelas = csvReader.GetField<int?>(9);
+                                NewLeaver.QUB = csvReader.GetField<int?>(10);
+                                NewLeaver.UU = csvReader.GetField<int?>(11);
+                                NewLeaver.BlanchIT = csvReader.GetField<int?>(12);
+                                NewLeaver.NatCol = csvReader.GetField<int?>(13);
+                                NewLeaver.DIT = csvReader.GetField<int?>(14);
+                                NewLeaver.ITTD = csvReader.GetField<int?>(15);
+                                NewLeaver.AthloneIT = csvReader.GetField<int?>(16);
+                                NewLeaver.Cork = csvReader.GetField<int?>(17);
+                                NewLeaver.Dundalk = csvReader.GetField<int?>(18);
+                                NewLeaver.GMIT = csvReader.GetField<int?>(19);
+                                NewLeaver.IADT = csvReader.GetField<int?>(20);
+                                NewLeaver.ITCarlow = csvReader.GetField<int?>(21);
+                                NewLeaver.ITSligo = csvReader.GetField<int?>(22);
+                                NewLeaver.ITTralee = csvReader.GetField<int?>(23);
+                                NewLeaver.ITLetterkenny = csvReader.GetField<int?>(24);
+                                NewLeaver.ITLimerick = csvReader.GetField<int?>(25);
+                                NewLeaver.WIT = csvReader.GetField<int?>(26);
+                                NewLeaver.Marino = csvReader.GetField<int?>(27);
+                                NewLeaver.CofI = csvReader.GetField<int?>(28);
+                                NewLeaver.MaryImac = csvReader.GetField<int?>(29);
+                                NewLeaver.NCAD = csvReader.GetField<int?>(30);
+                                NewLeaver.RCSI = csvReader.GetField<int?>(31);
+                                NewLeaver.Shannon = csvReader.GetField<int?>(32);
+                                NewLeaver.Progressed = csvReader.GetField<double>(34);
+                                NewLeaver.Name = csvReader.GetField<string>(0);
+                                NewLeaver.Name = NewLeaver.Name.TrimStart('*');
+                                NewLeaver.Name = NewLeaver.Name.Split(',')[0];
+                                NewLeaver.SchoolId = (from i in schools
+                                                      where i.Name.ToUpper().Equals(NewLeaver.Name.ToUpper())
+                                                      select i.SchoolId).Cast<int?>().FirstOrDefault();
 
-                            NewLeaver.NumAccepted = csvReader.GetField<int>(33);
-                            context.Leaving.Add(NewLeaver);
+                                NewLeaver.NumAccepted = csvReader.GetField<int>(33);
+                                context.Leaving.Add(NewLeaver);
 
+                            }
+                            catch (FormatException e)
+                            {
+                                Console.WriteLine(e);
+                            }
                         }
-                        catch (FormatException e)
-                        {
-                            Console.WriteLine(e);
-                        }
+                        reader.Dispose();
+
                     }
-                    reader.Dispose();
+
+                    SaveChanges(context);
 
                 }
-
-                SaveChanges(context);
-
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("ERROR: Cannot read csv file! " + e.Message);
-                //return null;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("ERROR: inside InsertFeederInfo! " + e.Message);
-                //return null;
+                catch (IOException e)
+                {
+                    Console.WriteLine("ERROR: Cannot read csv file! " + e.Message);
+                    //return null;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR: inside InsertFeederInfo! " + e.Message);
+                    //return null;
+                }
             }
         }
 
