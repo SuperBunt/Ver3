@@ -38,7 +38,7 @@
             // InsertPrimarySchools();
             // InsertPostPrimarySchools();
             // InsertFeederInfo();
-            // InsertBusinesses();
+            InsertBusinesses();
         }
 
         // Insert the garda stations
@@ -73,7 +73,7 @@
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("Reading staions: " + e);
+                            Console.WriteLine("Reading stations: " + e);
                         }
                     }
                 }
@@ -85,9 +85,12 @@
         // Insert the local businesses from csv file to the database
         private void InsertBusinesses()
         {
-            using (var context = new ApplicationDbContext())
+            try
             {
-                string resourceName = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/Businesses.csv";
+
+                int buffer = 0;
+                var businesses = new List<Business>();
+                string resourceName = "C:/Users/User/Documents/collegeStuff/Year4/project/Dublin/BusinessesForImport.csv";
                 using (StreamReader reader = new StreamReader(resourceName, Encoding.UTF8))
                 {
                     CsvReader csvReader = new CsvReader(reader);
@@ -106,6 +109,19 @@
                             NewBusiness.Phone = csvReader.GetField<string>(4);
                             NewBusiness.GeoLocation = CreatePoint(53.344926, -6.20609283);
                             NewBusiness.geocoded = "N";
+                            businesses.Add(NewBusiness);
+                            buffer++;
+                            // Using a buffer of 500 objects, add towns to the database
+                            if (buffer > 500)
+                            {
+                                using (var context = new ApplicationDbContext())
+                                {
+                                    businesses.ForEach(b => context.Business.Add(b));
+                                    SaveChanges(context);
+                                    buffer = 0;
+                                    businesses.Clear();
+                                }
+                            }
                         }
                         catch (Exception e)
                         {
@@ -113,10 +129,19 @@
                         }
                     }
                 }
-                // Add towns to the database
-                SaveChanges(context);
+                // Add remaining towns to the database
+                using (var context = new ApplicationDbContext())
+                {
+                    businesses.ForEach(b => context.Business.Add(b));              
+                    SaveChanges(context);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error saving local businesses: " + e);
             }
         }
+
 
         // Insert the towns from csv file to the database
         private void InsertTowns()
@@ -160,7 +185,7 @@
                                              where distance < 80000  // gets nearest station in 60 km radius
                                              orderby distance
                                              select f.StationId).FirstOrDefault();
-                                if(query > 0 && query < stations.Count())  // Ensure the station is valid
+                                if (query > 0 && query < stations.Count())  // Ensure the station is valid
                                     NewTown.GardaId = query;
                             }
                             context.Town.Add(NewTown);
@@ -317,7 +342,7 @@
             }
 
         }
-       
+
 
         private void InsertProperties()
         {
@@ -445,7 +470,7 @@
                                                  where distance < 60000  // gets nearest town in 60 km radius
                                                  orderby distance
                                                  select f.TownId).FirstOrDefault();
-                                    if(query > 0 && query < towns.Count())
+                                    if (query > 0 && query < towns.Count())
                                         NewSchool.TownId = (int?)query; // Ensures the search returned a valid id
                                 }
                                 context.School.Add(NewSchool);

@@ -39,14 +39,16 @@ namespace AreaAnalyserVer3.Controllers
                              Schools = town.Schools.ToList(),
                              NumSchools = town.Schools.Count(),
                              Crimes = town.Garda.Reports.ToList(),
-                             Businesses = town.LocalBusinesses.ToList()
+                             NumBusinesses = town.LocalBusinesses.Count()
                          }).Single();
                 }
 
-                area.WikiResults = GetWiki(area.Town.Name, "Dublin");
+                // TODO populate database table
+                //area.WikiResults = GetWiki(area.Town.Name, "Dublin");
 
                 return View(area);
-            }catch(HttpException e)
+            }
+            catch (HttpException e)
             {
                 Console.WriteLine("View not loading" + e);
             }
@@ -103,15 +105,57 @@ namespace AreaAnalyserVer3.Controllers
             }
         }
 
+        // Get local businesses data for table
+        public JsonResult GetBusinesses(int id)
+        {
+            var result = new List<Object>();
+
+            using (var db = new ApplicationDbContext())
+            {
+                var query = db.Town.Where(x => x.TownId == id)
+                    .Select(
+                    town => new
+                    {
+                        Businesses = town.LocalBusinesses.ToList()
+                    }).Single();
+
+
+
+                foreach (var b in query.Businesses)
+                {
+                    result.Add( new { category = b.Category, name = b.Name = b.Phone, address = b.Address });
+                }
+            }
+                result.ToArray();
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            
+        }
+
+        // Getprice register data for table
+        public JsonResult GetHouses(string townName)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                //var houses = db.PriceRegister.Where(x => x.Address.Contains(townName)).ToList();
+                var houses = (from h in db.PriceRegister
+                              where h.Address.Contains(townName)
+                              select new { h.DateOfSale, h.Address, h.Price }).ToArray();
+                string output = Newtonsoft.Json.JsonConvert.SerializeObject(houses);
+
+                return Json(houses, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         // Get Price Register data for chart
-        public JsonResult GetChartData(string id)
+        public string GetChartData(string id)
         {
             using (var db = new ApplicationDbContext())
             {
                 var town = db.Town.Find(Int32.Parse(id));
                 //  Town.LocalSpellings is used to allow for irish spellings of the town 
 
-                var houses = db.PriceRegister.Where(h => h.Address.Contains(town.Name)).ToList();
+                var houses = db.PriceRegister.Where(h => h.Address.Contains(town.Name)).ToArray();
                 //var houses = (from a in db.PriceRegister
                 //              where town.LocalSpellings.Any(word => a.Address.Contains(word) && a.County.Equals(town.County))
                 //              select a).OrderByDescending(x => x.DateOfSale).ToList();
@@ -126,7 +170,9 @@ namespace AreaAnalyserVer3.Controllers
 
                 string output = Newtonsoft.Json.JsonConvert.SerializeObject(avg);
 
-                return Json(avg, JsonRequestBehavior.AllowGet);
+                return output;
+
+                //return Json(avg, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -183,7 +229,7 @@ namespace AreaAnalyserVer3.Controllers
             return Json(townList);
         }
 
-       
+
         public ActionResult FindNearestTownId(double lat, double lng)
         {
             var coord = CreatePoint(lat, lng);

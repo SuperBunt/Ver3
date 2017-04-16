@@ -173,8 +173,20 @@ function refreshData(SchoolId, Name, bool) {
 var tableshowing;
 
 function transition(bool) {
+    $(this).text($(this).text() == 'View Graph' ? 'View Graph' : 'View Table');
     // Allows for smooth transition between table and graph   
     $("#schoolTable").toggle("slide", { direction: "left" }, 880)
     $("#feederGraph").toggle("slide", { direction: "right" }, 880);
     
+}
+
+function togglePpr() {
+   // $(this).text($(this).text() == 'View Graph' ? 'View Table' : 'View Graph');
+    $(this).text(function (i, text) {
+        return text === "View graph" ? "View table" : "View graph";
+    });
+    // Allows for smooth transition between table and graph   
+    $("#chartdiv").toggle("slide", { direction: "left" }, 880)
+    $("#pprTable").toggle("slide", { direction: "right" }, 880);
+
 }

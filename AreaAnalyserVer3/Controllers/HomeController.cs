@@ -109,7 +109,7 @@ namespace AreaAnalyserVer3.Controllers
             var markers = new List<Object>();
             foreach(var t in towns)
             {
-                markers.Add(new  { Id = t.TownId,  Latitude = t.GeoLocation.Latitude, Longitude = t.GeoLocation.Longitude, Description = t.Name, icon = @"../../Content/icons/Town_marker.png" });
+                markers.Add(new  { Id = t.TownId,  Latitude = t.GeoLocation.Latitude, Longitude = t.GeoLocation.Longitude, Description = t.Name, marker = @"../../Content/icons/Town_marker.png" });
             }
 
             return Json(new { AddressResult = markers });

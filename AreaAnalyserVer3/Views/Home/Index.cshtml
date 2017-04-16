@@ -121,7 +121,9 @@
                 position: siteLatLng,
                 map: map,
                 title: data.Description,
-                id: data.Id
+                id: data.Id,
+                icon: data.marker,
+                animation: google.maps.Animation.DROP
             });
 
             var contentString = "Some content";

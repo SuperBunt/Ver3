@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaAnalyserVer3.Tests", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{F9A4A034-BF96-4833-8419-86890F7EC2CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTasks", "ConsoleTasks\ConsoleTasks.csproj", "{155ECE95-B565-4D46-B3AD-6E5FD693F12D}"
+EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
@@ -30,6 +32,10 @@ Global
 		{F9A4A034-BF96-4833-8419-86890F7EC2CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9A4A034-BF96-4833-8419-86890F7EC2CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9A4A034-BF96-4833-8419-86890F7EC2CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

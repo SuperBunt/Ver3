@@ -11,27 +11,29 @@
     @Scripts.Render("~/amcharts/plugins/dataloader/dataloader.min.js")
     @Scripts.Render("~/Scripts/historyChart.js")
     @Scripts.Render("~/Scripts/education.js")
-    @*@Scripts.Render("~/Scripts/jquery.tablesorter.min.js")
-        @Scripts.Render("~/Scripts/jquery.tablesorter.pager.js")*@
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     @Scripts.Render("~/Scripts/tablesorter/jquery.tablesorter.combined.min.js")
     @Scripts.Render("~/Scripts/pager/jquery.tablesorter.pager.js")
-    @*@Scripts.Render("~/Content/theme.green.css")*@
-    @*<link href="~/Scripts/pager/jquery.tablesorter.pager.css" rel="stylesheet" />*@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
             integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
             crossorigin="anonymous"></script>
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.16/angular-filter.min.js"></script>
+    @Scripts.Render("~/Scripts/angular/tableAngular.js")
+    @Scripts.Render("~/Scripts/angular/dirPagination.js")
+    @Scripts.Render("~/Scripts/angular/toArrayFilter.js")
 
-    <script type="text/javascript">
+    @*<script type="text/javascript">
         $(function () {
             $("table")
                 .tablesorter({ widthFixed: true, widgets: ['zebra'] })
                 .tablesorterPager({ container: $("#pager") });
         });
-    </script>
+    </script>*@
 
 }
-<div class="wrapper">
+<div class="wrapper" ng-app="myApp">
     <div class="row row-offcanvas row-offcanvas-left">
         <!-- sidebar -->
         <div class="column col-sm-3 col-xs-1 sidebar-offcanvas" id="sidebar">
@@ -72,12 +74,12 @@
                 @*@Html.ActionLink("Back to search", "search", "PriceRegister", null, null)*@
 
 
-                @foreach (var item in Model.WikiResults)
+                @*@foreach (var item in Model.WikiResults)
             {
                     <h3><a href="@string.Format("https://en.wikipedia.org/wiki/{0}", @item.PageTitle)">@item.PageTitle</a></h3>
 
                     <p>@item.PageContent</p>
-                }
+                }*@
 
 
             </div>
@@ -93,11 +95,16 @@
 
             <!-- /Map container -->
             <!-- Property container -->
-            <div id="Property" class="tab-pane fade">
-                <div class="container-fluid">
+            <div id="Property" class="container-fluid tab-pane fade">
+                <h3 class="text-right">Property Price Register&nbsp;&nbsp;<button onclick="togglePpr(this)"><span><i class="fa fa-bars toggle-btn"></i></span></button></h3>
+                
+                <div>
                     <div id="chartdiv" style="width: 100%; height: 600px"></div>
                 </div>
-                <div class="container">
+                <div id="pprTable"  class="container-fluid" hidden>
+                    @Html.Partial("PriceRegister")
+                </div>
+                @*<div class="container">
                     <h2>Stats</h2>
                     <div class="container-fluid">
                         <br>
@@ -142,68 +149,69 @@
                         </div>
                     </div>
 
-                </div>
+                </div>*@
 
-                <div class="container">
-                    <table id="pprTable" class="table table-striped tablesorter">
-                        @if (Model.HousesInArea != null)
-            {
-                            <thead>
+                @*<div class="container">
+            <table id="pprTable" class="table table-striped tablesorter">
+                @if (Model.HousesInArea != null)
+    {
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.Display("Date Sold")
+                            </th>
+                            <th>
+                                @Html.Display("Address")
+                            </th>
+                            <th>
+                                @Html.Display("Price")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @{
+                            foreach (var item in Model.HousesInArea)
+                            {
+
                                 <tr>
-                                    <th>
-                                        @Html.Display("Date Sold")
-                                    </th>
-                                    <th>
-                                        @Html.Display("Address")
-                                    </th>
-                                    <th>
-                                        @Html.Display("Price")
-                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DateOfSale)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Address)
+                                    </td>
+                                    <td>
+                                        € @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+
                                 </tr>
-                            </thead>
-                            <tbody>
+                            }
+                        }
+                    </tbody>
+                            }
+            </table>
+            <div id="pager" class="pager">
+                <form>
 
-                                @{
-                                    foreach (var item in Model.HousesInArea)
-                                    {
-
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DateOfSale)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Address)
-                                            </td>
-                                            <td>
-                                                € @Html.DisplayFor(modelItem => item.Price)
-                                            </td>
-
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                                    }
-                    </table>
-                    <div id="pager" class="pager">
-                        <form>
-
-                            <img src="~/Images/icons/first.png" class="first" />
-                            <img src="~/Images/icons/prev.png" class="prev" />
-                            <input type="text" class="pagedisplay" />
-                            <img src="~/Images/icons/next.png" class="next" />
-                            <img src="~/Images/icons/last.png" class="last" />
-                            <select class="pagesize">
-                                <option selected="selected" value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="30">30</option>
-                                <option value="40">40</option>
-                            </select>
-                        </form>
-                    </div>
-                </div>
+                    <img src="~/Images/icons/first.png" class="first" />
+                    <img src="~/Images/icons/prev.png" class="prev" />
+                    <input type="text" class="pagedisplay" />
+                    <img src="~/Images/icons/next.png" class="next" />
+                    <img src="~/Images/icons/last.png" class="last" />
+                    <select class="pagesize">
+                        <option selected="selected" value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+                </form>
             </div>
-            <!-- /Property container -->
+        </div>*@
+            </div>
+                
+            <!-- /End Property container -->
             <!-- Crime container -->
             <div id="Crime" class="tab-pane fade">
 
@@ -290,6 +298,7 @@
         </div>
     </div>
 </div>
+    </div>
     @section map {
         <script>
             var name = '@Model.Town.Name';
@@ -302,9 +311,9 @@
         </script>
     }
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
+    @*<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
             type="text/javascript">
-    </script>
+    </script>*@
 
     <script type="text/javascript">
         //declare a variable

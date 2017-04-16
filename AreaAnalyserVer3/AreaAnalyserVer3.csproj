@@ -643,6 +643,8 @@
     <Content Include="pager\pager.css" />
     <Content Include="pager\prev.png" />
     <Content Include="Scripts\analysisMap.js" />
+    <Content Include="Scripts\angular\dirPagination.js" />
+    <Content Include="Scripts\angular\toArrayFilter.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\education.js" />
@@ -675,6 +677,7 @@
     <Content Include="Scripts\pager\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\angular\tableAngular.js" />
     <Content Include="Scripts\tablesorter\extras\jquery.dragtable.mod.js" />
     <Content Include="Scripts\tablesorter\extras\jquery.metadata.js" />
     <Content Include="Scripts\tablesorter\extras\semver-mod.js" />
@@ -775,6 +778,9 @@
     <Content Include="Views\Analysis\PostPrimary.cshtml" />
     <Content Include="Views\Analysis\Feeder.cshtml" />
     <Content Include="Views\Analysis\Businesses.cshtml" />
+    <Content Include="Views\Analysis\PriceRegister.cshtml" />
+    <Content Include="Views\Analysis\pagination.cshtml" />
+    <Content Include="Views\Analysis\crimeTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

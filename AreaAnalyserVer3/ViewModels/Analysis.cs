@@ -55,7 +55,7 @@ namespace AreaAnalyserVer3.ViewModels
         public List<PriceRegister> HousesInArea {
             get {
                 var query = db.PriceRegister.Where(x => x.Address.Contains(AreaName));
-
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(query);
                 return query.ToList();
             }
         }

@@ -1,0 +1,98 @@
+﻿@model AreaAnalyserVer3.ViewModels.Analysis
+
+
+@*<h3>Primary Schools&nbsp;&nbsp;<button data-toggle="collapse" data-target="#primary"><span><i class="fa fa-bars toggle-btn"></i></span></button></h3>*@
+
+
+
+</br>
+<div>
+    <div ng-controller="MyController" ng-init=init("@Model.AreaName") class="my-controller">
+        <div class="form-inline">
+            <form>
+                <div>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+
+                        <input type="text" class="form-control" placeholder="Search addresses" ng-model="q">
+
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <label for="search">items per page:</label>
+                    <input type="number" min="1" max="100" class="form-control" ng-model="pageSize">
+                </div>
+                <button ng-click="resetFilter()">Reset</button>
+            </form>
+        </div>
+
+        <br>
+        <!-- items being paged -->
+        <table id="pprTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <a href="#" ng-click="sortType = 'DateOfSale'; sortReverse = !sortReverse">
+                            Date sold
+                            <!-- Will show down arrow if price sort order is false -->
+                            <span ng-show="sortType == 'DateOfSale' && !sortReverse" class="fa fa-caret-down"></span>
+                            <!-- Will show up arrow when price sort order is true -->
+                            <span ng-show="sortType == 'DateOfSale' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th>
+                        Address
+                    </th>
+                    <th>
+                        <a href="#" ng-click="sortType = 'Price'; sortReverse = !sortReverse">
+                            Price
+                            <!-- Will show down arrow if price sort order is false -->
+                            <span ng-show="sortType == 'Price' && !sortReverse" class="fa fa-caret-down"></span>
+                            <!-- Will show up arrow when price sort order is true -->
+                            <span ng-show="sortType == 'Price' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="house in houses | toArray:false | filter:q | itemsPerPage: pageSize | orderBy:sortType:sortReverse" current-page="currentPage">
+                    <td>{{house.DateOfSale.substr(6,13) | date: 'dd-MM-y'}}</td>
+                    <td>{{house.Address}}</td>
+                    <td>{{house.Price | currency : "&euro; " : 0}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <!-- pager -->
+
+    </div>
+    <div ng-controller="OtherController" class="other-controller">
+
+        <div class="text-center">
+            <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)">
+                <ul class="pagination" ng-if="1 < pages.length || !autoHide">
+                    <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }">
+                        <a href="" ng-click="setCurrent(1)">&laquo;</a>
+                    </li>
+                    <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">
+                        <a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a>
+                    </li>
+                    <li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+                        <a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>
+                    </li>
+
+                    <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">
+                        <a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a>
+                    </li>
+                    <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == pagination.last }">
+                        <a href="" ng-click="setCurrent(pagination.last)">&raquo;</a>
+                    </li>
+                </ul>
+            </dir-pagination-controls>
+        </div>
+    </div>
+</div>
+     
+
