@@ -5,16 +5,16 @@ using Microsoft.Owin;
 using Owin;
 
 
-// [assembly: OwinStartupAttribute(typeof(AreaAnalyserVer3.Startup))]
+//[assembly: OwinStartupAttribute(typeof(AreaAnalyserVer3.Startup))]
 namespace AreaAnalyserVer3
 {
     public partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
-            Configuration(app);
-            // ConfigureAuth(app);
-            createRolesandUsers();
+            //Configuration(app);
+            ConfigureAuth(app);
+            // createRolesandUsers();  Initialised default user and Administrator
         }
 
         // In this method we will create default User roles and Admin user for login   
@@ -41,7 +41,7 @@ namespace AreaAnalyserVer3
                 user.UserName = "Pete";
                 user.Email = "javabraybowl@gmail.com";
 
-                string userPWD = "IEatRabbits88";
+                string userPWD = "ThisIsNotIT";
 
                 var chkUser = UserManager.Create(user, userPWD);
 
@@ -53,23 +53,33 @@ namespace AreaAnalyserVer3
                 }
             }
 
-            //// creating Creating Manager role    
-            //if (!roleManager.RoleExists("Manager"))
-            //{
-            //    var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-            //    role.Name = "Manager";
-            //    roleManager.Create(role);
+            // creating Creating User role    
+            if (!roleManager.RoleExists("User"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "User";
+                roleManager.Create(role);
 
-            //}
+                //Here we create a default user who for testing                  
 
-            //// creating Creating Employee role    
-            //if (!roleManager.RoleExists("Employee"))
-            //{
-            //    var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-            //    role.Name = "Employee";
-            //    roleManager.Create(role);
+                var user = new ApplicationUser();
+                user.UserName = "Tester";
+                user.Email = "peterconnell@outlook.com";
+
+                string userPWD = "LetMeTest99";
+
+                var chkUser = UserManager.Create(user, userPWD);
+
+                //Add default User to Role User   
+                if (chkUser.Succeeded)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "User");
+
+                }
 
             }
+
+        }
         }
     }
 

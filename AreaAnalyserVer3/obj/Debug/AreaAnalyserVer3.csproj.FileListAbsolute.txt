@@ -210,8 +210,8 @@ C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\pt\Microsoft.SqlServer.T
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\ru\Microsoft.SqlServer.Types.resources.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\zh-Hans\Microsoft.SqlServer.Types.resources.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\bin\zh-Hant\Microsoft.SqlServer.Types.resources.dll
-C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.csprojResolveAssemblyReference.cache
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.Migrations.Dublin.resources
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.csproj.GenerateResource.Cache
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.dll
 C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.pdb
+C:\Users\User\Dev\AreaAnalyserVer3\AreaAnalyserVer3\obj\Debug\AreaAnalyserVer3.csprojResolveAssemblyReference.cache

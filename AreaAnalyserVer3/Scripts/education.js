@@ -124,69 +124,75 @@ var feederData;
 
 function refreshData(SchoolId, Name, bool) {
 
+    
+        var allCharts = AmCharts.charts;
 
-    var allCharts = AmCharts.charts;
+        $.ajax({
+            async: false,
+            type: "POST",
+            dataType: "json",
+            url: "/Education/FeederTable?id=" + SchoolId,
+            data: '{}',
+            success: function (result) {
+                //alert("hello: " + allCharts[2]);
+                //feederData = result;
+                barChart.dataProvider = result;
+                barChart.validateData();
+                $('#schoolName').text(Name);
+                transition(bool);
+            },
+            "error": function (options, chart) {
+                //console.log('Ummm something went wrong loading this file: ' + options.url);
+                alert("Sorry, no data available for this school.");
+            }
+        });
 
-
-    $.ajax({
-        async: false,
-        type: "POST",
-        dataType: "json",
-        url: "/Education/FeederTable?id=" + SchoolId,
-        data: '{}',
-        success: function (result) {
-            //alert("hello: " + allCharts[2]);
-            //feederData = result;
-            barChart.dataProvider = result;
-            barChart.validateData();
-            $('#schoolName').text(Name);
-            transition(bool);
-        },
-        "error": function (options, chart) {
-            //console.log('Ummm something went wrong loading this file: ' + options.url);
-            alert("Sorry, no data available for this school.");
-        }
-    });
-
-    $.ajax({
-        async: false,
-        type: "POST",
-        dataType: "json",
-        url: "/Education/ProgressionPie?id=" + SchoolId,
-        data: '{}',
-        success: function (result) {
-            //alert("hello: " + allCharts[2]);
-            //feederData = result;
-            pieChart.dataProvider = result;
-            pieChart.validateData();
-        }
-    });
-    //$("#charts").show();
-    //allCharts[2].dataLoader.url = "/Education/ProgressionPie?id=" + SchoolId;
-    //allCharts[2].dataLoader.loadData();
-
-    //allCharts[1].dataLoader.url = "/Education/FeederTable?id=" + SchoolId;
-    //allCharts[1].dataLoader.loadData();
-
+        $.ajax({
+            async: false,
+            type: "POST",
+            dataType: "json",
+            url: "/Education/ProgressionPie?id=" + SchoolId,
+            data: '{}',
+            success: function (result) {
+                //alert("hello: " + allCharts[2]);
+                //feederData = result;
+                pieChart.dataProvider = result;
+                pieChart.validateData();
+            }
+        });
+        
 }
 
 var tableshowing;
 
-function transition(bool) {
-    $(this).text($(this).text() == 'View Graph' ? 'View Graph' : 'View Table');
-    // Allows for smooth transition between table and graph   
+function transition(bool) {     
     $("#schoolTable").toggle("slide", { direction: "left" }, 880)
     $("#feederGraph").toggle("slide", { direction: "right" }, 880);
-    
+    console.log('transistion between schools');
 }
 
 function togglePpr() {
-   // $(this).text($(this).text() == 'View Graph' ? 'View Table' : 'View Graph');
-    $(this).text(function (i, text) {
-        return text === "View graph" ? "View table" : "View graph";
-    });
+  
     // Allows for smooth transition between table and graph   
     $("#chartdiv").toggle("slide", { direction: "left" }, 880)
     $("#pprTable").toggle("slide", { direction: "right" }, 880);
+    $(this).find('i').toggleClass('fa-line-chart fa-table');
+    console.log('transistion between ppr');
+}
 
+function register() {
+    var txt;
+    alert("you pressed register");
+    var r = confirm("Sorry, this option is only available to members.\nSign up now to gain full access to local crime and school data!!");
+    if (r == true) {
+        window.location = '/Account/Register';
+    } else {
+       die();
+    }
+}
+
+function toggleCrime() {
+    $("#chartcrime").toggle("slide", { direction: "left" }, 880)
+    $("#crimeTable").toggle("slide", { direction: "right" }, 880);
+    console.log('transistion between crime');
 }

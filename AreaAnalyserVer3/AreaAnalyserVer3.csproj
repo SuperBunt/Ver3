@@ -298,7 +298,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\StartupOwin.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalysisController.cs" />
@@ -307,6 +306,7 @@
     <Compile Include="Controllers\LocalBusinessController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PriceRegisterController.cs" />
+    <Compile Include="Controllers\TownController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -532,6 +532,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom.css" />
+    <Content Include="Content\icons\business_marker.png" />
     <Content Include="Content\icons\glossy-green-button-hover.png" />
     <Content Include="Content\icons\glossy-green-button-md.png" />
     <Content Include="Content\icons\Icons-Land-Vista-Map-Markers-Map-Marker-Marker-Outside-Azure.ico" />
@@ -539,6 +540,7 @@
     <Content Include="Content\icons\MapMarker_Marker_Outside_Pink.png" />
     <Content Include="Content\icons\Optimized-glossy-green-button-md.png" />
     <Content Include="Content\icons\scale-justice-crime-law-ethics-balance-3f7a26cacefd3896-512x512.png" />
+    <Content Include="Content\icons\school_marker.png" />
     <Content Include="Content\icons\School_Supplies-512.png" />
     <Content Include="Content\icons\service-512.png" />
     <Content Include="Content\icons\soldHouse.jpeg" />
@@ -781,6 +783,22 @@
     <Content Include="Views\Analysis\PriceRegister.cshtml" />
     <Content Include="Views\Analysis\pagination.cshtml" />
     <Content Include="Views\Analysis\crimeTable.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Education\Edit.cshtml" />
+    <Content Include="Views\Analysis\Overview.cshtml" />
+    <Content Include="Views\Town\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

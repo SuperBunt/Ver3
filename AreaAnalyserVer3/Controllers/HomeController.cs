@@ -45,13 +45,20 @@ namespace AreaAnalyserVer3.Controllers
             //    new SelectListItem{Text="Choose area", Value="id"}
             //}
             //, "Value", "Text"); // First parameter is the display text on screen, Second parameter is the value
+            ViewBag.Towns = (from d in db.Town
+                        select new { TownId = d.TownId, Name = d.Name });
+
+           
+            //IEnumerable<Object> townList = query;
+
+            //ViewBag.Towns = new SelectList(townList, "Value", "Text");
 
             return View();
         }
         [HttpPost]
-        public ActionResult Index(string TownID)
+        public ActionResult Index(int TownID)
         {
-           return RedirectToAction("Index", "Analysis", new { TownID = TownID });
+           return RedirectToAction("Index", "Analysis", new { Id = TownID });
         }
 
         public ActionResult About()
@@ -100,12 +107,17 @@ namespace AreaAnalyserVer3.Controllers
             return View(model);
         }
 
+        public ActionResult Sent()
+        {
+            return View();
+        }
+
         //Populate the markers
         public JsonResult GetMarkers()
         {
             var towns = from t in db.Town
                         select t;
-            // Create a ist of merkers from the town data
+            // Create a list of markers from the town data
             var markers = new List<Object>();
             foreach(var t in towns)
             {

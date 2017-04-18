@@ -2,8 +2,10 @@
 using AreaAnalyserVer3.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -13,93 +15,110 @@ namespace AreaAnalyserVer3.Controllers
     public class EducationController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-        // GET: Education
-        [HttpGet]
-        public ActionResult Index()
-        {
-            Education Edu = new Education(784);
-            return View(Edu);
-        }
-        // POST: Education
-        [HttpPost]
-        public ActionResult Index(string id)
-        {
-            Education Edu = new Education(784);
-            return View(Edu);
-        }
+        //// GET: Education
+        //[HttpGet]
+        //public ActionResult Index()
+        //{
+        //    Education Edu = new Education(784);
+        //    return View(Edu);
+        //}
+        //// POST: Education
+        //[HttpPost]
+        //public ActionResult Index(string id)
+        //{
+        //    Education Edu = new Education(784);
+        //    return View(Edu);
+        //}
 
         // GET: Education/Details/5
         public ActionResult Details(int id)
         {
             var school = db.School.Find(id);
+            if(school == null)
+            {
+                return HttpNotFound();
+            }
             return View(school);
         }
 
         // GET: Education/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: Education/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
+        //// POST: Education/Create
+        //[HttpPost]
+        //public ActionResult Create(FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add insert logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: Education/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            // Search for the school in the database
+            var school = db.School.Find(id);
+            // Return not found status code if null
+            if(school == null)
+            {
+                return HttpNotFound();
+            }
+            return View(school);
         }
 
         // POST: Education/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "SchoolId,Name,Phone,Email,Address")] School school)
         {
             try
             {
-                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
+                    db.Entry(school).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Analysis", new { id = school.TownId });
+                }
 
-                return RedirectToAction("Index");
+                return View(school);
             }
             catch
             {
-                return View();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
             }
         }
 
         // GET: Education/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
 
         // POST: Education/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+        //[HttpPost]
+        //public ActionResult Delete(int id, FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add delete logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // Get the pie chart info
         public JsonResult ProgressionPie(int id)

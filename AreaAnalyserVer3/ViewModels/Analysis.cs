@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace AreaAnalyserVer3.ViewModels
 {
@@ -21,87 +22,69 @@ namespace AreaAnalyserVer3.ViewModels
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
-        public Analysis() {
-            sixMonthsAgo = DateTime.Today.AddMonths(-6);
+        public Analysis()
+        {
+            housesInArea = new List<PriceRegister>();
         }
 
         public Analysis(string TownID)
         {
-            sixMonthsAgo = DateTime.Today.AddMonths(-6);
-            //AreaName = TownID;
-            //housesInArea = GetLocalHouses(TownID);
-            // averagePriceLast6mths 
         }
         // fields
-        private DateTime sixMonthsAgo;
+
         private List<PriceRegister> housesInArea;
         private double averagePriceLast6mths;
-        
-
 
         // Properties
-        //public String Address { get; set; }
         public Town Town { get; set; }
-        public int NumBusinesses;
-        public int NumSchools;
+        [DisplayName("No. of listed businesses")]
+        public int NumBusinesses { get; set; }
+        [DisplayName("No. schools")]
+        public int NumSchools { get; set; }
+        [DisplayName("Area")]
         public string AreaName { get; set; }
+        public string NearestStation { get; set; }
         public GardaStation Garda { get; set; }
 
-        public List<SelectListItem> Counties { get; set; }
         public List<Business> Businesses { get; set; }
         public List<AnnualReport> Crimes { get; set; }
         public List<School> Schools { get; set; }
-
-        public List<PriceRegister> HousesInArea {
-            get {
-                var query = db.PriceRegister.Where(x => x.Address.Contains(AreaName));
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(query);
-                return query.ToList();
-            }
-        }
+        public List<PriceRegister> HousesInArea { get; set; }
         public List<WikiContent> WikiResults { get; set; }
         //public IEnumerable<WikiImage> WikiImages { get; set; }
-        public DateTime SixMonthsAgo { get; set; }
-        [DisplayName("Avg. price")]
-        public double AveragePriceLast6mths
-        {
-            get
-            {
-                if (NumSoldinLast6mths > 0)
-                    return 120000;
-                //return averagePriceLast6mths = housesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Average(p => p.Price);
-                else
-                    return 0;
-            }
-      }
-        [DisplayName("% diff from national average")]
-        public int PercentDiff
-        {
-            get
-            {
-                return 10;
-                //var national = db.PriceRegister.Where(y => y.DateOfSale > sixMonthsAgo);
-                //double nationalAvg = national.Average(p => (p.Price));
-                //// double localAvg = HousesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Average(p => (p.Price));
-                //// If no house sold in last 6 months then the average is 0
-                //if (national.Count() == 0)
-                //{
-                //    return 0;
-                //}
-                //double diff = nationalAvg - averagePriceLast6mths;
+        [DisplayName("* Units sold ")]
+        public int NumSoldinLast6mths { get; set; }
 
-                //return Convert.ToInt32((diff / averagePriceLast6mths) * 100);
-            }
-        }
-        [DisplayName("Units sold over last 6 months")]
-        public int NumSoldinLast6mths
+        [DisplayName("* Avg. price")]
+        [DisplayFormat(DataFormatString = "{0:C0, en-IE}")]
+        public double AveragePriceLast6mths { get; set; }
+
+        [DisplayName("* % diff")]
+        public string PercentDiff
         {
             get
             {
-                return 100;
-                //return housesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Count();
+                var sixAgo = DateTime.Today.AddMonths(-6);
+                var national = db.PriceRegister.Where(y => y.DateOfSale > sixAgo);
+
+                // The values are being truncated because too many decimals may result in infinity
+                // being returned later in the calculation
+                double nationalAvg = Math.Truncate(national.Average(p => (p.Price)));
+                // If no house sold in last 6 months then the average is 0
+                if (national.Count() == 0)
+                {
+                    return "0";
+                }
+                // work out the difference (increase) between the two numbers you are comparing.
+                double increase = nationalAvg - Math.Truncate(AveragePriceLast6mths);
+
+                double percent = (increase / AveragePriceLast6mths) * 100;
+
+                return String.Format("{0:0.#}", percent);
+
             }
         }
+
         #region Methods
 
         #endregion

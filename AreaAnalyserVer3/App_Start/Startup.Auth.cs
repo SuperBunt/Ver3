@@ -1,15 +1,33 @@
 ﻿using AreaAnalyserVer3.Models;
+using AreaAnalyserVer3.TokenStorage;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Notifications;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 using System;
+using System.Configuration;
+using System.IdentityModel.Claims;
+using System.IdentityModel.Tokens;
+using System.Threading.Tasks;
+using System.Web;
+
+// [assembly: OwinStartup(typeof(AreaAnalyserVer3.App_Start.StartupOwin))]
 
 namespace AreaAnalyserVer3
 {
     public partial class Startup
     {
+        public static string appId = ConfigurationManager.AppSettings["ida:AppId"];
+        public static string appPassword = ConfigurationManager.AppSettings["ida:AppPassword"];
+        public static string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
+        public static string[] scopes = ConfigurationManager.AppSettings["ida:AppScopes"]
+          .Replace(' ', ',').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -44,6 +62,44 @@ namespace AreaAnalyserVer3
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
+            // Outlook integration
+
+            app.UseOpenIdConnectAuthentication(
+             new OpenIdConnectAuthenticationOptions
+             {
+                 ClientId = appId,
+                 Authority = "https://login.microsoftonline.com/common/v2.0",
+                 Scope = "openid offline_access profile email " + string.Join(" ", scopes),
+                 RedirectUri = redirectUri,
+                 PostLogoutRedirectUri = "/",
+                 TokenValidationParameters = new TokenValidationParameters
+                 {
+                      // For demo purposes only, see below
+                      ValidateIssuer = false
+
+                      // In a real multitenant app, you would add logic to determine whether the
+                      // issuer was from an authorized tenant
+                      //ValidateIssuer = true,
+                      //IssuerValidator = (issuer, token, tvp) =>
+                      //{
+                      //  if (MyCustomTenantValidation(issuer))
+                      //  {
+                      //    return issuer;
+                      //  }
+                      //  else
+                      //  {
+                      //    throw new SecurityTokenInvalidIssuerException("Invalid issuer");
+                      //  }
+                      //}
+                  },
+                 Notifications = new OpenIdConnectAuthenticationNotifications
+                 {
+                     AuthenticationFailed = OnAuthenticationFailed,
+                     AuthorizationCodeReceived = OnAuthorizationCodeReceived
+                 }
+             }
+           );
+
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
             //    clientId: "",
@@ -62,6 +118,44 @@ namespace AreaAnalyserVer3
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+        }
+
+        // Token handling for Microsoft Outlook
+
+        private Task OnAuthenticationFailed(AuthenticationFailedNotification<OpenIdConnectMessage,
+          OpenIdConnectAuthenticationOptions> notification)
+        {
+            notification.HandleResponse();
+            string redirect = "/Home/Error?message=" + notification.Exception.Message;
+            if (notification.ProtocolMessage != null && !string.IsNullOrEmpty(notification.ProtocolMessage.ErrorDescription))
+            {
+                redirect += "&debug=" + notification.ProtocolMessage.ErrorDescription;
+            }
+            notification.Response.Redirect(redirect);
+            return Task.FromResult(0);
+        }
+
+        private async Task OnAuthorizationCodeReceived(AuthorizationCodeReceivedNotification notification)
+        {
+            // Get the signed in user's id and create a token cache
+            string signedInUserId = notification.AuthenticationTicket.Identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            SessionTokenCache tokenCache = new SessionTokenCache(signedInUserId,
+                notification.OwinContext.Environment["System.Web.HttpContextBase"] as HttpContextBase);
+
+            ConfidentialClientApplication cca = new ConfidentialClientApplication(
+                appId, redirectUri, new ClientCredential(appPassword), tokenCache);
+
+            try
+            {
+                var result = await cca.AcquireTokenByAuthorizationCodeAsync(scopes, notification.Code);
+            }
+            catch (MsalException ex)
+            {
+                string message = "AcquireTokenByAuthorizationCodeAsync threw an exception";
+                string debug = ex.Message;
+                notification.HandleResponse();
+                notification.Response.Redirect("/Home/Error?message=" + message + "&debug=" + debug);
+            }
         }
     }
 }

@@ -5,26 +5,25 @@
 
 
 
-</br>
 <div>
     <div ng-controller="MyController" ng-init=init("@Model.AreaName") class="my-controller">
-        <div class="form-inline">
-            <form>
-                <div>
-                    <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
 
-                        <input type="text" class="form-control" placeholder="Search addresses" ng-model="q">
-
-                    </div>
-                </div>
-                <div class="col-xs-2">
-                    <label for="search">items per page:</label>
-                    <input type="number" min="1" max="100" class="form-control" ng-model="pageSize">
-                </div>
-                <button ng-click="resetFilter()">Reset</button>
-            </form>
+                <input type="text" class="form-control" placeholder="Search addresses" ng-model="q">
+            </div>
         </div>
+
+        <div class="form-inline">
+            <div>
+                <label for="search">items per page:</label>
+                <input type="number" min="1" max="100" class="form-control" ng-model="pageSize">
+            </div>
+            <button ng-click="resetFilter()">Reset</button>
+        </div>
+
+
 
         <br>
         <!-- items being paged -->
@@ -64,7 +63,7 @@
             </tbody>
 
         </table>
-
+    </div>
         <!-- pager -->
 
     </div>
@@ -93,6 +92,6 @@
             </dir-pagination-controls>
         </div>
     </div>
-</div>
+
      
 

@@ -691,7 +691,7 @@ function MyController($scope, $http) {
 
     $http.get('/Analysis/GetHouses?townName=' + name)
         .then(function (response) {         //
-            alert("success with houses");
+            //alert("success with houses");
             $scope.houses = response.data;
             console.log($scope.houses);
             }),
@@ -714,7 +714,7 @@ function MyController($scope, $http) {
         $scope.sortBusinessType = 'category';
         $scope.q = '';
         $scope.sortType = ''; // set the default sort type
-        $scope.sortReverse = true;  // set the default sort order
+        $scope.sortReverse = false;  // set the default sort order
         $scope.searchAddress = '';     // set the default search/filter term
 
         $scope.currentPage = 1;
@@ -817,7 +817,7 @@ function BusinessController($scope, $http) {
                method: 'GET',
                url: '/Analysis/GetBusinesses?id=' + $scope.townId,
            }).then(function (response) {
-               alert("success businesses: ");
+               //alert("success businesses: ");
                $scope.businesses = response.data;
            }),
         (function (data) {

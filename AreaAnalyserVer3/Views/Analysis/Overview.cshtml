@@ -1,0 +1,61 @@
+﻿@model AreaAnalyserVer3.ViewModels.Analysis
+
+<div>
+    <h4>Summary</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumSchools)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumSchools)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumBusinesses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumBusinesses)
+        </dd>
+    </dl>
+    <hr />
+    <h4>Property statistics</h4>
+
+    <dl class="dl-horizontal">      
+        <dt>
+            @Html.DisplayNameFor(model => model.NumSoldinLast6mths)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumSoldinLast6mths)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AveragePriceLast6mths)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AveragePriceLast6mths)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PercentDiff)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PercentDiff) %
+        </dd>
+
+    </dl>
+    <p class="small">* previous 6 months</p>
+</div>
