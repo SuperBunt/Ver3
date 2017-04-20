@@ -6,8 +6,9 @@
 
 @using (Html.BeginForm())
 {
-    @*@Html.AntiForgeryToken()*@
+    @Html.AntiForgeryToken()
     <h4>Send your comments.</h4>
+    <p>Please feel free to contact our staff if you experience any issues with the arealyser.</p>
     <hr />
     <div class="form-group">
         @Html.LabelFor(m => m.FromName, new { @class = "col-md-2 control-label" })
@@ -44,6 +45,6 @@
     </div>
 }
 
-@section Scripts {
+@*@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+}*@

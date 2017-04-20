@@ -36,7 +36,6 @@ C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.AspNet.Identit
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Owin.Security.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Owin.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Owin.Security.Cookies.dll
-C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Identity.Client.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Office365.OutlookServices.Portable.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.OData.Client.dll
@@ -83,7 +82,6 @@ C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.AspNet.Identit
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Owin.Security.xml
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Owin.Security.Cookies.xml
-C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.Identity.Client.xml
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\Microsoft.OData.Client.xml
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Debug\LinqToWiki.Generated.pdb

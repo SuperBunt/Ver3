@@ -38,7 +38,6 @@ C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Microsoft.AspNet.Ident
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Microsoft.AspNet.Identity.Owin.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Microsoft.Owin.Security.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Owin.dll
-C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Microsoft.AspNet.Identity.EntityFramework.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Microsoft.Identity.Client.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\Microsoft.Office365.OutlookServices.Portable.dll
 C:\Users\User\Dev\AreaAnalyserVer3\HelloWorld\bin\Release\EntityFramework.dll

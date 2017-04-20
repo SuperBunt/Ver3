@@ -1,6 +1,6 @@
 ﻿@model AreaAnalyserVer3.ViewModels.Analysis
 
- 
+<hr />
 <h3 class="text-right">Primary Schools&nbsp;&nbsp;<button data-toggle="collapse" data-target="#primary"><span><i class="fa fa-bars toggle-btn"></i></span></button></h3>
 
 <div id="primary" class="collapse in">
@@ -17,9 +17,6 @@
                     </th>
                     <th>
                         @Html.DisplayName("Ethos")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Enrolled")
                     </th>
                     <th></th>
                 </tr>
@@ -39,18 +36,20 @@
                                 @Html.DisplayFor(modelItem => item.Ethos)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Total)
-                            </td>
-                            <td>
-                                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-
-                                @Html.ActionLink("Details", "Details", new { id = item.SchoolId })
-                                @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                                @Html.ActionLink("Details", "Details", new { controller = "Education", id = item.SchoolId }, new { @class = "btn-small" })
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    @Html.ActionLink("Edit", "Edit", new { controller = "Education", id = item.SchoolId }, new { @class = "btn-small" })
+                                }
                             </td>
                         </tr>
                     }
                 }
             </table>
+        }
+        else
+        {
+            <p>Sorry, no school data available</p>
         }
     </div>
 </div>

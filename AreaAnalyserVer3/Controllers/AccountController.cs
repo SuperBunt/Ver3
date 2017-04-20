@@ -169,7 +169,8 @@ namespace AreaAnalyserVer3.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                var role = UserManager.AddToRole(user.Id, "User");
+                if (result.Succeeded && role.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     

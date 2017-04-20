@@ -1,32 +1,35 @@
 ﻿@model AreaAnalyserVer3.ViewModels.Analysis
 
 <div ng-controller="BusinessController" ng-init=init("@Model.Town.TownId") class="business-controller">
-    <h2>Local Businesses {{townName}}</h2>
-   
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </div>
-                <input type="text" class="form-control" placeholder="Search businesses" ng-model="bus">
-                </div>
-            </div>
-        
-        <div class="form-inline">
+    <div class="panel row">
+        <div class="container-fluid">
             <div class="form-group">
-                <label for="search">items per page:</label>
-                <input type="number" min="1" max="20" class="form-control" ng-model="pageSize">
+                <label for="search">Filter your search:</label>
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Search businesses" ng-model="bus" ng-change="currentPage = 1">
+                </div>
             </div>
-            <button ng-click="resetFilter()">Reset</button>
         </div>
-    
+        <div class="container-fluid">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="pages">items per page:</label>
+                    <input type="number" min="1" max="20" class="form-control" ng-model="pageSize">
+                </div>
+                <button ng-click="resetFilter()">Reset</button>
+            </div>
+        </div>
+    </div>
     <br>
     <!-- items being paged -->
     <table id="pprTable" class="table table-striped">
         <thead>
             <tr>
                 <th>
-                    <select ng-model="cat" ng-options="entry.category as entry.category for entry in businesses | unique: 'category'">
+                    <select ng-model="cat" ng-options="entry.category as entry.category for entry in businesses | unique: 'category' | orderBy: 'category'">
                         <option value="">Select Category</option>
                     </select>
                 </th>
@@ -36,12 +39,16 @@
                 <th>
                     Address
                 </th>
+                <th>
+                    Phone
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr dir-paginate="b in businesses| toArray:false  | filter:bus | filter:cat | itemsPerPage: pageSize | orderBy:sortType:sortBusinessReverse" current-page="currentPage">
+            <tr dir-paginate="b in businesses| toArray:false  | filter:bus | filter:cat | itemsPerPage: pageSize | orderBy:sortBusinessType:sortBusinessReverse" current-page="currentPage">
                 <td>{{b.category}}</td>
                 <td>{{b.name}}</td>
+                <td>{{b.address}}</td>
                 <td>{{b.phone}}</td>
             </tr>
         </tbody>
@@ -128,6 +135,24 @@
     </td>
     <td>
     </td>
+
+</tr>
+<tr>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+</tr>
+
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
 
 </tr>
 <tr>

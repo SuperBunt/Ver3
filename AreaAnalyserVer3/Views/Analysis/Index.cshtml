@@ -1,7 +1,7 @@
 ﻿@model  AreaAnalyserVer3.ViewModels.Analysis
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Arealysing";
 }
 
 @section Amcharts {
@@ -24,21 +24,18 @@
     @Scripts.Render("~/Scripts/angular/dirPagination.js")
     @Scripts.Render("~/Scripts/angular/toArrayFilter.js")
 
-    @*<script type="text/javascript">
-        $(function () {
-            $("table")
-                .tablesorter({ widthFixed: true, widgets: ['zebra'] })
-                .tablesorterPager({ container: $("#pager") });
-        });
-    </script>*@
-
 }
+
+@{int townId = Model.Town.TownId; double? latitude = Model.Town.GeoLocation.Latitude; double? longitude = Model.Town.GeoLocation.Longitude;}
+
+
+
 <div class="wrapper" ng-app="myApp">
     <div class="row row-offcanvas row-offcanvas-left">
         <!-- sidebar -->
         <div class="column col-sm-3 col-xs-1 sidebar-offcanvas" id="sidebar">
             <ul class="nav" id="menu">
-                <li class="text-left"><a data-toggle="pill" href="#Summary"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i><span class="collapse in hidden-sm"></span>&nbsp;&nbsp;Overview</a></li>
+                <li class="text-left"><a data-toggle="pill" href="#Summary"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i><span class="collapse in hidden-xs"></span>&nbsp;&nbsp;Overview</a></li>
                 <li class="active"><a data-toggle="pill" href="#Map"><i class="fa fa-map-o fa-fw" aria-hidden="true"></i><span class="collapse in hidden-xs"></span>&nbsp;&nbsp;Map</a></li>
                 <li><a data-toggle="pill" href="#Property"><i class="fa fa-building fa-fw"></i><span class="collapse in hidden-xs"></span>&nbsp;&nbsp;Property</a></li>
                 @if (User.IsInRole("User") || User.IsInRole("Admin"))
@@ -56,149 +53,140 @@
                 {
                     <li><a href="@Url.Action("Edit", "Town")"><i class="fa fa-edit" aria-hidden="true"></i><span class="collapse in hidden-xs"></span>&nbsp;&nbsp;Edit Town</a></li>
                 }
+                <li><a data-toggle="pill" href="#Survey"><i class="fa fa-smile-o fa-fw aria-hidden=" true""></i><span class="collapse in hidden-xs"></span>&nbsp;&nbsp;Feedback survey</a></li>
             </ul>
         </div>
         <!-- /sidebar -->
-      
-
         <!-- main right col -->
         <div class="tab-content col-sm-9 col-xs-11" id="main">
 
-            <div id="Home" class="tab-pane fade">
+            <div id="Survey" class="tab-pane fade">
 
-
-                <h1>@Html.DisplayFor(m => m.Town.Name)</h1>
-                @*<input id="address" type="text" value="@Html.DisplayFor(m => m.Address)" hidden>*@
-                <input type="text" id="latitude" value=@Html.Raw(Model.Town.GeoLocation.Latitude) hidden />
-                <input type="text" id="longitude" value=@Html.Raw(Model.Town.GeoLocation.Longitude) hidden />
-                <input type="text" id="townId" value=@Html.Raw(Model.Town.TownId) hidden />
-
-
-                @*@foreach (var item in Model.WikiResults)
-            {
-                    <h3><a href="@string.Format("https://en.wikipedia.org/wiki/{0}", @item.PageTitle)">@item.PageTitle</a></h3>
-
-                    <p>@item.PageContent</p>
-                }*@
-
+                <script>(function(e,t,n,s){var o,c,r;e.SMCX=e.SMCX||[],t.getElementById(s)||(o=t.getElementsByTagName(n),c=o[o.length-1],r=t.createElement(n),r.type="text/javascript",r.async=!0,r.id=s,r.src=["https:"===location.protocol?"https://":"http://","widget.surveymonkey.com/collect/website/js/Hm7RFCDnzetmawCs2qTMA70yV5NNVNxhV15PqxdNrgUQVS5nBvLYO9m4Y68Jr6e_2B.js"].join(""),c.parentNode.insertBefore(r,c))})(window,document,"script","smcx-sdk");</script><a style="font: 12px Helvetica, sans-serif; color: #999; text-decoration: none;" href=https://www.surveymonkey.com/mp/customer-satisfaction-surveys /> Create your own user feedback survey </a>
 
             </div>
 
-            <!-- Map container -->
+            <!-- Summary container -->
             <div id="Summary" class="tab-pane fade">
-                <div class="container-fluid">
-                    <div>
-                        @Html.Partial("Overview")
-                    </div>                  
-
-                </div>
+                
+                    @Html.Partial("Overview")
+                
             </div>
-            <!-- /Map container -->
+            <!-- /Summary container -->
+
             <!-- Map container -->
             <div id="Map" class="tab-pane fade in active">
                 <div class="container-fluid">
+                    <div class="form-inline panel">
+                        <div>
+                            <label for="filter">Filter by category:</label>
+                            @Html.DropDownList("value", new SelectList(ViewBag.Categories, "Text", "Value"), "Filter category", new { @onchange = "filterMarkers(this.value);", @class = "form-control; col-md-6;" })
+                        </div>
+                    </div>
+                    <div id="localMap" style="width: 600px; height: 600px; background-color: #23570e;">
 
-                    <div id="localMap" style="width: 600px; height: 600px; background-color: yellow;"> </div>
+                    </div>
 
                 </div>
             </div>
             <!-- /Map container -->
-
             <!-- Property container -->
             <div id="Property" class="container-fluid tab-pane fade">
-                <h3 class="text-right">Property Price Register&nbsp;&nbsp;<button onclick="togglePpr()"><span><i class="fa fa-list"></i></span></button></h3>
-                
+                <h2 id="category-header">Property Price Register&nbsp;&nbsp;<button class="btn btn-default" id="PprBtn" onclick="togglePpr()"><i class="fa fa-list fa-inverse"></i>&nbsp;&nbsp;<span class="text">View table</span></button></h2>
+                <p class="small">- To search for property in another area please return to the homescreen</p>
                 <div>
                     <div id="chartdiv" style="width: 100%; height: 600px"></div>
                 </div>
-                <div id="pprTable"  class="container-fluid" hidden>
+                <div id="pprTable" class="container-fluid" hidden>
                     @Html.Partial("PriceRegister")
                 </div>
-              
-            </div>             
+
+            </div>
             <!-- /End Property container -->
-
             <!-- Crime container -->
-
             <div id="Crime" class="tab-pane fade">
 
-                <h4>Crime Stats</h4>
-                <h5>Nearest station : <span>@*@Html.Raw(Model.Garda.Name)*@</span></h5>
-                <button onclick="toggleCrime()"><span><i class="fa fa-list"></i></span></button>
+                <h2 id="category-header">Crime Stats&nbsp;&nbsp;<button class="btn btn-default" id="crimeBtn" onclick="toggleCrime()"><span><i class="fa fa-list fa-inverse"></i></span></button></h2>
+                <p class="small">- To search crime statistics in another area please return to the homescreen</p>
+                <hr />
+                <h5>Nearest station : <span>@Html.Raw(Model.NearestStation)</span></h5>
 
                 <div id="chartcrime" style="width: 100%; height: 600px; "></div>
 
                 <div id="crimeTable" hidden>
-                <table class="table table-striped">
-                    @if (Model.Crimes != null)
+                    <table class="table table-striped">
+                        @if (Model.Crimes != null)
             {
-                        <tr>
-                            <th class="col-md-2">
-                                @Html.DisplayName("Attempted murder/assaults")
-                            </th>
-                            <th class="col-md-2">
-                                @Html.DisplayName("Burglaries")
-                            </th>
-                            <th class="col-md-2">
-                                @Html.DisplayName("Damage")
-                            </th>
-                            <th class="col-md-2">
-                                @Html.DisplayName("Dangerous acts")
-                            </th>
-                            <th class="col-md-2">
-                                @Html.DisplayName("Drug offences")
-                            </th>
-                            <th class="col-md-2">
-                                @Html.DisplayName("Year")
-                            </th>
-                        </tr>
-
-                        foreach (var item in Model.Crimes)
-                        {
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.NumAttemptedMurderAssault)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.NumBurglary)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.NumDamage)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.NumDangerousActs)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.NumDrugs)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Year)
-                                </td>
+                                <th class="col-md-2">
+                                    @Html.DisplayName("Attempted murder/assaults")
+                                </th>
+                                <th class="col-md-2">
+                                    @Html.DisplayName("Burglaries")
+                                </th>
+                                <th class="col-md-2">
+                                    @Html.DisplayName("Damage")
+                                </th>
+                                <th class="col-md-2">
+                                    @Html.DisplayName("Dangerous acts")
+                                </th>
+                                <th class="col-md-2">
+                                    @Html.DisplayName("Drug offences")
+                                </th>
+                                <th class="col-md-2">
+                                    @Html.DisplayName("Year")
+                                </th>
                             </tr>
+
+                            foreach (var item in Model.Crimes)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumAttemptedMurderAssault)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumBurglary)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumDamage)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumDangerousActs)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumDrugs)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Year)
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
-                </table>
-                    </div>
+                    </table>
+                </div>
 
             </div>
             <!-- / Crime container -->
-
             <!-- Education partial -->
-            <div id="Education" class="tab-pane fade" style="background-color:yellow">
-               
-                    <div id="schoolTable" >
-                        @Html.Partial("PrimarySchools")
-                        @Html.Partial("PostPrimary")
-                    </div>
-                    <div id="feederGraph" hidden style="width: 100%">
-                        @Html.Partial("Feeder")
-                    </div>
-                
+            <div id="Education" class="tab-pane fade">
+                <h2 id="category-header">Local Schools</h2>
+                <p class="small">- To search for schools in another area please return to the homescreen</p>
+                <div id="schoolTable">
+                    @Html.Partial("PrimarySchools")
+                    @Html.Partial("PostPrimary")
+                    <p class="small">* Gender: B = boys, G = Girls, M = Mixed</p>
+                </div>
+
+                <div id="feederGraph" hidden style="width: 100%">
+                    @Html.Partial("Feeder")
+                </div>
+
             </div>
             <!-- / Education partial -->
-
             <!-- Local Businesses partial -->
             <div id="Businesses" class="tab-pane fade">
+                <h2 id="category-header">Local Businesses</h2>
+                <p class="small">- To search for businesses in another area please return to the homescreen</p>
                 <div class="container-fluid">
 
                     @Html.Partial("Businesses")
@@ -210,76 +198,40 @@
         </div>
     </div>
 </div>
-    </div>
-    @section map {
-        <script>
-            var name = '@Model.Town.Name';
-            $
-            $(document).ready(function () {
-                generateCharts();
-                loadGraph();
-                $(".title").text(name);
-            });
-        </script>
-    }
-
-    @*<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
-            type="text/javascript">
-    </script>*@
-
-    <script type="text/javascript">
-        //declare a variable
-        var markers = [];
-        var id = document.getElementById('townId').value;
-        $.ajax({
-            async: false,
-            type: "POST",
-            dataType: "json",
-            url: '@Url.Action("GetMarkers", "Analysis")' + '?Id=' + id,
-            data: '{}',
-            success: function (result) {
-                //get address from controller action.....
-                markers = result.AddressResult;
-            }
-
+</div>
+@section map {
+    <script>
+        var name = '@Model.Town.Name';
+        $
+        $(document).ready(function () {
+            generateCharts();
+            loadGraph();
+            $(".title").text(name);
         });
-
-        function initMap() {
-            var myLatLong = { lat: @Model.Town.GeoLocation.Latitude, lng: @Model.Town.GeoLocation.Longitude };
-            var mapOptions = {
-                center: myLatLong,
-                zoom: 13,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var infoWindow = new google.maps.InfoWindow();
-            var latlngbounds = new google.maps.LatLngBounds(new google.maps.LatLng(54.668922, -7.0100274), new google.maps.LatLng(55.121921664, -6.5620904));
-            var map = new google.maps.Map(document.getElementById("localMap"), mapOptions);
-            setMarkers(map, markers);
-
-        }
-
-        function setMarkers(map, markers) {
-
-            for (var i = 0; i < markers.length; i++) {
-                //alert("success getting marker "+[i]);
-                var data = markers[i];
-                var siteLatLng = new google.maps.LatLng(data.Latitude, data.Longitude);
-                var marker = new google.maps.Marker({
-                    position: siteLatLng,
-                    map: map,
-                    title: data.Description,
-                    icon: data.icon,
-                    label: data.Label
-                });
-
-                var contentString = "Some content";
-
-                google.maps.event.addListener(marker, "click", function (e) {
-                    //myFunction(this.id);
-                    infowindow.setContent(this.title);
-                    infowindow.open(map, this);
-                });
-            }
-        }
-
     </script>
+}
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
+        type="text/javascript">
+</script>
+
+<script type="text/javascript">
+    //declare a variable
+    var townId = Number(@townId);
+    var latitude = Number(@latitude);
+    var longitude = Number(@longitude);
+
+    $.ajax({
+        async: false,
+        type: "POST",
+        dataType: "json",
+        url: '@Url.Action("GetMarkers", "Analysis")' + '?Id=' + townId,
+        data: '{}',
+        success: function (result) {
+            //get address from controller action.....
+            markers = result.AddressResult;
+        }
+
+    });
+
+</script>

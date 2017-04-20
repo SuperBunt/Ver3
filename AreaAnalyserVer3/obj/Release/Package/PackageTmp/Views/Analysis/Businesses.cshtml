@@ -1,10 +1,86 @@
 ﻿@model AreaAnalyserVer3.ViewModels.Analysis
 
-<h3>Local Businesses</h3>
+<div ng-controller="BusinessController" ng-init=init("@Model.Town.TownId") class="business-controller">
+    <div class="panel row">
+        <div class="container-fluid">
+            <div class="form-group">
+                <label for="search">Filter your search:</label>
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Search businesses" ng-model="bus" ng-change="currentPage = 1">
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="pages">items per page:</label>
+                    <input type="number" min="1" max="20" class="form-control" ng-model="pageSize">
+                </div>
+                <button ng-click="resetFilter()">Reset</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <!-- items being paged -->
+    <table id="pprTable" class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <select ng-model="cat" ng-options="entry.category as entry.category for entry in businesses | unique: 'category' | orderBy: 'category'">
+                        <option value="">Select Category</option>
+                    </select>
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Phone
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr dir-paginate="b in businesses| toArray:false  | filter:bus | filter:cat | itemsPerPage: pageSize | orderBy:sortBusinessType:sortBusinessReverse" current-page="currentPage">
+                <td>{{b.category}}</td>
+                <td>{{b.name}}</td>
+                <td>{{b.address}}</td>
+                <td>{{b.phone}}</td>
+            </tr>
+        </tbody>
 
-<table class="table table-striped">
-    @if (Model.Businesses != null)
-            {
+    </table>
+</div>
+
+<div ng-controller="OtherController" class="text-center">
+    <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)">
+        <ul class="pagination" ng-if="1 < pages.length || !autoHide">
+            <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }">
+                <a href="" ng-click="setCurrent(1)">&laquo;</a>
+            </li>
+            <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">
+                <a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a>
+            </li>
+            <li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+                <a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>
+            </li>
+
+            <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">
+                <a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a>
+            </li>
+            <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == pagination.last }">
+                <a href="" ng-click="setCurrent(pagination.last)">&raquo;</a>
+            </li>
+        </ul>
+    </dir-pagination-controls>
+</div>
+
+@*@if (Model.Businesses != null)
+                {
         <tr>
             <th class="col-md-2">
                 @Html.DisplayName("Category")
@@ -35,9 +111,101 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Phone)
                 </td>
-                
+
             </tr>
         }
-    }
-</table>
+    }*@
+<tr>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+</tr>
 
+<tr>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+
+</tr>
+<tr>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+</tr>
+
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+
+</tr>
+<tr>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+</tr>
+
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+
+</tr>
+<tr>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+</tr>
+
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+
+</tr>
+<tr>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+    <th class="col-md-2">
+    </th>
+</tr>
+
+<tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+
+</tr>

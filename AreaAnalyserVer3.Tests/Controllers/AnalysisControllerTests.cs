@@ -61,6 +61,16 @@ namespace AreaAnalyserVer3.Controllers.Tests
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2016, 3, 1), Price = 30000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2016, 3, 1), Price = 30000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2016, 3, 1), Price = 30000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 100000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 100000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 100000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 2, 1), Price = 200000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 2, 1), Price = 200000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 2, 1), Price = 200000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 3, 1), Price = 300000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 3, 1), Price = 300000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 3, 1), Price = 300000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 3, 1), Price = 300000 });
             // Act
             var avg = (sampleHouses.OrderBy(x => x.DateOfSale)
               .GroupBy(x => new { x.DateOfSale.Year, x.DateOfSale.Month })

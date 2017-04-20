@@ -10,10 +10,10 @@ namespace HelloWorld
     public class Functions
     {
         
-        public static void HelloWorldFunction()
+        public static void PerformUpdate()
         {
             PPRFile myJob = new PPRFile();
-            myJob.GetListFromCSV();
+            //myJob.GetListFromCSV();
         }
 
 

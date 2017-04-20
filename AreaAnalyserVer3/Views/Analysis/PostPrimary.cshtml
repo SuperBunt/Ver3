@@ -13,13 +13,13 @@
                         @Html.DisplayName("Name")
                     </th>
                     <th>
-                        @Html.DisplayName("Type")
-                    </th>
-                    <th>
                         @Html.DisplayName("Ethos")
                     </th>
                     <th>
-                        @Html.DisplayName("Gender")
+                        @Html.DisplayName("Gender *")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Type")
                     </th>
                     <th></th>
                 </tr>
@@ -33,31 +33,18 @@
                                 @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
+                                @Html.DisplayFor(modelItem => item.Ethos)
+                            </td>                          
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Gender)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.Type)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Ethos)
-                            </td>
-                            @if (item.Gender == "B")
-                            {
-                                <i class="fa fa-mars"></i>
-                            }
-                            else if (item.Gender == "G")
-                            {
-                                <i class="fa fa-venus"></i>
-                            } (item.Gender == "M")
-                            {
-                            <i class="fa fa-venus-mars"></i>
-                            }
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Total)
-                            </td>
-                            <td>
                                 @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-                                <button onclick="refreshData(@item.SchoolId, '@item.Name', true)"><i class="fa fa-university toggle-btn"></i></button>
-                                @*<a href="@Html.ActionLink(" ", "Details", new { id = item.SchoolId })">
-                                        <span><i class="fa fa-info-circle" aria-hidden="true"></i></span>
-                                    </a>*@
+                                <button id="schoolToggle" onclick="refreshData(@item.SchoolId, '@item.Name', true)">College&nbsp;<i class="fa fa-university toggle-btn"></i></button>
+                                
                                 @Html.ActionLink("Details", "Details", new { controller = "Education", id = item.SchoolId }, new { @class = "btn-small" })
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -69,6 +56,10 @@
                     }
                 }
             </table>
+        }
+        else
+        {
+            <p>Sorry, no school data available</p>
         }
     </div>
 </div>

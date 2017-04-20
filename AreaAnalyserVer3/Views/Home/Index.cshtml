@@ -5,7 +5,8 @@
 <div class="container">
     <div class="row">
         <h1>Welcome to the Arealyser</h1>
-        <p class="lead">Use the arealyser to research and analyse your chosen area.</p>
+        <p class="lead">Thinking about moving house or simply interested in your local area. Use the arealyser to research and analyse your chosen area.</p>
+        <p class="lead"></p>
     </div>
     @*<div class="row">
             @using (Html.BeginForm())
@@ -16,16 +17,18 @@
                     <input type="submit" value="Arealyse" />
             }
         </div>*@
-    <form class="form-inline">
-        @using (Html.BeginForm())
+    @using (Html.BeginForm())
             {
+        <form class="form-inline">
+
             <div class="form-group">
-                <label for="choice">Choose your area</label>
-                @Html.DropDownList("TownId", new SelectList(ViewBag.Towns, "TownId", "Name"), "Or press a map marker...", new { @class = "form-control; col-xs-4;" })
+                <label for="choice">Choose your area and press the button&nbsp;</label>
+                @Html.DropDownList("TownID", new SelectList(ViewBag.Towns, "TownId", "Name"), "Or press a map marker...", new { @class = "form-control; col-md-6;" })&nbsp;
                 <input class="btn btn-primary" type="submit" value="Arealyse" />
             </div>
-        }
-    </form>
+
+        </form>
+    }
     <hr>
     <div id="selectMap" style="width: 600px; height: 600px">
     </div>
@@ -39,7 +42,7 @@
         $("#TownID").empty();
 
         $.ajax({
-                        type: 'POST',
+            type: 'POST',
             url: '@Url.Action("GetTowns")',
             dataType: 'json',
             data: { county: $("#County").val() },
@@ -49,14 +52,14 @@
                     $("#TownID").append('<option value ="'
                     + locale.TownId + '">'
                         + locale.Name + ' </option>');
-                            });
-                        },
+                });
+            },
             error: function (ex) {
-                            alert('Failed' + ex);
-                        }
-                    });
-                    return false;
-                })
+                alert('Failed' + ex);
+            }
+        });
+        return false;
+    })
 
 
 </script>
@@ -100,11 +103,7 @@
         }
 
         function myFunction(e) {
-            //var txt;
-            //var lat = e.latLng.lat();
-            //var lng = e.latLng.lng();
-            alert(e);
-
+           
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("FindNearestTownId", "Analysis")',
@@ -112,7 +111,6 @@
                 data: { Id: e },
                 dataType: "json",
                 success: function () {
-                    alert("Success")
                     window.location = Redirect.url;
                 },
                 error: function () {
@@ -149,3 +147,5 @@
 
     </script>
 }
+
+<script>(function(e,t,s,n){var c,o,i;e.SMCX=e.SMCX||[],t.getElementById(n)||(c=t.getElementsByTagName(s),o=c[c.length-1],i=t.createElement(s),i.type="text/javascript",i.async=!0,i.id=n,i.src=["https:"===location.protocol?"https://":"http://","widget.surveymonkey.com/collect/website/js/b_2BAFivsTZZhynsIbX0ilSR4zcOsDGNhUnSQM_2F_2B2M45r_2B7W3hL7BkBwhAhs6jeeUn.js"].join(""),o.parentNode.insertBefore(i,o))})(window,document,"script","smcx-sdk");</script>

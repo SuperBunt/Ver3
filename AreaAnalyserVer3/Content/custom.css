@@ -120,12 +120,14 @@
             -moz-border-radius: 0;
             text-decoration: none;
             color: #2f332e;
-            box-shadow: 10 10px 5px 5px rgba(0, 0, 0, 0.5);
+           
         }
+
+
 
 /*To enable smooth transistion between the school table 
     and graph we need to set these properties*/
-#schoolTable {
+/*#schoolTable {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -143,7 +145,7 @@
     position: relative;
     top: 5px;
     left: 15px;
-}
+}*/
 
 
 
@@ -170,4 +172,20 @@
 .nav-pills > li > a:hover {
     border-color: #000000;
     background-color: rgba(131, 131, 13, 0.70);
+}
+
+/* Category headers*/
+
+#category-header  {
+    background-color: rgba(18,129,6,1);
+    color: rgba(255,255,255,1);
+    text-align:center;
+    padding: 3px;
+    padding-right: 10px;
+}
+
+#category-header .btn{
+    background-color: #AA3939;
+    color: rgba(255,255,255,1);
+    
 }

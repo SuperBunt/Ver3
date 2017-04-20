@@ -1,6 +1,5 @@
 ﻿using AreaAnalyserVer3.Models;
 using CsvHelper;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,8 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace HelloWorld
 {
@@ -21,16 +18,17 @@ namespace HelloWorld
             string year = DateTime.Now.Year.ToString();
 
             url = "https://www.propertypriceregister.ie/website/npsra/ppr/npsra-ppr.nsf/downloads/ppr-" + year + ".csv/$file/ppr-" + year + ".csv";
-            
         }
 
         // download data file from propertypriceregister.ie
         public string DownloadFile()
         {
+            Console.WriteLine("Downloading file from propertypriceregister.ie");
             string error = null;
             try
             {
                 string temp = Path.GetTempPath();
+                // Assign GUID as name to tempfile
                 var fileName = Guid.NewGuid().ToString() + ".csv";
                 temp = Path.Combine(temp, fileName);
                 using (WebClient webClient = new WebClient())
@@ -41,7 +39,7 @@ namespace HelloWorld
             }
             catch (IOException e)
             {
-                Console.WriteLine("ERROR: downloading PPR data file: " + e.Message);
+                Console.WriteLine("ERROR: writing PPR data file: " + e.Message);
                 return error;
             }
             catch (WebException we)
@@ -52,41 +50,52 @@ namespace HelloWorld
         }
 
         // return list of Priceregister objects from propertypriceregister.ie
-        public void GetListFromCSV()
+        public void GetListFromCSV(TextWriter log)
         {
             List<PriceRegister> pprList = new List<PriceRegister>();
 
-            // Assembly assembly = Assembly.GetExecutingAssembly();
-            //string filename = "C:/Users/User/AppData/Local/Temp/382012fa-c406-41ef-8043-31b428f64c73.csv";
-             string filename = DownloadFile();
-            //resourceName = FormatResourceName(assembly, resourceName);
-            DateTime date = DateTime.Today.AddDays(-7);
+            // Ignore fiename below, was used for testing
+            string filename = "C:/Users/User/AppData/Local/Temp/b1015421-d354-444a-8f8a-2ec441419122.csv";
+
+            // string filename = DownloadFile();
+
+            // Get the date of the last item added to the database
+            // DateTime lastDate;
+            DateTime lastDate = new DateTime(2017, 1, 1);
+            log.WriteLine("Latest date in Price Register db was " + lastDate.ToShortDateString());
+            //using (var db = new ApplicationDbContext())
+            //{
+            //    lastDate = db.PriceRegister.Max(i => i.DateOfSale);
+            //    Console.WriteLine("Latest date in Price Register db was " + lastDate.ToShortDateString());
+            //}
+
             try
             {
-                //var list = new List<PriceRegister>();
-                //using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (StreamReader reader = new StreamReader(filename, Encoding.Default))
                 {
-                    using (StreamReader reader = new StreamReader(filename, Encoding.Default))
+                    CsvReader csvReader = new CsvReader(reader);
+                    csvReader.Configuration.WillThrowOnMissingField = false;
+                    csvReader.ReadHeader();
+
+                    string[] charsToRemove = { "€", ",", "*" };
+                    string county = "";
+                    // Read each line of the csv file
+                    while (csvReader.Read())
                     {
-                        CsvReader csvReader = new CsvReader(reader);
-                        csvReader.Configuration.WillThrowOnMissingField = false;
-                        csvReader.ReadHeader();
-
-                        string[] charsToRemove = { "€", ",", "*" };
-                        
-
-                        while (csvReader.Read())
+                        try
                         {
-                            try
+                            county = csvReader.GetField<string>(3);
+                            var csvDate = csvReader.GetField<DateTime>(0);
+                            int result = DateTime.Compare(csvDate, lastDate);
+                            // we dont need to add any units sold before previous date
+                            if (result > 0)
                             {
-                                var csvDate = csvReader.GetField<DateTime>(0);
-                                int result = DateTime.Compare(csvDate, date);   // we dont need to add any units sold before previous date
-                                if (result > 0)
+                                if (county.Equals("Dublin"))    //  We are only storing houses in Dublin
                                 {
                                     PriceRegister toAdd = new PriceRegister();
                                     toAdd.DateOfSale = csvReader.GetField<DateTime>(0);
                                     toAdd.Address = csvReader.GetField<string>(1);
-                                    toAdd.PostCode = csvReader.GetField<string>(3);
+                                    toAdd.PostCode = csvReader.GetField<string>(2);
                                     toAdd.NotFullMarket = 0;
                                     var priceConvert = csvReader.GetField<string>(4);
                                     foreach (var c in charsToRemove)
@@ -98,17 +107,13 @@ namespace HelloWorld
                                     pprList.Add(toAdd);
                                 }
                             }
-                            catch (FormatException e)
-                            {
-                                Console.WriteLine(e);
-                            }
                         }
-
-                        //return list;
-                    }
-
-                }
-                
+                        catch (FormatException e)
+                        {
+                            Console.WriteLine("Format error reading csv file" + e);
+                        }
+                    }   // end csvReader.Read(), no more lines                    
+                }   // end reader
             }
             catch (IOException e)
             {
@@ -121,21 +126,38 @@ namespace HelloWorld
                 //return null;
             }
 
-            if (pprList != null)
-            {
-                foreach (var ppr in pprList)
-                {
-                    Console.WriteLine(ppr.Address);
-                    // Add item to database
-                }
-            }
-            else
+            // Add the items to the database if the list is not empty
+            #region database update
+            if (pprList.Count() == 0)
             {
                 Console.WriteLine("List empty, no houses updated!");
             }
-
+            else
+            {
+                try
+                {
+                    AddToDatabase(ref pprList);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR: Adding items to databse! " + e.Message);
+                }
+            }
+            #endregion
         }
 
+        // Add the latest items to the database
+        private void AddToDatabase(ref List<PriceRegister> pprList)
+        {
+            Console.WriteLine("Adding items to the database. Count = " + pprList.Count());
+            foreach(var item in pprList)
+            {
+                // TODO: Add item to database
+            }
+            Console.WriteLine("Finished adding items to the database");
+        }
+
+        // Helper method for formatting filename
         private static string FormatResourceName(Assembly assembly, string resourceName)
         {
             return assembly.GetName().Name + "." + resourceName.Replace(" ", "_")
@@ -144,63 +166,3 @@ namespace HelloWorld
         }
     }
 }
-
-
-//List<PriceRegister> list = new List<PriceRegister>();
-
-//    Assembly assembly = Assembly.GetExecutingAssembly();
-//    string resourceName = "DebugAealyser.PPR-2017-01-Dublin.csv";
-//            //#region ppr
-//            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-//            {
-//                using (StreamReader reader = new StreamReader(stream, Encoding.Default))
-//                {
-//                    CsvReader csvReader = new CsvReader(reader);
-//    csvReader.Configuration.WillThrowOnMissingField = false;
-//                    csvReader.ReadHeader();
-
-//                    string[] charsToRemove = { "€", ",", "*" };
-//    var date = new DateTime(2017, 1, 25);
-
-//                    while (csvReader.Read())
-//                    {
-//                        try
-//                        {
-//                            var csvDate = csvReader.GetField<DateTime>(0);
-//    int result = DateTime.Compare(csvDate, date);   // we dont need to add any units sold before previous date
-//                            if (result > 0)
-//                            {
-//                                PriceRegister toAdd = new PriceRegister();
-//    toAdd.DateOfSale = csvReader.GetField<DateTime>(0);
-//                                toAdd.Address = csvReader.GetField<string>(1);
-//                                toAdd.County = csvReader.GetField<string>(3);
-//                                toAdd.NotFullMarket = 0;
-//                                var priceConvert = csvReader.GetField<string>(4);
-//                                foreach (var c in charsToRemove)
-//                                {
-//                                    priceConvert = priceConvert.Replace(c, string.Empty);
-//                                }
-////priceConvert = priceConvert.Trim(MyChar);
-//toAdd.Price = Convert.ToDouble(priceConvert);
-//                                list.Add(toAdd);
-//                            }
-//                        }
-//                        catch(Exception e)
-//                        {
-//                            Console.WriteLine(e);
-//                        }
-//                    }
-
-//                }
-
-//            }
-
-
-//            foreach (var ppr in list)
-//            {
-//                Console.WriteLine(ppr.ToString());
-//            }
-
-//            // Console.Write(list);
-//            Console.ReadKey();
-//        }

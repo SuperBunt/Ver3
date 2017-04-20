@@ -6,6 +6,9 @@
     },
     {
       "filePath": "../HelloWorld/HelloWorld.csproj"
+    },
+    {
+      "filePath": "../UpdatePriceRegister/UpdatePriceRegister.csproj"
     }
   ]
 }

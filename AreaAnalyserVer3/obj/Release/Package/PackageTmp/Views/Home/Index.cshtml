@@ -3,8 +3,11 @@
 }
 
 <div class="container">
-    <h1>Welcome to the Arealyser</h1>
-    <p class="lead">Use the arealyser to research and analyse your chosen area.</p>
+    <div class="row">
+        <h1>Welcome to the Arealyser</h1>
+        <p class="lead">Thinking about moving house or simply interested in your local area. Use the arealyser to research and analyse your chosen area.</p>
+        <p class="lead"></p>
+    </div>
     @*<div class="row">
             @using (Html.BeginForm())
                 {
@@ -14,9 +17,19 @@
                     <input type="submit" value="Arealyse" />
             }
         </div>*@
-    <div id="divConfirmDialog" title="Arealyser">
+    @using (Html.BeginForm())
+            {
+        <form class="form-inline">
 
-    </div>
+            <div class="form-group">
+                <label for="choice">Choose your area and press the button&nbsp;</label>
+                @Html.DropDownList("TownID", new SelectList(ViewBag.Towns, "TownId", "Name"), "Or press a map marker...", new { @class = "form-control; col-md-6;" })&nbsp;
+                <input class="btn btn-primary" type="submit" value="Arealyse" />
+            </div>
+
+        </form>
+    }
+    <hr>
     <div id="selectMap" style="width: 600px; height: 600px">
     </div>
 </div>
@@ -52,88 +65,87 @@
 </script>
 
 @section Map{
-@*@Scripts.Render("~/Scripts/homeMaps.js")*@
+    @*@Scripts.Render("~/Scripts/homeMaps.js")*@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeZsRxVhJ__8kmVandHXR7UvI4kvGRzgs&callback=initMap"
             type="text/javascript">
 
     </script>
 
-<script type="text/javascript">
-    //declare a variable
-    var markers = [];
-
-    $.ajax({
-        async: false,
-        type: "POST",
-        dataType: "json",
-        url: '@Url.Action("GetMarkers", "Home")',
-        data: '{}',
-        success: function (result) {
-            //get address from controller action.....
-            markers = result.AddressResult;
-        }
-
-    });
-
-    function initMap() {
-        var myLatLong = { lat: 53.3498, lng: -6.2603 };
-        var mapOptions = {
-            center: myLatLong,
-            zoom: 11,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var infoWindow = new google.maps.InfoWindow();
-        var latlngbounds = new google.maps.LatLngBounds(new google.maps.LatLng(54.668922, -7.0100274), new google.maps.LatLng(55.121921664, -6.5620904));
-        var map = new google.maps.Map(document.getElementById("selectMap"), mapOptions);
-        setMarkers(map, markers);
-
-    }
-
-    function myFunction(e) {
-        //var txt;
-        //var lat = e.latLng.lat();
-        //var lng = e.latLng.lng();
-        alert(e);
+    <script type="text/javascript">
+        //declare a variable
+        var markers = [];
 
         $.ajax({
-            type: "GET",
-            url: '@Url.Action("FindNearestTownId", "Analysis")',
-            contentType: "application/json; charset=utf-8",
-            data: { Id: e },
+            async: false,
+            type: "POST",
             dataType: "json",
-            success: function () {
-                alert("Success")
-                window.location = Redirect.url;
-            },
-            error: function () {
-                alert('error happened');
+            url: '@Url.Action("GetMarkers", "Home")',
+            data: '{}',
+            success: function (result) {
+                //get address from controller action.....
+                markers = result.AddressResult;
             }
+
         });
-    }
 
+        function initMap() {
+            var myLatLong = { lat: 53.3498, lng: -6.2603 };
+            var mapOptions = {
+                center: myLatLong,
+                zoom: 11,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var infoWindow = new google.maps.InfoWindow();
+            var latlngbounds = new google.maps.LatLngBounds(new google.maps.LatLng(54.668922, -7.0100274), new google.maps.LatLng(55.121921664, -6.5620904));
+            var map = new google.maps.Map(document.getElementById("selectMap"), mapOptions);
+            setMarkers(map, markers);
 
-    function setMarkers(map, markers) {
+        }
 
-        for (var i = 0; i < markers.length; i++) {
-            var data = markers[i];
-            var siteLatLng = new google.maps.LatLng(data.Latitude, data.Longitude);
-            var marker = new google.maps.Marker({
-                position: siteLatLng,
-                map: map,
-                title: data.Description,
-                id: data.Id
-            });
-
-            var contentString = "Some content";
-
-            google.maps.event.addListener(marker, "click", function (e) {
-                //myFunction(this.id);
-                window.location = '@Url.Action("Index", "Analysis")'+'?Id='+this.id;
-                infowindow.setContent(this.title);
-                infowindow.open(map, this);
+        function myFunction(e) {
+           
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("FindNearestTownId", "Analysis")',
+                contentType: "application/json; charset=utf-8",
+                data: { Id: e },
+                dataType: "json",
+                success: function () {
+                    window.location = Redirect.url;
+                },
+                error: function () {
+                    alert('error happened');
+                }
             });
         }
-    }
 
-</script>
+
+        function setMarkers(map, markers) {
+
+            for (var i = 0; i < markers.length; i++) {
+                var data = markers[i];
+                var siteLatLng = new google.maps.LatLng(data.Latitude, data.Longitude);
+                var marker = new google.maps.Marker({
+                    position: siteLatLng,
+                    map: map,
+                    title: data.Description,
+                    id: data.Id,
+                    icon: data.marker,
+                    animation: google.maps.Animation.DROP
+                });
+
+                var contentString = "Some content";
+
+                google.maps.event.addListener(marker, "click", function (e) {
+                    //myFunction(this.id);
+                    window.location = '@Url.Action("Index", "Analysis")' + '?Id=' + this.id;
+                    infowindow.setContent(this.title);
+                    infowindow.open(map, this);
+                });
+            }
+        }
+
+    </script>
 }
+
+<script>(function(e,t,s,n){var c,o,i;e.SMCX=e.SMCX||[],t.getElementById(n)||(c=t.getElementsByTagName(s),o=c[c.length-1],i=t.createElement(s),i.type="text/javascript",i.async=!0,i.id=n,i.src=["https:"===location.protocol?"https://":"http://","widget.surveymonkey.com/collect/website/js/b_2BAFivsTZZhynsIbX0ilSR4zcOsDGNhUnSQM_2F_2B2M45r_2B7W3hL7BkBwhAhs6jeeUn.js"].join(""),o.parentNode.insertBefore(i,o))})(window,document,"script","smcx-sdk");</script>

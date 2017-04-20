@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Research &amp; Analyse your chosen area</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="../../Content/icons/logo.png">
     @*BE AWARE OF THE POSITION OF EACH SCRIPT, CAN HAVE KNOCK-ON EFFECTS IF NOT IN CORRECT ORDER*@
 
     @Scripts.Render("~/bundles/modernizr")
@@ -14,6 +15,9 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/custom.css")
     @*@Styles.Render("~/Scripts/jquery-ui-1.12.1.min.js")*@
+    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
 
     @if (IsSectionDefined("Amcharts"))
     {
@@ -25,37 +29,40 @@
         @RenderSection("School");
     }
 
+    
+
     <meta name="description" content="Home page" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                    </button>*@
+                    </button>
                 @Html.ActionLink("Arealyser", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Contact", "Contact", "Home", new { @class = "navbar-brand" })
+                @*@Html.ActionLink("Contact", "Contact", "Home", new { @class = "navbar-brand" })*@
             </div>
-            @*<div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" })</li>
                         <li>@Html.ActionLink("About", "About", "Home")</li>
                         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     </ul>
                     @Html.Partial("_LoginPartial")
-                </div>*@
+                </div>
         </div>
     </div>
+
     <div id="my-header" class="jumbotron">
-        <div class="container" style="max-height: 100px">
+        <div class="container" style="justify-content:; max-height: 100px">
             <h1 class="pull-left title">
                 Arealyser&nbsp;&nbsp; 
             </h1>
             <a href="@Url.Action("Index", "Home", null)">
-                <img class="img-responsive targetBtn" src="~/Content/icons/Optimized-glossy-green-button-md.png" style="padding-left:20px; width:80px" alt="Return to home">
+                <img class="img-responsive targetBtn" src="~/Content/icons/glossy-green-button-md.png" style="padding-left:20px; width:80px" alt="Return to home">
             </a>
         </div>
     </div>
@@ -68,9 +75,7 @@
         </footer>
     </div>
 
-    @*@Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)*@
+       
 
 </body>
 

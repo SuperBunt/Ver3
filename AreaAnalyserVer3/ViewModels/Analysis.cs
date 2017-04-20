@@ -37,9 +37,9 @@ namespace AreaAnalyserVer3.ViewModels
 
         // Properties
         public Town Town { get; set; }
-        [DisplayName("No. of listed businesses")]
+        [DisplayName("Businesses/services")]
         public int NumBusinesses { get; set; }
-        [DisplayName("No. schools")]
+        [DisplayName("Schools")]
         public int NumSchools { get; set; }
         [DisplayName("Area")]
         public string AreaName { get; set; }
@@ -51,34 +51,37 @@ namespace AreaAnalyserVer3.ViewModels
         public List<School> Schools { get; set; }
         public List<PriceRegister> HousesInArea { get; set; }
         public List<WikiContent> WikiResults { get; set; }
-        //public IEnumerable<WikiImage> WikiImages { get; set; }
-        [DisplayName("* Units sold ")]
+        [DisplayName("Units sold ")]
         public int NumSoldinLast6mths { get; set; }
 
-        [DisplayName("* Avg. price")]
-        [DisplayFormat(DataFormatString = "{0:C0, en-IE}")]
+        [DisplayName("Avg. price")]
+        [DisplayFormat(DataFormatString = "€ {0:0}")]
         public double AveragePriceLast6mths { get; set; }
 
-        [DisplayName("* % diff")]
+        [DisplayName("% diff")]
         public string PercentDiff
         {
             get
             {
-                var sixAgo = DateTime.Today.AddMonths(-6);
-                var national = db.PriceRegister.Where(y => y.DateOfSale > sixAgo);
+                var sixAgo = DateTime.Now.AddMonths(-6).Month;
+                var now = DateTime.Now.Month;
+                //var national = db.PriceRegister.Where(y => y.DateOfSale > sixAgo);
 
-                // The values are being truncated because too many decimals may result in infinity
-                // being returned later in the calculation
-                double nationalAvg = Math.Truncate(national.Average(p => (p.Price)));
-                // If no house sold in last 6 months then the average is 0
-                if (national.Count() == 0)
-                {
-                    return "0";
-                }
+                //// The values are being truncated because too many decimals may result in infinity
+                //// being returned later in the calculation
+                //double nationalAvg = Math.Truncate(national.Average(p => (p.Price)));
+                //// If no house sold in last 6 months then the average is 0
+                //if (national.Count() == 0)
+                //{
+                //    return "0";
+                //}
+                var previous = HousesInArea.Where(y => y.DateOfSale.Month == sixAgo).Average(p => p.Price);
+                var currentAvg = HousesInArea.Where(y => y.DateOfSale.Month == now).Average(p => p.Price);
+
                 // work out the difference (increase) between the two numbers you are comparing.
-                double increase = nationalAvg - Math.Truncate(AveragePriceLast6mths);
+                double increase = Math.Round(previous) - Math.Round(currentAvg);
 
-                double percent = (increase / AveragePriceLast6mths) * 100;
+                double percent = (increase / currentAvg) * 100;
 
                 return String.Format("{0:0.#}", percent);
 

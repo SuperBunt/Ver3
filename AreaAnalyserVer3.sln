@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTasks", "ConsoleTasks\ConsoleTasks.csproj", "{155ECE95-B565-4D46-B3AD-6E5FD693F12D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdatePriceRegister", "UpdatePriceRegister\UpdatePriceRegister.csproj", "{B04B98B6-835C-468D-A3F0-2A6F37B4C012}"
+EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
@@ -36,6 +38,10 @@ Global
 		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{155ECE95-B565-4D46-B3AD-6E5FD693F12D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

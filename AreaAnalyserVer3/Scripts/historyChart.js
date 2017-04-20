@@ -100,6 +100,7 @@ function generateChart() {
 				    "backgroundColor": "#BBBBBB",
 				    "borderColor": "#CC0000",
 				    "percentPrecision": 0,
+				    "precision": 0,
 				    "theme": "default",
 				    "categoryAxis": {
 				        "minPeriod": "MM",
@@ -189,7 +190,8 @@ function generateChart() {
 }
 
 function generateCharts() {
-    var id = document.getElementById('townId').value
+    //var id = document.getElementById('townId').value
+    var id = townId;
     var crimeUrl = "/Analysis/GetCrimeData/" + id
     var chart1 = AmCharts.makeChart("chartcrime",
 				{
@@ -204,7 +206,8 @@ function generateCharts() {
 				    "chartCursor": {
 				        "enabled": true,
 				        "animationDuration": 0,
-				        "categoryBalloonDateFormat": "YYYY"
+				        "categoryBalloonDateFormat": "YYYY",
+				        "oneBalloonOnly": true
 				    },
 				    "chartScrollbar": {
 				        "enabled": true
@@ -328,7 +331,7 @@ function generateCharts() {
 				    "valueAxes": [
 						{
 						    "id": "ValueAxis-1",
-						    "title": "Axis title"
+						    "title": "Num.recorded offences"
 						}
 				    ],
 				    "allLabels": [
@@ -361,6 +364,7 @@ function generateCharts() {
 				    "backgroundColor": "#BBBBBB",
 				    "borderColor": "#CC0000",
 				    "percentPrecision": 0,
+				    "precision": 0,
 				    "theme": "default",
 				    "categoryAxis": {
 				        "minPeriod": "MM",

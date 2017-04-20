@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Research &amp; Analyse your chosen area</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="../../Content/icons/logo.png">
     @*BE AWARE OF THE POSITION OF EACH SCRIPT, CAN HAVE KNOCK-ON EFFECTS IF NOT IN CORRECT ORDER*@
 
     @Scripts.Render("~/bundles/modernizr")
@@ -56,12 +57,12 @@
     </div>
 
     <div id="my-header" class="jumbotron">
-        <div class="container" style="max-height: 100px">
+        <div class="container" style="justify-content:; max-height: 100px">
             <h1 class="pull-left title">
                 Arealyser&nbsp;&nbsp; 
             </h1>
             <a href="@Url.Action("Index", "Home", null)">
-                <img class="img-responsive targetBtn" src="~/Content/icons/Optimized-glossy-green-button-md.png" style="padding-left:20px; width:80px" alt="Return to home">
+                <img class="img-responsive targetBtn" src="~/Content/icons/glossy-green-button-md.png" style="padding-left:20px; width:80px" alt="Return to home">
             </a>
         </div>
     </div>
