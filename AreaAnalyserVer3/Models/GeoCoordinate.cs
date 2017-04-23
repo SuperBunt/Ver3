@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity.Spatial;
 
-namespace AreaAnalyserVer3.ViewModels
+namespace AreaAnalyserVer3.Models
 {
-    internal class GeoCoordinate
+    public class GeoCoordinate
     {
         private float latitude;
         private float longitude;

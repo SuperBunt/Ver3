@@ -37,21 +37,9 @@ namespace AreaAnalyserVer3.Controllers
             //conf.SeedDebug(db);
 
             //  ******************************************************
-
-            //ViewBag.County = new SelectList(PriceRegister.counties);
-            //ViewBag.TownID = new SelectList(
-            //new List<SelectListItem>
-            //{
-            //    new SelectListItem{Text="Choose area", Value="id"}
-            //}
-            //, "Value", "Text"); // First parameter is the display text on screen, Second parameter is the value
+            
             ViewBag.Towns = (from d in db.Town
                         select new { TownId = d.TownId, Name = d.Name });
-
-           
-            //IEnumerable<Object> townList = query;
-
-            //ViewBag.Towns = new SelectList(townList, "Value", "Text");
 
             return View();
         }
@@ -83,9 +71,8 @@ namespace AreaAnalyserVer3.Controllers
             {
                 var message = new MailMessage();
                 message.To.Add(new MailAddress("arealyser@outlook.com"));  // replace with valid value 
-                message.From = new MailAddress("arealyser@outlook.com");  // replace with valid value
+                message.From = new MailAddress("arealyser@outlook.com", "Feedback"); 
                 message.Subject = model.Subject;
-                //message.Body = string.Format(body, model.FromName, model.FromEmail, model.Message);
                 message.Body = model.Message;
                 message.IsBodyHtml = true;
 
@@ -112,7 +99,7 @@ namespace AreaAnalyserVer3.Controllers
             return View();
         }
 
-        //Populate the markers
+        //Populate the markers with towns
         public JsonResult GetMarkers()
         {
             var towns = from t in db.Town

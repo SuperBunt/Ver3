@@ -93,16 +93,15 @@ namespace AreaAnalyserVer3.Controllers
         //{
         //    return View();
         //}
-
+        [Authorize(Roles = "Admin")]
         public void SignIn()
         {
-            if (!Request.IsAuthenticated)
-            {
+            
                 // Signal OWIN to send an authorization request to Azure
                 HttpContext.GetOwinContext().Authentication.Challenge(
                     new AuthenticationProperties { RedirectUri = "/Admin/AdminSecure" },
                     OpenIdConnectAuthenticationDefaults.AuthenticationType);
-            }
+            
         }
 
         public void SignOut()
@@ -176,6 +175,7 @@ namespace AreaAnalyserVer3.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Inbox()
         {
             string token = await GetAccessToken();

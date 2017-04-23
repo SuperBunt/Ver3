@@ -320,6 +320,7 @@
     <Compile Include="Models\Business.cs" />
     <Compile Include="Models\DisplayMessage.cs" />
     <Compile Include="Models\Email.cs" />
+    <Compile Include="Models\GeoCoordinate.cs" />
     <Compile Include="Models\Leaver.cs" />
     <Compile Include="Models\School.cs" />
     <Compile Include="Models\Town.cs" />
@@ -638,6 +639,8 @@
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %284%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy %285%29.pubxml" />
+    <None Include="Properties\PublishProfiles\arealyser - Web Deploy %286%29.pubxml" />
+    <None Include="Properties\PublishProfiles\arealyser - Web Deploy %287%29.pubxml" />
     <None Include="Properties\PublishProfiles\arealyser - Web Deploy.pubxml" />
     <Content Include="pager\first.png" />
     <Content Include="pager\last.png" />

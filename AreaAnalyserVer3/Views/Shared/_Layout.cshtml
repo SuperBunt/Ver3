@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Research &amp; Analyse your chosen area</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="../../Content/icons/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("../../Content/icons/logo.png")">
     @*BE AWARE OF THE POSITION OF EACH SCRIPT, CAN HAVE KNOCK-ON EFFECTS IF NOT IN CORRECT ORDER*@
 
     @Scripts.Render("~/bundles/modernizr")
@@ -29,7 +29,7 @@
         @RenderSection("School");
     }
 
-    
+
 
     <meta name="description" content="Home page" />
 </head>
@@ -38,32 +38,33 @@
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                @Html.ActionLink("Arealyser", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+               
                 @*@Html.ActionLink("Contact", "Contact", "Home", new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" })</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
-                    @Html.Partial("_LoginPartial")
-                </div>
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
         </div>
     </div>
 
     <div id="my-header" class="jumbotron">
-        <div class="container" style="justify-content:; max-height: 100px">
-            <h1 class="pull-left title">
-                Arealyser&nbsp;&nbsp; 
+        <div id ="NameText" class="container" style="align-items: center; max-height: 100px">
+            <h1  class="title" style="display:inline;">
+               <span>Arealyser&nbsp;&nbsp;</span> 
+                <a href="@Url.Action("Index", "Home", null)">
+                    <img class="img-responsive targetBtn" src="~/Content/icons/glossy-green-button-md.png" style="display:inline; padding-left:20px; width:80px" alt="Return to home">
+                </a>
             </h1>
-            <a href="@Url.Action("Index", "Home", null)">
-                <img class="img-responsive targetBtn" src="~/Content/icons/glossy-green-button-md.png" style="padding-left:20px; width:80px" alt="Return to home">
-            </a>
+
         </div>
     </div>
     <div class="container body-content">
@@ -75,7 +76,7 @@
         </footer>
     </div>
 
-       
+
 
 </body>
 

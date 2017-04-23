@@ -9,6 +9,9 @@
     },
     {
       "filePath": "../UpdatePriceRegister/UpdatePriceRegister.csproj"
+    },
+    {
+      "filePath": "../Geocoder/Geocoder.csproj"
     }
   ]
 }

@@ -35,7 +35,7 @@ namespace AreaAnalyserVer3.Controllers.Tests
 
             //Act
             JsonResult result = test_controller.GetHouses(name);
-            // Act
+            // Assert
             Assert.IsNotNull(result, "No ActionResult returned from action method.");
             dynamic jsonObject = result.Data;
             Assert.IsTrue(jsonObject.Success);
@@ -62,8 +62,8 @@ namespace AreaAnalyserVer3.Controllers.Tests
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2016, 3, 1), Price = 30000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2016, 3, 1), Price = 30000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 100000 });
-            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 100000 });
-            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 100000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 110000 });
+            sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 1, 1), Price = 120000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 2, 1), Price = 200000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 2, 1), Price = 200000 });
             sampleHouses.Add(new PriceRegister() { DateOfSale = new DateTime(2017, 2, 1), Price = 200000 });
@@ -79,7 +79,7 @@ namespace AreaAnalyserVer3.Controllers.Tests
                   date_sold = string.Format("{0},{1}", p.Key.Year, p.Key.Month),
                   avg_price = p.Average(i => i.Price)
               })).ToList();
-            //Assert
+
             // The required result = 
             //  [
             //  {
@@ -90,14 +90,21 @@ namespace AreaAnalyserVer3.Controllers.Tests
             //      "date_sold": "2016,02",
             //	    "avg_price": 200000
             //   } ]
+            //Assert
+            Assert.AreEqual(avg[0].date_sold, "2016,1");
+            Assert.AreEqual(avg[0].avg_price, 10000);
+            Assert.AreEqual(avg[1].date_sold, "2016,2");
+            Assert.AreEqual(avg[1].avg_price, 200000);
+            Assert.AreEqual(avg[2].date_sold, "2016,3");
+            Assert.AreEqual(avg[2].avg_price, 30000);
 
-            Assert.AreSame(avg[0].date_sold, "2016,01");
-            Assert.AreSame(avg[0].avg_price, 10000);
-            Assert.AreSame(avg[1].date_sold, "2016,02");
-            Assert.AreSame(avg[1].avg_price, 200000);
-            Assert.AreSame(avg[2].date_sold, "2016,03");
-            Assert.AreSame(avg[2].avg_price, 30000);
-            Assert.Fail();
+            Assert.AreEqual(avg[3].date_sold, "2017,1");
+            Assert.AreEqual(avg[3].avg_price, 110000);
+            Assert.AreEqual(avg[4].date_sold, "2017,2");
+            Assert.AreEqual(avg[4].avg_price, 200000);
+            Assert.AreEqual(avg[5].date_sold, "2017,3");
+            Assert.AreEqual(avg[5].avg_price, 300000);
+
         }
 
         [TestMethod()]
@@ -116,20 +123,6 @@ namespace AreaAnalyserVer3.Controllers.Tests
             Assert.IsTrue(jsonObject.Success);
         }
 
-        // helper method
-        //public static object GetReflectedProperty(this object obj, string propertyName)
-        //{
-        //    obj.ThrowIfNull("obj");
-        //    propertyName.ThrowIfNull("propertyName");
-
-        //    PropertyInfo property = obj.GetType().GetProperty(propertyName);
-
-        //    if (property == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    return property.GetValue(obj, null);
-        //}
+        
     }
 }

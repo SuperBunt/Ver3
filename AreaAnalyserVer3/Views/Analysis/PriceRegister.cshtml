@@ -1,10 +1,5 @@
 ﻿@model AreaAnalyserVer3.ViewModels.Analysis
 
-
-@*<h3>Primary Schools&nbsp;&nbsp;<button data-toggle="collapse" data-target="#primary"><span><i class="fa fa-bars toggle-btn"></i></span></button></h3>*@
-
-
-
 <div>
     <div ng-controller="MyController" ng-init=init("@Model.AreaName") class="my-controller">
         <div class="form-group">
@@ -23,10 +18,8 @@
             <button ng-click="resetFilter()">Reset</button>
         </div>
 
-
-
         <br>
-        <!-- items being paged -->
+        <!-- table being paged -->
         <table id="pprTable" class="table table-striped">
             <thead>
                 <tr>
@@ -55,7 +48,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr dir-paginate="house in houses | toArray:false | filter:q | itemsPerPage: pageSize | orderBy:sortType:sortReverse" current-page="currentPage">
+                <tr dir-paginate="house in houses | toArray:false | filter:q | itemsPerPage: pageSize | orderBy:sortType:sortReverse" | current-page="currentPage">
                     <td>{{house.DateOfSale.substr(6,13) | date: 'dd-MM-y'}}</td>
                     <td>{{house.Address}}</td>
                     <td>{{house.Price | currency : "&euro; " : 0}}</td>
@@ -64,9 +57,11 @@
 
         </table>
     </div>
-        <!-- pager -->
+        <!-- table -->
 
     </div>
+
+<!-- Pager controls -->
     <div ng-controller="OtherController" class="other-controller">
 
         <div class="text-center">
@@ -92,6 +87,6 @@
             </dir-pagination-controls>
         </div>
     </div>
-
+<!-- Pager controls -->
      
 

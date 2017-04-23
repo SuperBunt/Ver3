@@ -34,17 +34,35 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Ethos)
-                            </td>                          
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Gender)
                             </td>
+                            @if (item.Gender == "B ")
+                            {
+                                <td>
+                                    <span><i class="fa fa-mars"></i></span>
+                                </td>
+                            }
+                            else if (item.Gender == "G ")
+                            {
+                                <td>
+                                    <span><i class="fa fa-venus-mars"></i></span>
+                                </td>
+                            }
+                            else if (item.Gender == "M ")
+                            {
+                                <td>
+                                    <span><i class="fa fa-venus"></i></span>
+                                </td>
+                            }
+                            @*<td>
+                                @Html.DisplayFor(modelItem => item.Gender)
+                            </td>*@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Type)
                             </td>
                             <td>
                                 @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
                                 <button id="schoolToggle" onclick="refreshData(@item.SchoolId, '@item.Name', true)">College&nbsp;<i class="fa fa-university toggle-btn"></i></button>
-                                
+
                                 @Html.ActionLink("Details", "Details", new { controller = "Education", id = item.SchoolId }, new { @class = "btn-small" })
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -56,6 +74,7 @@
                     }
                 }
             </table>
+            <p class="small">* Gender:<span><i class="fa fa-mars"></i></span> = Boys, <span><i class="fa fa-venus"></i></span> = Girls, <span><i class="fa fa-venus-mars"></i></span> = Mixed</p>
         }
         else
         {

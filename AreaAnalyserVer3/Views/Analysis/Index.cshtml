@@ -174,7 +174,6 @@
                 <div id="schoolTable">
                     @Html.Partial("PrimarySchools")
                     @Html.Partial("PostPrimary")
-                    <p class="small">* Gender: B = boys, G = Girls, M = Mixed</p>
                 </div>
 
                 <div id="feederGraph" hidden style="width: 100%">
@@ -206,7 +205,10 @@
         $(document).ready(function () {
             generateCharts();
             loadGraph();
-            $(".title").text(name);
+            $("#NameText").find('span').text(function (i, text) {
+                return text = name;
+            })
+           
         });
     </script>
 }

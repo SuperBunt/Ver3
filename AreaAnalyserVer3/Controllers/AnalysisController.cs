@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace AreaAnalyserVer3.Controllers
 {
@@ -47,25 +48,44 @@ namespace AreaAnalyserVer3.Controllers
                 }
 
                 area.HousesInArea = db.PriceRegister.Where(x => x.Address.Contains(area.AreaName)).ToList();
-                area.NumSoldinLast6mths = area.HousesInArea.Count();
-                area.AveragePriceLast6mths = area.HousesInArea.Where(y => y.DateOfSale > sixMonthsAgo).Average(p => p.Price);
+                area.NumSoldinLast6mths = area.HousesInArea.Where(y => y.DateOfSale >= sixMonthsAgo).Count();
+                if (area.NumSoldinLast6mths != 0)
+                {
+                    area.LastSixMonths = area.HousesInArea.Where(y => y.DateOfSale >= sixMonthsAgo).ToList();
+                    area.AveragePriceLast6mths = area.LastSixMonths.Average(p => p.Price);                    
+                }
 
-                //var filterList = area.Businesses
-                //                 .Select(t => t.Category)
-                //                 .Distinct();
+                else
+                {
+                    area.AveragePriceLast6mths = 0;
+                }
 
-                //ViewBag.Categories = new SelectList(filterList);
-
-                // TODO: Dirty hardcoded categories to demonstrate filter functionality for map
-                // Use correct data when businesses are geocoded
-                ViewBag.Categories = new List<object> {
-                    new  { Text = "Butchers", Value = "Butchers" },
-                    new  { Text = "Hairdresser", Value = "Hairdresser" },
-                    new  { Text = "Hardware", Value = "Hardware" },
-                    new  { Text = "School", Value = "School" },
-                    new  { Text = "Shop", Value = "Shop" },
-                    new  { Text = "Pub", Value = "Pub" }
-                };
+                // Populate map filter list with local business cateogries
+                if (area.Businesses.Any(x => x.geocoded.Equals("Y "))) {
+                    var types = area.Businesses
+                                     .Select(t => t.Category)
+                                     .Distinct();
+                    var ddlist = new List<object>();
+                    ddlist.Add(new { Text = "School", Value = "School" });
+                    foreach (var t in types)
+                    {
+                        ddlist.Add( new { Text = t, Value = t } );
+                    }
+                    ViewBag.Categories = ddlist;
+                }
+                else
+                {
+                    // Hardcoded categories if local area has not been geocoded
+                    // Used to demonstrate filter functionality for map
+                    ViewBag.Categories = new List<object> {
+                        new  { Text = "Butchers", Value = "Butchers" },
+                        new  { Text = "Hairdresser", Value = "Hairdresser" },
+                        new  { Text = "Hardware", Value = "Hardware" },
+                        new  { Text = "School", Value = "School" },
+                        new  { Text = "Shop", Value = "Shop" },
+                        new  { Text = "Pub", Value = "Pub" }
+                    };
+                }
 
                 // TODO populate database table
                 area.WikiResults = GetWiki(area.Town.Name, "Dublin");
@@ -102,67 +122,74 @@ namespace AreaAnalyserVer3.Controllers
                     markers.Add(new { Category = "School", Id = s.TownId, Latitude = s.GeoLocation.Latitude, Longitude = s.GeoLocation.Longitude, Description = s.Name, icon = @"../../Content/icons/school_marker.png" });
                 }
                 // TODO: Use this method when businesses are geocoded correctly
-                //foreach (var s in query.Businesses)
-                //{
-                //    markers.Add(new { Category = s.Type, Latitude = s.GeoLocation.Latitude, Longitude = s.GeoLocation.Longitude, Description = s.Name, icon = @"../../Content/icons/business_marker.png" });
-                //}
-
-                // Disgusting method to give some local businesses that can be filtered until businesses are correctly geocoded
-                #region populate markers
-                var lat = query.latitude;
-                var lont = query.longitude;
-                lat += 0.003;
-                lont += 0.0005;
-                markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Local shop", icon = @"../../Content/icons/business_marker.png" });
-                lat += 0.0003;
-                lont += 0.00205;
-                markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Another Local shop", icon = @"../../Content/icons/business_marker.png" });
-                lat += 0.00066;
-                lont += 0.005002;
-                markers.Add(new { Category = "Pub", Latitude = lat, Longitude = lont, Description = "The village Inn", icon = @"../../Content/icons/business_marker.png" });
-                lat += 0.00004;
-                lont = 0.000102;
-                markers.Add(new { Category = "Pub", Latitude = lat, Longitude = lont, Description = "Castle Inn", icon = @"../../Content/icons/business_marker.png" });
-                lat = query.latitude;
-                lont = query.longitude;
-                lat += 0.00094;
-                lont -= 0.00102;
-                markers.Add(new { Category = "Pub", Latitude = lat, Longitude = lont, Description = "Fill House", icon = @"../../Content/icons/business_marker.png" });
-                lat += 0.0070045;
-                lont -= 0.0022;
-                markers.Add(new { Category = "Hairdresser", Latitude = lat, Longitude = lont, Description = "Local Hairdresser", icon = @"../../Content/icons/business_marker.png" });
-                lat += 0.0020047;
-                lont -= 0.0090233;
-                markers.Add(new { Category = "Hairdresser", Latitude = lat, Longitude = lont, Description = "Die Hard", icon = @"../../Content/icons/business_marker.png" });
-                lat += 0.0010047;
-                lont -= 0.0010233;
-                markers.Add(new { Category = "Butchers", Latitude = lat, Longitude = lont, Description = "Bills", icon = @"../../Content/icons/business_marker.png" });
-                lat = query.latitude;
-                lont = query.longitude;
-                lat -= 0.006247;
-                lont += 0.0088833;
-                markers.Add(new { Category = "Butchers", Latitude = lat, Longitude = lont, Description = "Conways", icon = @"../../Content/icons/business_marker.png" });
-                lat -= 0.0008047;
-                lont += 0.0010233;
-                markers.Add(new { Category = "Butchers", Latitude = lat, Longitude = lont, Description = "Martins butchers", icon = @"../../Content/icons/business_marker.png" });
-                lat -= 0.002247;
-                lont += 0.010233;
-                markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Local shop", icon = @"../../Content/icons/business_marker.png" });
-                lat = query.latitude;
-                lont = query.longitude;
-                lat += 0.008247;
-                lont -= 0.010233;
-                markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Another Local shop", icon = @"../../Content/icons/business_marker.png" });
-                lat -= 0.002247;
-                lont += 0.09005;
-                markers.Add(new { Category = "Hardware", Latitude = lat, Longitude = lont, Description = "Luigis", icon = @"../../Content/icons/business_marker.png" });
-                lat -= 0.02247;
-                lont += 0.000004;
-                markers.Add(new { Category = "Hardware", Latitude = lat, Longitude = lont, Description = "Sammy's", icon = @"../../Content/icons/business_marker.png" });
-                lat -= 0.0026247;
-                lont += 0.001104;
-                markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Centra", icon = @"../../Content/icons/business_marker.png" });
-                #endregion
+                if (query.Businesses.Any(x => x.geocoded.Equals("Y ")))
+                {
+                    var localMarker = query.Businesses.Where(g => g.geocoded.Equals("Y "));
+                    foreach (var s in localMarker)
+                    {
+                        markers.Add(new { Category = s.Category, Latitude = s.GeoLocation.Latitude, Longitude = s.GeoLocation.Longitude, Description = s.Name, icon = @"../../Content/icons/business_marker.png" });
+                    }
+                }
+                else
+                {
+                    // Only used if chosen area has not been geocoded
+                    // Disgusting code to give fill map with some local businesses 
+                    #region populate markers
+                    var lat = query.latitude;
+                    var lont = query.longitude;
+                    lat += 0.003;
+                    lont += 0.0005;
+                    markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Local shop", icon = @"../../Content/icons/business_marker.png" });
+                    lat += 0.0003;
+                    lont += 0.00205;
+                    markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Another Local shop", icon = @"../../Content/icons/business_marker.png" });
+                    lat += 0.00066;
+                    lont += 0.005002;
+                    markers.Add(new { Category = "Pub", Latitude = lat, Longitude = lont, Description = "The village Inn", icon = @"../../Content/icons/business_marker.png" });
+                    lat += 0.00004;
+                    lont = 0.000102;
+                    markers.Add(new { Category = "Pub", Latitude = lat, Longitude = lont, Description = "Castle Inn", icon = @"../../Content/icons/business_marker.png" });
+                    lat = query.latitude;
+                    lont = query.longitude;
+                    lat += 0.00094;
+                    lont -= 0.00102;
+                    markers.Add(new { Category = "Pub", Latitude = lat, Longitude = lont, Description = "Fill House", icon = @"../../Content/icons/business_marker.png" });
+                    lat += 0.0070045;
+                    lont -= 0.0022;
+                    markers.Add(new { Category = "Hairdresser", Latitude = lat, Longitude = lont, Description = "Local Hairdresser", icon = @"../../Content/icons/business_marker.png" });
+                    lat += 0.0020047;
+                    lont -= 0.0090233;
+                    markers.Add(new { Category = "Hairdresser", Latitude = lat, Longitude = lont, Description = "Die Hard", icon = @"../../Content/icons/business_marker.png" });
+                    lat += 0.0010047;
+                    lont -= 0.0010233;
+                    markers.Add(new { Category = "Butchers", Latitude = lat, Longitude = lont, Description = "Bills", icon = @"../../Content/icons/business_marker.png" });
+                    lat = query.latitude;
+                    lont = query.longitude;
+                    lat -= 0.006247;
+                    lont += 0.0088833;
+                    markers.Add(new { Category = "Butchers", Latitude = lat, Longitude = lont, Description = "Conways", icon = @"../../Content/icons/business_marker.png" });
+                    lat -= 0.0008047;
+                    lont += 0.0010233;
+                    markers.Add(new { Category = "Butchers", Latitude = lat, Longitude = lont, Description = "Martins butchers", icon = @"../../Content/icons/business_marker.png" });
+                    lat -= 0.002247;
+                    lont += 0.010233;
+                    markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Local shop", icon = @"../../Content/icons/business_marker.png" });
+                    lat = query.latitude;
+                    lont = query.longitude;
+                    lat += 0.008247;
+                    lont -= 0.010233;
+                    markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Another Local shop", icon = @"../../Content/icons/business_marker.png" });
+                    lat -= 0.002247;
+                    lont += 0.09005;
+                    markers.Add(new { Category = "Hardware", Latitude = lat, Longitude = lont, Description = "Luigis", icon = @"../../Content/icons/business_marker.png" });
+                    lat -= 0.02247;
+                    lont += 0.000004;
+                    markers.Add(new { Category = "Hardware", Latitude = lat, Longitude = lont, Description = "Sammy's", icon = @"../../Content/icons/business_marker.png" });
+                    lat -= 0.0026247;
+                    lont += 0.001104;
+                    markers.Add(new { Category = "Shop", Latitude = lat, Longitude = lont, Description = "Centra", icon = @"../../Content/icons/business_marker.png" });
+                    #endregion
+                }
 
                 return Json(new { AddressResult = markers }, JsonRequestBehavior.AllowGet);
             }
@@ -238,7 +265,7 @@ namespace AreaAnalyserVer3.Controllers
         }
 
         // Get Price Register data for chart
-        public async Task<JsonResult> GetCrimeData(string id)
+        public JsonResult GetCrimeData(string id)
         {
             List<AnnualReport> listReports = new List<AnnualReport>();
             using (var db = new ApplicationDbContext())

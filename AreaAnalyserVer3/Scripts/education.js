@@ -249,7 +249,7 @@ function togglePpr() {
 }
 
 function register() {
-    var txt = "Sorry, this option is only available to members.\nSign up now to gain full access to local crime and school data!!";
+    var txt = "Sorry, this option is only available to members.\nSign up now to gain full access to local crime !!";
     var r = confirm(txt);
     if (r == true) {
         window.location = '/Account/Register';

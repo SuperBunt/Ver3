@@ -33,7 +33,10 @@ namespace AreaAnalyserVer3.ViewModels
         // fields
 
         private List<PriceRegister> housesInArea;
-        private double averagePriceLast6mths;
+        internal DateTime sixMonthsAgo;
+
+        // private double averagePriceLast6mths;
+        //private string percentDiff;
 
         // Properties
         public Town Town { get; set; }
@@ -46,10 +49,19 @@ namespace AreaAnalyserVer3.ViewModels
         public string NearestStation { get; set; }
         public GardaStation Garda { get; set; }
 
+        DateTime Today { get; set; } = DateTime.Now;
+        DateTime SixMonthsAgo { get; set; } = DateTime.Now.AddMonths(-6);
+
+        public int sixMonthsAgoInt { get; set; } = DateTime.Now.AddMonths(-6).Month;
+        public int YearsixMonthsAgo { get; set; } = DateTime.Now.AddMonths(-6).Year;
+        public int nowMonth { get; set; } = DateTime.Now.Month;
+        public int nowYear { get; set; } = DateTime.Now.Year;
+
         public List<Business> Businesses { get; set; }
         public List<AnnualReport> Crimes { get; set; }
         public List<School> Schools { get; set; }
         public List<PriceRegister> HousesInArea { get; set; }
+        public List<PriceRegister> LastSixMonths { get; set; }
         public List<WikiContent> WikiResults { get; set; }
         [DisplayName("Units sold ")]
         public int NumSoldinLast6mths { get; set; }
@@ -58,34 +70,44 @@ namespace AreaAnalyserVer3.ViewModels
         [DisplayFormat(DataFormatString = "€ {0:0}")]
         public double AveragePriceLast6mths { get; set; }
 
-        [DisplayName("% diff")]
+        [DisplayName("% increase")]
         public string PercentDiff
         {
             get
             {
-                var sixAgo = DateTime.Now.AddMonths(-6).Month;
-                var now = DateTime.Now.Month;
-                //var national = db.PriceRegister.Where(y => y.DateOfSale > sixAgo);
+                if (NumSoldinLast6mths > 0)
+                {
 
-                //// The values are being truncated because too many decimals may result in infinity
-                //// being returned later in the calculation
-                //double nationalAvg = Math.Truncate(national.Average(p => (p.Price)));
-                //// If no house sold in last 6 months then the average is 0
-                //if (national.Count() == 0)
-                //{
-                //    return "0";
-                //}
-                var previous = HousesInArea.Where(y => y.DateOfSale.Month == sixAgo).Average(p => p.Price);
-                var currentAvg = HousesInArea.Where(y => y.DateOfSale.Month == now).Average(p => p.Price);
+                    try
+                    {
+                        var previousAvg = LastSixMonths.Where(y => y.DateOfSale.Month == sixMonthsAgoInt && y.DateOfSale.Year == YearsixMonthsAgo).Average(p => p.Price);
+                        // we'll use to accumalated average as default
+                        var currentAvg = AveragePriceLast6mths;
+                        // The actual value we desire is the average price this for six months ago
+                        if (LastSixMonths.Where(y => y.DateOfSale.Month == nowMonth && y.DateOfSale.Year == nowYear).Count() == 0)
+                            currentAvg = LastSixMonths.Where(y => y.DateOfSale.Month == nowMonth && y.DateOfSale.Year == nowYear).Average(p => p.Price);
+                       
 
-                // work out the difference (increase) between the two numbers you are comparing.
-                double increase = Math.Round(previous) - Math.Round(currentAvg);
+                        // work out the difference (increase) between the two numbers you are comparing.
+                        // Ensure there was houses sold in the last 6 months
 
-                double percent = (increase / currentAvg) * 100;
+                        double increase = Math.Round(currentAvg) - Math.Round(previousAvg);
 
-                return String.Format("{0:0.#}", percent);
+                        double percent = (increase / previousAvg) * 100;
+
+                        return String.Format("{0:0.0}", percent);
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        return "Sorry we dont have that information!";
+                    }
+                }
+                return "Cannot compare, No houses sold in previous 6 months.";
 
             }
+
         }
 
         #region Methods

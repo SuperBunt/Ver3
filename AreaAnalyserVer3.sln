@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTasks", "ConsoleTask
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdatePriceRegister", "UpdatePriceRegister\UpdatePriceRegister.csproj", "{B04B98B6-835C-468D-A3F0-2A6F37B4C012}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geocoder", "Geocoder\Geocoder.csproj", "{987706BC-C85A-47D5-B059-61396D9483F6}"
+EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
@@ -42,6 +44,10 @@ Global
 		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B04B98B6-835C-468D-A3F0-2A6F37B4C012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{987706BC-C85A-47D5-B059-61396D9483F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{987706BC-C85A-47D5-B059-61396D9483F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{987706BC-C85A-47D5-B059-61396D9483F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{987706BC-C85A-47D5-B059-61396D9483F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

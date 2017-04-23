@@ -11,7 +11,7 @@
     <WebStackScaffolding_ViewDialogWidth>600</WebStackScaffolding_ViewDialogWidth>
     <WebStackScaffolding_DbContextTypeFullName>AreaAnalyserVer3.Models.ApplicationDbContext</WebStackScaffolding_DbContextTypeFullName>
     <ProjectView>ShowAllFiles</ProjectView>
-    <NameOfLastUsedPublishProfile>arealyser - Web Deploy %285%29</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>arealyser - Web Deploy %287%29</NameOfLastUsedPublishProfile>
     <IISExpressSSLPort>44329</IISExpressSSLPort>
   </PropertyGroup>
   <ProjectExtensions>
